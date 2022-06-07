@@ -1,0 +1,6 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.37 18.16C7.73 18.67 8.33 19 9 19L20 18.99C21.1 18.99 22 18.1 22 17L22 7C22 5.9 21.1 5.01 20 5.01L9 5C8.33 5 7.73 5.33 7.37 5.84L3 12L7.37 18.16ZM9 7L20 7L20 17L9 17L5.45 12L9 7Z" fill="#8041F7"/>
+<circle cx="17" cy="12" r="1" transform="rotate(-180 17 12)" fill="#8041F7"/>
+<circle cx="11" cy="12" r="1" transform="rotate(-180 11 12)" fill="#8041F7"/>
+<circle cx="14" cy="12" r="1" transform="rotate(-180 14 12)" fill="#8041F7"/>
+</svg>

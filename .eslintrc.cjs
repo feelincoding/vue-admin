@@ -8,8 +8,22 @@ module.exports = {
     "eslint:recommended",
     "@vue/eslint-config-typescript/recommended",
     "@vue/eslint-config-prettier",
+    "plugin:prettier/recommended"
   ],
+  plugins: ['prettier'],
   env: {
     "vue/setup-compiler-macros": true,
   },
+  rules: {
+    "vue/multi-word-component-names": "off",
+    "generator-star-spacing": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-useless-escape": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
+  }
 };
