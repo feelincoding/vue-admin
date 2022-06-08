@@ -1,6 +1,7 @@
 <template>
   <ListLayout :title="$t('system.list_top_title')">
     <template v-slot:search-form>
+      <!-- <template slot='search-form'> -->
       <div class="search-wrap">
         <!-- Input Box 옵션 -->
         <div class="search-cont">
@@ -87,6 +88,7 @@
             </table>
           </div>
         </template>
+        <!-- <template v-slot:pagination v-if="!isShowProgress && systemPagination"> -->
         <template v-slot:pagination v-if="!isShowProgress">
           <Paging :pagingOption="systemPagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
         </template>
@@ -134,11 +136,36 @@ import ErrorCode from '@/error/ErrorCodes';
 import { useRoute } from 'vue-router';
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
+import { BSpinner } from 'bootstrap-vue-3';
 
 const systemModule = new SystemModule();
 
 const listOption: Ref<SystemResponse[]> = ref([]);
-const systemPagination: Ref<Pagination> = ref({}) as Ref<Pagination>;
+// const systemPagination: Ref<Pagination|null> = ref(null);
+// const systemPagination: Ref<Pagination> = ref({} as Pagination);
+const systemPagination: Ref<Pagination> = ref({
+  page: 0,
+  size: 0,
+  totalElements: 0,
+  totalPage: 0,
+  currentElements: 0,
+  currentPage: 0,
+  orderBy: '',
+  sortBy: '',
+  limit: 0,
+});
+// const systemPagination: Ref<Pagination> = ref({}) as Ref<Pagination>;
+// const systemPagination: Ref<Pagination> = ref({
+//   page: 0,
+//   size: 0,
+//   totalElements: 0,
+//   totalPage: 0,
+//   currentElements: 0,
+//   currentPage: 0,
+//   orderBy: '',
+//   sortBy: '',
+//   limit: 0,
+// });
 
 const searchData: Ref<SearchCondition> = ref({});
 const DateList: Ref<string[][]> = ref([]);
