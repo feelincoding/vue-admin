@@ -1,4 +1,4 @@
-import { SystemEdptType } from '@/types/SystemType';
+import type { SystemEdptType } from '@/types/SystemType';
 
 export const stringArrToEdptArr = (arr: string[]) => {
   const edpts: SystemEdptType[] = [];

@@ -2,7 +2,7 @@
   <div class="body-wrap">
     <div class="wrap">
       <MainHeader />
-      <!-- <router-view /> -->
+      <router-view />
       <MainFooter></MainFooter>
       <ModalLayout
         v-if="showAlert"
@@ -20,6 +20,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { RouterLink, RouterView } from 'vue-router';
+
 import MainHeader from '@/components/layout/header/MainHeader.vue';
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';

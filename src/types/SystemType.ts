@@ -9,6 +9,7 @@ export interface SystemIdEdpt {
   edpt: string[];
 }
 
+// ---------- response type ----------
 //시스템 관리
 export interface SystemResponse {
   id: string; // system id(PK)
@@ -22,7 +23,8 @@ export interface SystemResponse {
   updDt: string;
   updId: string;
 }
-//시스템 관리
+
+//시스템 등록
 export interface SystemRegisterResponse {
   id: string; // system id(PK)
   tkcgrNm: string; // 담당자 이름
@@ -33,15 +35,7 @@ export interface SystemRegisterResponse {
   cretId: string;
   updId: string;
 }
-//pagination
-export interface PaginationType {
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPage: number;
-  currentElements: number;
-  currentPage: number;
-  orderBy: string;
-  sortBy: string;
-  limit: number;
+
+export interface SystemCheckById {
+  isPkDuplicated: boolean;
 }

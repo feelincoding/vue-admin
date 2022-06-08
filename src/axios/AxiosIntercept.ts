@@ -1,10 +1,11 @@
 import ErrorCode from '@/error/ErrorCodes';
-import Axios, { AxiosRequestConfig } from 'axios';
+import Axios from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 
 const axios = Axios.create({
-  // baseURL: 'http://ec2-43-200-30-176.ap-northeast-2.compute.amazonaws.com:8080/mngt/v1/',
+  baseURL: 'http://ec2-43-200-30-176.ap-northeast-2.compute.amazonaws.com:8080/mngt/v1/',
   // baseURL: 'http://localhost:8080/mngt/v1/',
-  baseURL: 'http://platform-digico.com:8080/mngt/v1/',
+  // baseURL: 'http://platform-digico.com:8080/mngt/v1/',
   timeout: 5000,
   headers: {
     Accept: 'application/json',

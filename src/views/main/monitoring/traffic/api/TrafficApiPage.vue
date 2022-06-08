@@ -1,13 +1,11 @@
 <template>
-    <div>
-        <h1>This is SystemPage!!</h1>
-    </div>
+  <div>
+    <h1>traffic Api Page</h1>
+  </div>
 </template>
 
 <script setup lang="ts">
-
 </script>
 
 <style scoped>
-
 </style>

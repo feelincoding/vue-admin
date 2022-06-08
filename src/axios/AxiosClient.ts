@@ -1,12 +1,14 @@
 import axios from '@/axios/AxiosIntercept';
-import Axios, { CancelTokenSource } from 'axios';
+import Axios from 'axios';
+import type { CancelTokenSource } from 'axios';
+
 import { GateWayError } from '@/error/GateWayError';
 import ErrorCode from '@/error/ErrorCodes';
-import { GateWayResponse } from '@/types/GateWayResponse';
-import { AxiosResponse } from 'axios';
+import type { GateWayResponse } from '@/types/GateWayResponse';
+import type { AxiosResponse } from 'axios';
 
 import router from '@/router/index';
-import modal from '@/plugins/modal/ModalPlugin';
+// import modal from '@/plugins/modal/ModalPlugin';
 
 export class AxiosClient {
   private static instance: AxiosClient;

@@ -1,16 +1,24 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+// import Vue from 'vue';
+// import VueI18n from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
 import ko from '@/locales/kr.json';
 
-Vue.use(VueI18n);
+// Vue.use(VueI18n);
 
-export default new VueI18n({
+// export default new VueI18n({
+//   locale: 'ko',
+//   fallbackLocale: 'ko',
+//   messages: { en, ko },
+// });
+
+const i18n = createI18n({
   locale: 'ko',
   fallbackLocale: 'ko',
   messages: { en, ko },
 });
 
+export default i18n;
 //////// 사용 법 /////////
 // "message": {
 //   "example": "example",

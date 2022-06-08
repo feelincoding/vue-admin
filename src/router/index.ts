@@ -1,7 +1,5 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router';
 import { SYSTEM, SERVICE, API, MANAGEMENT, MONITORING, MY } from '@/router/Names';
-
-import HomeView from "../views/HomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,106 +48,106 @@ const router = createRouter({
           component: () => import('@/views/main/dash-board/DashBoardPage.vue'),
         },
         // System
-        // {
-        //   path: SYSTEM,
-        //   name: 'system',
-        //   component: () => import('@/views/main/system-mngt/SystemPage.vue'),
-        // },
-        // {
-        //   path: SYSTEM + '/register',
-        //   name: 'system-register',
-        //   component: () => import('@/views/main/system-mngt/register/SystemRegisterPage.vue'),
-        // },
-        // {
-        //   path: SYSTEM + '/detail/:id',
-        //   name: 'system-detail',
-        //   component: () => import('@/views/main/system-mngt/detail/SystemDetailPage.vue'),
-        // },
-        // {
-        //   path: SYSTEM + '/edit/:id',
-        //   name: 'system-edit',
-        //   component: () => import('@/views/main/system-mngt/edit/SystemEditPage.vue'),
-        // },
-        // // Api
-        // {
-        //   path: API,
-        //   name: 'api',
-        //   component: () => import('@/views/main/api-mngt/ApiPage.vue'),
-        // },
-        // {
-        //   path: API + '/register',
-        //   name: 'api-register',
-        //   component: () => import('@/views/main/api-mngt/register/ApiRegisterPage.vue'),
-        // },
-        // {
-        //   path: API + '/detail',
-        //   name: 'api-detail',
-        //   component: () => import('@/views/main/api-mngt/detail/ApiDetailPage.vue'),
-        // },
-        // {
-        //   path: API + '/edit',
-        //   name: 'api-edit',
-        //   component: () => import('@/views/main/api-mngt/edit/ApiEditPage.vue'),
-        // },
-        // // Service
-        // {
-        //   path: SERVICE,
-        //   name: 'service',
-        //   component: () => import('@/views/main/service-mngt/ServicePage.vue'),
-        // },
-        // {
-        //   path: SERVICE + '/register',
-        //   name: 'service-register',
-        //   component: () => import('@/views/main/service-mngt/register/ServiceRegisterPage.vue'),
-        // },
-        // {
-        //   path: SERVICE + '/detail/:id',
-        //   name: 'service-detail',
-        //   component: () => import('@/views/main/service-mngt/detail/ServiceDetailPage.vue'),
-        // },
-        // {
-        //   path: SERVICE + '/edit/:id',
-        //   name: 'service-edit',
-        //   component: () => import('@/views/main/service-mngt/edit/ServiceEditPage.vue'),
-        // },
-        // {
-        //   path: MONITORING + '/control',
-        //   name: 'control',
-        //   component: () => import('@/views/main/monitoring/children/ControlPage.vue'),
-        //   redirect: MONITORING + '/control/service',
-        //   children: [
-        //     {
-        //       path: 'service',
-        //       name: 'control-service',
-        //       component: () => import('@/views/main/monitoring/children/control-children/ControlServicePage.vue'),
-        //     },
-        //     {
-        //       path: 'api',
-        //       name: 'control-api',
-        //       component: () => import('@/views/main/monitoring/children/control-children/ControlAPIPage.vue'),
-        //     },
-        //   ],
-        // },
-        // {
-        //   path: MONITORING + '/statistic',
-        //   name: 'statistic',
-        //   component: () => import('@/views/main/monitoring/children/StatisticPage.vue'),
-        // },
-        // {
-        //   path: MONITORING + '/traffic',
-        //   name: 'traffic',
-        //   component: () => import('@/views/main/monitoring/children/TrafficPage.vue'),
-        // },
-        // {
-        //   path: MANAGEMENT,
-        //   name: 'management',
-        //   component: () => import('@/views/main/management/ManagementPage.vue'),
-        // },
-        // {
-        //   path: MY + '/:id',
-        //   name: 'my',
-        //   component: () => import('@/views/main/my/MyPage.vue'),
-        // },
+        {
+          path: SYSTEM,
+          name: 'system',
+          component: () => import('@/views/main/system-mngt/SystemPage.vue'),
+        },
+        {
+          path: SYSTEM + '/register',
+          name: 'system-register',
+          component: () => import('@/views/main/system-mngt/register/SystemRegisterPage.vue'),
+        },
+        {
+          path: SYSTEM + '/detail/:id',
+          name: 'system-detail',
+          component: () => import('@/views/main/system-mngt/detail/SystemDetailPage.vue'),
+        },
+        {
+          path: SYSTEM + '/edit/:id',
+          name: 'system-edit',
+          component: () => import('@/views/main/system-mngt/edit/SystemEditPage.vue'),
+        },
+        // Api
+        {
+          path: API,
+          name: 'api',
+          component: () => import('@/views/main/api-mngt/ApiPage.vue'),
+        },
+        {
+          path: API + '/register',
+          name: 'api-register',
+          component: () => import('@/views/main/api-mngt/register/ApiRegisterPage.vue'),
+        },
+        {
+          path: API + '/detail',
+          name: 'api-detail',
+          component: () => import('@/views/main/api-mngt/detail/ApiDetailPage.vue'),
+        },
+        {
+          path: API + '/edit',
+          name: 'api-edit',
+          component: () => import('@/views/main/api-mngt/edit/ApiEditPage.vue'),
+        },
+        // Service
+        {
+          path: SERVICE,
+          name: 'service',
+          component: () => import('@/views/main/service-mngt/ServicePage.vue'),
+        },
+        {
+          path: SERVICE + '/register',
+          name: 'service-register',
+          component: () => import('@/views/main/service-mngt/register/ServiceRegisterPage.vue'),
+        },
+        {
+          path: SERVICE + '/detail/:id',
+          name: 'service-detail',
+          component: () => import('@/views/main/service-mngt/detail/ServiceDetailPage.vue'),
+        },
+        {
+          path: SERVICE + '/edit/:id',
+          name: 'service-edit',
+          component: () => import('@/views/main/service-mngt/edit/ServiceEditPage.vue'),
+        },
+        {
+          path: MONITORING + '/control',
+          name: 'control',
+          component: () => import('@/views/main/monitoring/control/ControlPage.vue'),
+          redirect: MONITORING + '/control/service',
+          children: [
+            {
+              path: 'service',
+              name: 'control-service',
+              component: () => import('@/views/main/monitoring/control/service/ControlServicePage.vue'),
+            },
+            {
+              path: 'api',
+              name: 'control-api',
+              component: () => import('@/views/main/monitoring/control/api/ControlApiPage.vue'),
+            },
+          ],
+        },
+        {
+          path: MONITORING + '/statistic',
+          name: 'statistic',
+          component: () => import('@/views/main/monitoring/statistic/StatisticPage.vue'),
+        },
+        {
+          path: MONITORING + '/traffic',
+          name: 'traffic',
+          component: () => import('@/views/main/monitoring/traffic/TrafficPage.vue'),
+        },
+        {
+          path: MANAGEMENT,
+          name: 'management',
+          component: () => import('@/views/main/management/ManagementPage.vue'),
+        },
+        {
+          path: MY + '/:id',
+          name: 'my',
+          component: () => import('@/views/main/my/MyPage.vue'),
+        },
       ],
     },
   ],
