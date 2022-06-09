@@ -1,6 +1,12 @@
 <template>
   <div>
-    <SelectSearch :isFocus="isSearchFocus" :propServiceList="searchSvcList" tab="service" @search="getSearchOption" />
+    <StatisticSelectSearch
+      :isFocus="isSearchFocus"
+      :propServiceList="searchSvcList"
+      :propApiList="null"
+      tab="service"
+      @search="getSearchOption"
+    />
     <div
       class="service-list"
       v-if="serviceList != undefined && serviceList.svcStat != undefined && serviceList.svcStat.length > 0"
@@ -24,6 +30,7 @@ import ErrorCode from '@/error/ErrorCodes';
 import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
 import type { StatResponse } from '@/types/MonitoringStatisticType';
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import StatisticSelectSearch from '@/components/monitoring/StatisticSelectSearch.vue';
 const props = defineProps<{
   isSearchFocus: boolean;
 }>();
