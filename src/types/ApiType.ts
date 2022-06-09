@@ -1,4 +1,4 @@
-import { GateWayResponse, Pagination } from './GateWayResponse';
+import type { GateWayResponse, Pagination } from './GateWayResponse';
 
 export const dummyPagination: Pagination = {
   page: 1,
@@ -23,9 +23,9 @@ export interface ApiDetailResponse {
   resHndlrGrpId: string;
   timeOut: number;
   desc: string | null;
-  cretDt: string | null;
+  cretDt: string;
   cretId: string | null;
-  updDt: string | null;
+  updDt: string;
   updId: string | null;
 }
 // [x:string ] => confirm 출력용으로 사용

@@ -1,37 +1,48 @@
-<!-- <template>
+<template>
   <div>
-    <label class="label">{{ label }}</label>
+    <label class="label">{{ props.label }}</label>
     <select class="select-box" @change="handleChangeTarget">
-      <option v-for="(item, index) in selectOptions" :key="index" :selected="item.label == searchTarget">
+      <option v-for="(item, index) in props.selectOptions" :key="index" :selected="item.label == props.searchTarget">
         {{ item.value }}
       </option>
     </select>
-    <input type="text" class="input-box" :value="searchValue" @change="handleChangeSearchData" @keyup="handleKeyup" />
+    <input
+      type="text"
+      class="input-box"
+      :value="props.searchValue"
+      @change="handleChangeSearchData"
+      @keyup="handleKeyup"
+    />
   </div>
 </template>
 
-<script lang="ts">
-import { SelectOptionType } from '@/types/SearchType';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+<script setup lang="ts">
+import type { SelectOptionType } from '@/types/SearchType';
 
-@Component
-export default class SelectBox extends Vue {
-  @Prop() public label!: string;
-  @Prop() public placeholder!: string;
-  @Prop() public selectOptions!: SelectOptionType[];
-  @Prop() public searchTarget!: string;
-  @Prop() public searchValue!: string;
+const props = defineProps<{
+  label: string;
+  selectOptions: SelectOptionType[];
+  searchTarget: string;
+  searchValue: string;
+}>();
 
-  handleKeyup(event: any) {
-    if (event.keyCode === 13) {
-      this.$emit('submit');
-    }
+const emit = defineEmits<{
+  (e: 'update:searchTarget', value: string): void;
+  (e: 'update:searchValue', value: string): void;
+  (e: 'submit'): void;
+}>();
+
+const handleKeyup = (event: any) => {
+  if (event.keyCode === 13) {
+    emit('submit');
   }
-  handleChangeTarget(event: any) {
-    this.$emit('update:searchTarget', this.selectOptions[event.target.selectedIndex].label);
-  }
-  handleChangeSearchData(event: any) {
-    this.$emit('update:searchValue', event.target.value);
-  }
-}
-</script> -->
+};
+
+const handleChangeTarget = (event: any) => {
+  emit('update:searchTarget', props.selectOptions[event.target.selectedIndex].label);
+};
+
+const handleChangeSearchData = (event: any) => {
+  emit('update:searchValue', event.target.value);
+};
+</script>
