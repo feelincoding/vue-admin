@@ -1,23 +1,28 @@
 import { AxiosClient } from '@/axios/AxiosClient';
 import type { GateWayError } from '@/error/GateWayError';
 import type { GateWayResponse } from '@/types/GateWayResponse';
-import type { TotalTrafficStat, TrafficRequestType, TotalApiDetailRequest } from '@/types/DashBoardType';
+import type {
+  TotalTrafficStat,
+  TrafficRequestType,
+  TotalApiDetailRequest,
+  ErrorStatsType,
+  ErrorStatsRequest,
+  ErrorStatsDetailRequest,
+} from '@/types/DashBoardType';
 export default class DashBoardRepository {
   public totaltrafficDetail: TotalTrafficStat[] = [];
 
   async getTotalAPITraffic(param: TrafficRequestType) {
-    const response = await AxiosClient.getInstance()
-      .get<GateWayResponse<TotalTrafficStat>>(`/getDashboardTrafficStat`, param)
-      .then((res) => {
-        console.log('!!!!!');
-        console.log(res.data.value);
-        console.log(typeof res.data.value);
-        return Promise.resolve(res.data);
-      })
-      .catch((err) => {
-        console.log('!!!!!');
-        return Promise.reject(err);
-      });
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<TotalTrafficStat>>(
+        `/getDashboardTrafficStat`,
+        param
+      );
+      return Promise.resolve(response.data);
+    } catch (error: GateWayError | any) {
+      console.log(error);
+      return Promise.reject(error);
+    }
   }
 
   async getTrafficStatDetail(param: TotalApiDetailRequest) {
@@ -31,5 +36,29 @@ export default class DashBoardRepository {
         return Promise.reject(err);
       });
     return response;
+  }
+
+  async getErrorStats(param: ErrorStatsRequest) {
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<ErrorStatsType>>(
+        `/getDashboardErrorStat`,
+        param
+      );
+      return Promise.resolve(response.data);
+    } catch (error: GateWayError | any) {
+      return Promise.reject(error);
+    }
+  }
+
+  async getErrorStatsDetail(param: ErrorStatsDetailRequest) {
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<ErrorStatsType>>(
+        `/getDashboardErrorStatDetail`,
+        param
+      );
+      return Promise.resolve(response.data);
+    } catch (error: GateWayError | any) {
+      return Promise.reject(error);
+    }
   }
 }

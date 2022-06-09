@@ -1,28 +1,23 @@
-<!-- <template>
+<template>
   <div class="chart-wrap">
-    <div class="dash-modal-background" v-if="modal === true" @click="modal = false"></div>
+    <div class="dash-modal-background" v-if="syncedModal === true"></div>
 
     <h3 class="h3-tit">API 평균 응답시간 및 TPS (종전 1분)</h3>
     <div
       class="chart-group tps-group"
       :class="{
-        'avg-collapse-modal': modal == false,
-        'avg-expand-modal': modal == true,
+        'avg-collapse-modal': syncedModal == false,
+        'avg-expand-modal': syncedModal == true,
       }"
-      ref="tpsGroup"
+      ref="tpsGroupRef"
     >
-      <ErrorWrapper v-show="isCommError" />
-      <div
-        class="tps-chart-modal"
-        @click="toggleModal(0)"
-        v-show="modal === true && modalType === 1"
-        style="width: 100%; height: 100%"
-      >
+      <ErrorWrapper v-show="syncedIsCommError" />
+      <div class="tps-chart-modal" v-show="syncedModal === true && modalType === 1" style="width: 100%; height: 100%">
         <h5 class="h5-tit" style="color: #fff6e5">평균 응답시간 Detail</h5>
         <div
           :class="{
-            'dash-modal-detail-collapse': modal == false,
-            'dash-modal-detail-expand': modal == true,
+            'dash-modal-detail-collapse': syncedModal == false,
+            'dash-modal-detail-expand': syncedModal == true,
           }"
           id="avgDetail"
           style="width: 100%; height: 90%"
@@ -32,11 +27,10 @@
       <div
         class="tps-chart"
         :class="{
-          'dash-modal-detail-collapse': modal == true,
-          'dash-modal-detail-expand': modal == false,
+          'dash-modal-detail-collapse': syncedModal == true,
+          'dash-modal-detail-expand': syncedModal == false,
         }"
-        @click="toggleModal(1)"
-        v-show="modal === false"
+        v-show="syncedModal === false"
       >
         <i><img src="@/assets/req_ico.svg" alt="평균 응답시간" /></i>
         <p class="text">평균 응답시간</p>
@@ -48,12 +42,11 @@
 
       <div
         class="tps-chart-modal"
-        @click="toggleModal(0)"
-        v-show="modal === true && modalType === 2"
+        v-show="syncedModal === true && modalType === 2"
         style="width: 100%; height: 100%"
         :class="{
-          'dash-modal-detail-collapse': modal == false,
-          'dash-modal-detail-expand': modal == true,
+          'dash-modal-detail-collapse': syncedModal == false,
+          'dash-modal-detail-expand': syncedModal == true,
         }"
       >
         <h5 class="h5-tit" style="color: #fff6e5">TPS Detail</h5>
@@ -62,11 +55,10 @@
       <div
         class="tps-chart"
         :class="{
-          'dash-modal-detail-collapse': modal == true,
-          'dash-modal-detail-expand': modal == false,
+          'dash-modal-detail-collapse': syncedModal == true,
+          'dash-modal-detail-expand': syncedModal == false,
         }"
-        @click="toggleModal(2)"
-        v-show="modal === false"
+        v-show="syncedModal === false"
       >
         <i><img src="@/assets/tps_ico.svg" alt="TPS" /></i>
         <p class="text">TPS</p>
@@ -77,141 +69,159 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue, Watch, Prop, PropSync } from 'vue-property-decorator';
+<script setup lang="ts">
+import { onMounted, onUnmounted, onUpdated, ref, watch, type Ref } from 'vue';
+
 import * as echarts from 'echarts';
 import { getTpsDetailOption, getAvgDetailOption } from '@/components/dash-board/chartDummy';
-import { ApiResponseStatus } from '@/types/DashBoardType';
+import type { ApiResponseStatus } from '@/types/DashBoardType';
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 
-@Component({
-  components: { ErrorWrapper },
-})
-export default class ApiResponseAvg extends Vue {
-  @PropSync('modal', { type: Boolean, default: false }) syncedModal!: boolean;
-  @PropSync('isDraged', { type: Number }) syncedIsDraged!: number;
-  @Prop() apiResponseStatus!: ApiResponseStatus;
-  @Prop() apiResponseStatusDetail!: ApiResponseStatus[];
-  @PropSync('isCommError', { type: Boolean, default: false }) syncedIsCommError!: boolean;
-  @Prop({ type: Boolean, default: false }) isLoadData!: boolean;
+const props = defineProps({
+  isLoadData: {
+    type: Boolean,
+    default: false,
+  },
+  syncedModal: {
+    type: Boolean,
+    default: false,
+  },
+  syncedIsDraged: {
+    type: Number,
+  },
+  apiResponseStatus: {
+    type: Object,
+    default: () => ({}),
+  },
+  apiResponseStatusDetail: {
+    type: Array,
+    default: () => [{}],
+  },
+  syncedIsCommError: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-  @Watch('apiResponseStatusDetail')
-  onApiResponseStatusDetailChange(val: ApiResponseStatus[]) {
-    if (this.modalType == 1) {
-      this.detailAvgChart.setOption(getAvgDetailOption(this.apiResponseStatusDetail));
-    } else if (this.modalType == 2) {
-      this.detailTpsChart.setOption(getTpsDetailOption(this.apiResponseStatusDetail));
-    }
-  }
+const detailAvgDom = ref({} as HTMLDivElement);
+const detailAvgChart = ref({} as echarts.EChartsType);
+const detailTpsDom = ref({} as HTMLDivElement);
+const detailTpsChart = ref({} as echarts.EChartsType);
+// 0 = 모달 안보일 때
+// 1 = avg모달일 때
+// 2 = tps모달일 때
+const modalType = ref(0);
 
-  detailAvgDom = {} as HTMLDivElement;
-  detailAvgChart = {} as echarts.EChartsType;
-  detailTpsDom = {} as HTMLDivElement;
-  detailTpsChart = {} as echarts.EChartsType;
-  // 0 = 모달 안보일 때
-  // 1 = avg모달일 때
-  // 2 = tps모달일 때
-  modalType = 0;
+// @Watch('apiResponseStatusDetail')
+// onApiResponseStatusDetailChange(val: ApiResponseStatus[]) {
+//   if (this.modalType == 1) {
+//     this.detailAvgChart.setOption(getAvgDetailOption(this.apiResponseStatusDetail));
+//   } else if (this.modalType == 2) {
+//     this.detailTpsChart.setOption(getTpsDetailOption(this.apiResponseStatusDetail));
+//   }
+// }
 
-  isModalDomInitAvg = false;
-  isModalDomInitTps = false;
-  setDetailChart() {
-    if (this.modalType == 1 && this.isModalDomInitAvg === false && this.syncedIsDraged === 1) {
-      this.initChartAndDomModalAvg();
-    }
-    if (this.modalType == 2 && this.isModalDomInitTps === false && this.syncedIsDraged === 1) {
-      this.initChartAndDomModalTps();
-    }
-  }
+const isModalDomInitAvg = ref(false);
+const isModalDomInitTps = ref(false);
 
-  initChartAndDomModalAvg() {
-    this.isModalDomInitAvg = true;
-    this.detailAvgDom = document.getElementById('avgDetail') as HTMLDivElement;
-    this.detailAvgChart = echarts.init(this.detailAvgDom);
-    this.detailAvgChart.setOption(getAvgDetailOption(this.apiResponseStatusDetail));
+const setDetailChart = () => {
+  if (modalType.value == 1 && isModalDomInitAvg.value === false && props.syncedIsDraged === 1) {
+    initChartAndDomModalAvg();
   }
-  initChartAndDomModalTps() {
-    this.isModalDomInitTps = true;
-    this.detailTpsDom = document.getElementById('tpsDetail') as HTMLDivElement;
-    this.detailTpsChart = echarts.init(this.detailTpsDom);
-    this.detailTpsChart.setOption(getTpsDetailOption(this.apiResponseStatusDetail));
+  if (modalType.value == 2 && isModalDomInitTps.value === false && props.syncedIsDraged === 1) {
+    initChartAndDomModalTps();
   }
+};
 
-  mounted() {
-    window.addEventListener('resize', this.observeSize);
-  }
+const initChartAndDomModalAvg = () => {
+  isModalDomInitAvg.value = true;
+  detailAvgDom.value = document.getElementById('avgDetail') as HTMLDivElement;
+  detailAvgChart.value = echarts.init(detailAvgDom.value);
+  detailAvgChart.value.setOption(getAvgDetailOption(props.apiResponseStatusDetail as ApiResponseStatus[]));
+};
+const initChartAndDomModalTps = () => {
+  isModalDomInitTps.value = true;
+  detailTpsDom.value = document.getElementById('tpsDetail') as HTMLDivElement;
+  detailTpsChart.value = echarts.init(detailTpsDom.value);
+  detailTpsChart.value.setOption(getTpsDetailOption(props.apiResponseStatusDetail as ApiResponseStatus[]));
+};
 
-  updated() {
-    this.setDetailChart();
-  }
-  beforeDestroy() {
-    window.removeEventListener('resize', this.observeSize);
-  }
+onMounted(() => {
+  window.addEventListener('resize', observeSize);
+});
+onUpdated(() => {
+  setDetailChart();
+});
 
-  width = 0;
-  height = 0;
-  observeSize() {
-    const ro = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        const { width, height } = entry.contentRect;
-        this.width = width;
-        this.height = height;
-      });
+onUnmounted(() => {
+  window.removeEventListener('resize', observeSize);
+});
+
+const width1 = ref(0);
+const height1 = ref(0);
+const tpsGroupRef = ref<HTMLDivElement | null>(null);
+const observeSize = () => {
+  const ro = new ResizeObserver((entries) => {
+    entries.forEach((entry) => {
+      const { width, height } = entry.contentRect;
+      width1.value = width;
+      height1.value = height;
     });
-    ro.observe(this.$refs.tpsGroup as HTMLDivElement);
-  }
-  resizeChart() {
-    this.isModalDomInitAvg && this.detailAvgChart.resize();
-    this.isModalDomInitTps && this.detailTpsChart.resize();
-  }
-  @Watch('width')
-  onWidthChange() {
-    this.resizeChart();
-  }
+  });
+  ro.observe(tpsGroupRef.value as HTMLDivElement);
+};
 
-  showModal() {
-    if (this.isLoadData) {
-      return;
-    }
-    if (this.syncedIsDraged === 2) {
-      this.syncedIsDraged = 1;
-      return;
-    }
-    this.syncedModal = true;
-  }
+watch(width1, () => {
+  resizeChart();
+});
 
-  closeModal() {
-    this.clearModal();
-    this.syncedModal = false;
-  }
+const resizeChart = () => {
+  isModalDomInitAvg.value && detailAvgChart.value.resize();
+  isModalDomInitTps.value && detailTpsChart.value.resize();
+};
 
-  toggleModal(type: number) {
-    this.syncedModal ? this.closeModal() : this.showModal();
-    this.modalType = type;
-    this.observeSize();
-  }
+// showModal() {
+//   if (this.isLoadData) {
+//     return;
+//   }
+//   if (this.syncedIsDraged === 2) {
+//     this.syncedIsDraged = 1;
+//     return;
+//   }
+//   this.syncedModal = true;
+// }
 
-  @Watch('syncedModal')
-  onModalChange() {
-    this.clearModal();
-    // if (this.modalType !== 0 && !this.syncedModal) {
-    //   this.clearModal();
-    //   this.modalType = 0;
-    // }
-  }
+// closeModal() {
+//   this.clearModal();
+//   this.syncedModal = false;
+// }
 
-  clearModal() {
-    if (this.modalType == 1) {
-      if (this.isModalDomInitAvg) {
-        this.detailAvgChart.clear();
-      }
-    } else if (this.modalType == 2) {
-      if (this.isModalDomInitTps) {
-        this.detailTpsChart.clear();
-      }
-    }
-  }
-}
+// toggleModal(type: number) {
+//   this.syncedModal ? this.closeModal() : this.showModal();
+//   this.modalType = type;
+//   this.observeSize();
+// }
+
+// @Watch('syncedModal')
+// onModalChange() {
+//   this.clearModal();
+//   // if (this.modalType !== 0 && !this.syncedModal) {
+//   //   this.clearModal();
+//   //   this.modalType = 0;
+//   // }
+// }
+
+// clearModal() {
+//   if (this.modalType == 1) {
+//     if (this.isModalDomInitAvg) {
+//       this.detailAvgChart.clear();
+//     }
+//   } else if (this.modalType == 2) {
+//     if (this.isModalDomInitTps) {
+//       this.detailTpsChart.clear();
+//     }
+//   }
+// }
 </script>
 <style scoped>
 .avg-collapse-modal {
@@ -240,4 +250,4 @@ export default class ApiResponseAvg extends Vue {
   padding: 20px 30px;
   align-items: center;
 }
-</style> -->
+</style>

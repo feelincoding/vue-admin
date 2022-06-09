@@ -34,11 +34,27 @@
           <section class="group col-3" style="height: 219px">
             <!--- Total API Traffic (24Hour) area --->
             <TotalApiTraffic
-              :totalApiTraffic="totalTraffic"
+              v-model:totalApiTraffic="totalTraffic"
               :modal.sync="trafficModal"
               :isDraged.sync="isDraged"
               :isLoadData="isLoadData"
               :isCommError.sync="isTotalAPITrafficCommError"
+            />
+            <!--- Error stats (24Hour) area --->
+            <ErrorStats
+              v-model:errorStats="errorStats"
+              :modal.sync="errorModal"
+              :isDraged.sync="isDraged"
+              :isLoadData="isLoadData"
+              :isCommError.sync="isErrorStatCommError"
+            />
+            <!--- API 평균 응답시간 / TPS area !! --->
+            <ApiResponseAvg
+              v-model:apiResponseStatus="apiResponseStatus"
+              :modal.sync="avgModal"
+              :isDraged.sync="isDraged"
+              :isLoadData="isLoadData"
+              :isCommError.sync="isApiResponseStusCommError"
             />
           </section>
         </div>
@@ -51,6 +67,8 @@ import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import TotalApiTraffic from '@/components/dash-board/TotalApiTraffic.vue';
+import ErrorStats from '@/components/dash-board/ErrorStats.vue';
+import ApiResponseAvg from '@/components/dash-board/ApiResponseAvg.vue';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
 import type {
@@ -197,9 +215,19 @@ const dashBoardRepo = new DashBoardRepository();
 // };
 
 onMounted(() => {
-  const temp = dashBoardRepo.getTotalAPITraffic(TOTAL_TRAFFIC_PARAM).then((res) => {
-    console.log('@@@@@@@', res);
-  });
+  dashBoardRepo
+    .getTotalAPITraffic(TOTAL_TRAFFIC_PARAM)
+    .then((res) => {
+      totalTraffic.value = res.value as TotalTrafficStat;
+    })
+    .catch(() => {});
+
+  dashBoardRepo
+    .getErrorStats(ERROR_STATS_PARAM)
+    .then((res) => {
+      errorStats.value = res.value as ErrorStatsType;
+    })
+    .catch(() => {});
 });
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);

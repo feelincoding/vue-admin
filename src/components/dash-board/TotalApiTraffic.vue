@@ -9,7 +9,7 @@
         'total-expand-modal': syncedModal == true,
       }"
       @click="toggleModal()"
-      ref="totalApiTraffic"
+      ref="totalApiTrafficRef"
       id="totalApiTraffic"
     >
       <ErrorWrapper v-show="syncedIsCommError" />
@@ -66,8 +66,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
-import type { Ref } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, watch, type Ref } from 'vue';
 import { drawTotalApiTrafficChart } from '@/utils/chart';
 
 import * as echarts from 'echarts';
@@ -119,18 +118,28 @@ onMounted(() => {
   window.addEventListener('resize', observeSize);
 });
 
-watch(props.totalApiTraffic, () => {
-  myChart1.value.clear();
-  myChart2.value.clear();
-  myChart3.value.clear();
+watch(
+  () => props.totalApiTraffic,
+  () => {
+    console.log('^&&', props.totalApiTraffic);
 
-  myChart1.value.setOption(getTotalApiTrafficOption(props.totalApiTraffic.totCnt));
-  myChart2.value.setOption(getSuccessApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt));
-  myChart3.value.setOption(getFailApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt));
+    myChart1.value.clear();
+    myChart2.value.clear();
+    myChart3.value.clear();
+
+    myChart1.value.setOption(getTotalApiTrafficOption(props.totalApiTraffic.totCnt));
+    myChart2.value.setOption(getSuccessApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt));
+    myChart3.value.setOption(getFailApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt));
+  }
+);
+
+watch(props.totalApiTrafficDetail, () => {
+  setTimeout(() => {
+    myChart4.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
+  }, 400);
 });
 
 const setChartData = () => {
-  console.log(props.totalApiTraffic);
   myChart1.value = drawTotalApiTrafficChart(
     'totalApiTrafficTotal',
     getTotalApiTrafficOption(props.totalApiTraffic.totCnt)
@@ -145,12 +154,6 @@ const setChartData = () => {
   );
 };
 
-watch(props.totalApiTrafficDetail, () => {
-  setTimeout(() => {
-    myChart4.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
-  }, 400);
-});
-
 const setDetailChart = () => {
   isModalDomInit.value = true;
   dom4.value = document.getElementById('totalApiTrafficDetail') as HTMLDivElement;
@@ -160,7 +163,7 @@ const setDetailChart = () => {
 
 const width1 = ref(0);
 const height1 = ref(0);
-const totalApiTraffic = ref<HTMLDivElement | null>(null);
+const totalApiTrafficRef = ref<HTMLDivElement | null>(null);
 const observeSize = () => {
   const ro = new ResizeObserver((entries) => {
     entries.forEach((entry) => {
@@ -169,8 +172,11 @@ const observeSize = () => {
       height1.value = height;
     });
   });
-  ro.observe(totalApiTraffic.value as HTMLDivElement);
+  ro.observe(totalApiTrafficRef.value as HTMLDivElement);
 };
+watch(width1, () => {
+  resizeChart();
+});
 
 onMounted(() => {
   setChartData();
@@ -195,9 +201,6 @@ const resizeChart = () => {
     myChart4.value.resize();
   }
 };
-watch(width1, () => {
-  resizeChart();
-});
 
 const showModal = () => {
   if (props.isLoadData) {
