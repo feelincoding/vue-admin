@@ -4,14 +4,7 @@
     <img class="img" id="error-wrapper-icon" src="@/assets/warning_ico.svg" alt="uri" />
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue, Watch, Prop, PropSync } from 'vue-property-decorator';
-@Component
-export default class ErrorWrapper extends Vue {
-  @PropSync('modal', { type: Boolean, default: false }) syncedModal!: boolean;
-  @PropSync('isDraged', { type: Number }) syncedIsDraged!: number;
-}
-</script>
+<script setup lang="ts"></script>
 <style scoped>
 .error-wrapper {
   z-index: 100;

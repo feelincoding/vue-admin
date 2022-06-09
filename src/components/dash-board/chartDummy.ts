@@ -1,5 +1,5 @@
 import * as echarts from 'echarts';
-import { TotalTrafficStat, ApiResponseStatus, ErrorStatsType } from '@/types/DashBoardType';
+import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType } from '@/types/DashBoardType';
 
 export function getAvgDetailOption(detail: ApiResponseStatus[]) {
   detail.forEach((item) => {
@@ -178,77 +178,6 @@ export function getTpsDetailOption(detail: ApiResponseStatus[]) {
   return tpsDetailOption;
 }
 
-// export const avgDetailOption: echarts.EChartsOption = {
-//   color: '#FFBF00',
-//   tooltip: {
-//     trigger: 'axis',
-//     axisPointer: {
-//       type: 'cross',
-//       label: {
-//         backgroundColor: '#6a7985',
-//       },
-//     },
-//   },
-
-//   grid: {
-//     top: '5%',
-//     left: '2%',
-//     right: '4%',
-//     bottom: '3%',
-//     containLabel: true,
-//   },
-//   xAxis: [
-//     {
-//       type: 'category',
-//       boundaryGap: false,
-//       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-//       axisLine: { show: true, lineStyle: { color: '#FFF6E5' } },
-//       axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#FFF6E5' },
-//     },
-//   ],
-//   yAxis: [
-//     {
-//       type: 'value',
-//       // splitLine: { show: true, lineStyle: { color: '#000' } },
-//       axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#FFF6E5' },
-//     },
-//   ],
-//   series: [
-//     {
-//       type: 'line',
-//       stack: 'Total',
-//       smooth: true,
-//       lineStyle: {
-//         width: 0,
-//       },
-//       showSymbol: false,
-//       label: {
-//         show: true,
-//         position: 'top',
-//       },
-//       areaStyle: {
-//         opacity: 0.8,
-//         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-//           {
-//             offset: 0,
-//             color: '#1EDBD2',
-//           },
-//           {
-//             offset: 1,
-//             color: '#00BDB4',
-//           },
-//         ]),
-//       },
-//       emphasis: {
-//         focus: 'series',
-//       },
-//       data: [220, 302, 181, 234, 210, 290, 150],
-//       zlevel: 5,
-//       z: 5,
-//     },
-//   ],
-// };
-
 export const tpsDetailOption: echarts.EChartsOption = {
   color: '#FFBF00',
   tooltip: {
@@ -393,7 +322,8 @@ export function getTotalApiTrafficOption(total: number) {
         label: {
           show: true,
           position: 'center',
-          formatter: [`{data|${total.toLocaleString()}}`, ''].join(''),
+          // formatter: [`{data|${total.toLocaleString()}}`, ''].join(''),
+          formatter: [`{data|123}`, ''].join(''),
           rich: {
             data: {
               fontSize: '14',
@@ -448,7 +378,8 @@ export function getSuccessApiTrafficOption(sucesCnt: number, failCnt: number) {
         label: {
           show: true,
           position: 'center',
-          formatter: [`{data|${sucesCnt.toLocaleString()}}`].join(''),
+          formatter: [`{data|11}`].join(''),
+          // formatter: [`{data|${sucesCnt.toLocaleString()}}`].join(''),
           rich: {
             data: {
               fontSize: '14',
@@ -502,7 +433,8 @@ export function getFailApiTrafficOption(sucesCnt: number, failCnt: number) {
         label: {
           show: true,
           position: 'center',
-          formatter: [`{data|${failCnt.toLocaleString()}}`].join(),
+          formatter: [`{data|11}`].join(),
+          // formatter: [`{data|${failCnt.toLocaleString()}}`].join(),
           rich: {
             data: {
               fontSize: '14',

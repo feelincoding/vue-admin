@@ -2,14 +2,57 @@
   <article class="dashboard">
     <!--- refresh play/pause area --->
     <TimeCheck :isLoadData.sync="isLoadData" />
+    <gridLayout
+      :layout="layout"
+      :col-num="1"
+      :row-height="1"
+      :is-resizable="false"
+      :is-mirrored="false"
+      :use-css-transforms="true"
+      @layout-updated="layoutUpdatedEvent"
+    >
+      <gridItem
+        v-for="item in layout"
+        :x="item.x"
+        :y="item.y"
+        :w="item.w"
+        :h="item.h"
+        :i="item.i"
+        :key="item.i"
+        @move="dragEvent(item.i)"
+        :class="{
+          'total-modal-z-index': item.i == '0',
+        }"
+        dragIgnoreFrom="#real-time-traffic, #lastTraffic , #lastResponse"
+        style="touch-action: none"
+      >
+        <div
+          v-if="item.i == '0'"
+          style="padding: 11px; width: 100%; background-color: #fff"
+          :class="{ 'drag-box': box1 }"
+        >
+          <section class="group col-3" style="height: 219px">
+            <!--- Total API Traffic (24Hour) area --->
+            <TotalApiTraffic
+              :totalApiTraffic="totalTraffic"
+              :modal.sync="trafficModal"
+              :isDraged.sync="isDraged"
+              :isLoadData="isLoadData"
+              :isCommError.sync="isTotalAPITrafficCommError"
+            />
+          </section>
+        </div>
+      </gridItem>
+    </gridLayout>
   </article>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
-
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
+import TotalApiTraffic from '@/components/dash-board/TotalApiTraffic.vue';
 
+import DashBoardRepository from '@/repository/dash-board-repository';
 import type {
   RealTimeServiceStat,
   TotalTrafficStat,
@@ -86,6 +129,80 @@ const avgModal = ref(false);
 const realTimeModal = ref(false);
 const draggable = ref(true);
 const clickedParamData = {};
+
+const isErrorStatCommError = ref(false);
+const isTotalAPITrafficCommError = ref(false);
+const isApiResponseStusCommError = ref(false);
+const isApiTop5CommError = ref(false);
+const isServiceTop5CommError = ref(false);
+const isLastTrafficCommError = ref(false);
+const isLastResponseCommError = ref(false);
+
+const layout = [
+  { x: 0, y: 0, w: 6, h: 22, i: '0' },
+  { x: 0, y: 1, w: 6, h: 22, i: '1' },
+  { x: 0, y: 2, w: 6, h: 34, i: '2' },
+  { x: 0, y: 3, w: 6, h: 25, i: '3' },
+];
+
+const isDraged = ref(0);
+const layoutUpdatedEvent = () => {
+  // 최초 1회는 막아야한다.
+  // isDraged == 0 : 최초 로딩시
+  // isDraged == 1 : 드래그를 안한 상태
+  // isDraged == 2 : 드래그를 한 상태
+  if (isDraged.value === 0) {
+    isDraged.value = 1;
+    return;
+  } else if (isDraged.value === 1) {
+    isDraged.value = 2;
+    return;
+  }
+};
+
+const box1 = ref(false);
+const box2 = ref(false);
+const box3 = ref(false);
+const box4 = ref(false);
+
+const dragEvent = (i: string) => {
+  if (i == '0') {
+    box1.value = true;
+  } else if (i == '1') {
+    box2.value = true;
+  } else if (i == '2') {
+    box3.value = true;
+  } else if (i == '3') {
+    box4.value = true;
+  }
+  window.addEventListener('mouseup', (e) => {
+    box1.value = false;
+    box2.value = false;
+    box3.value = false;
+    box4.value = false;
+  });
+};
+
+const dashBoardRepo = new DashBoardRepository();
+// const getTotalTrafficDetail = (): TotalTrafficStat[] => {
+//   // return {
+//   //   svcId: null,
+//   //   statBaseTm: '2022-06-09T15:05:09.381613',
+//   //   totCnt: 24985,
+//   //   sucesCnt: 20426,
+//   //   failCnt: 4559,
+//   // };
+//   const temp = dashBoardRepo.getTrafficStatDetail();
+//   return [];
+// };
+
+onMounted(() => {
+  const temp = dashBoardRepo.getTotalAPITraffic(TOTAL_TRAFFIC_PARAM).then((res) => {
+    console.log('@@@@@@@', res);
+  });
+});
+
+const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
 
 //   dashBoardModule = getModule(DashBoardModule, this.$store);
 

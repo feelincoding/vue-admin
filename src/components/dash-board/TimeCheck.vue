@@ -41,8 +41,8 @@ onMounted(() => {
 
 const setCountChart = () => {
   const dom = document.getElementById('timer') as HTMLDivElement;
-  countChart.value = echarts.init(dom);
-  countChart.value.setOption(getTimerOption());
+  // countChart.value = echarts.init(dom);
+  // countChart.value.setOption(getTimerOption());
 };
 
 const getTimerOption = () => {
