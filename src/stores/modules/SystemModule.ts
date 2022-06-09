@@ -2,7 +2,7 @@ import { AxiosClient } from '@/axios/AxiosClient';
 
 import type { GateWayError } from '@/error/GateWayError';
 
-import type { GateWayResponse, Data, Pagination } from '@/types/GateWayResponse';
+import type { GateWayResponse, Data } from '@/types/GateWayResponse';
 import type { SystemResponse, SystemRegisterResponse, SystemIdEdpt, SystemCheckById } from '@/types/SystemType';
 import type { SearchCondition } from '@/types/SearchType';
 
