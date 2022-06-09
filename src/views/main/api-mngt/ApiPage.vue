@@ -6,10 +6,10 @@
           <!-- <h2 class="h2-tit">{{ $t('common.search') }}</h2> -->
           <div class="search-cont">
             <SelectBox
-              :searchTarget.sync="searchTarget"
-              :searchValue.sync="searchValue"
-              :label="searchOption.label"
-              :selectOptions="searchOption.selectOptions"
+              v-model:searchTarget="searchTarget"
+              v-model:searchValue="searchValue"
+              v-model:label="searchOption.label"
+              v-model:selectOptions="searchOption.selectOptions"
               @submit="searchOnClieckEvent"
             />
           </div>
@@ -112,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import { ref, watch, onMounted, type Ref } from 'vue';
 import ListLayout from '@/components/layout/ListLayout.vue';
 import ListForm from '@/components/commons/ListForm.vue';
 import ListRow from '@/components/api-mngt/list/ListRow.vue';
