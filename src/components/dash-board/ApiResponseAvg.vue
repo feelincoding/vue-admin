@@ -22,7 +22,7 @@
           id="avgDetail"
           style="width: 100%; height: 90%"
           onclick="event.stopPropagation()"
-        />
+        ></div>
       </div>
       <div
         class="tps-chart"

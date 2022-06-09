@@ -58,6 +58,49 @@
             />
           </section>
         </div>
+        <div
+          v-if="item.i == '1'"
+          style="padding: 11px; width: 100%; background-color: #fff"
+          :class="{ 'drag-box': box2 }"
+        >
+          <section class="group">
+            <!--- 실시간 Traffic area --->
+            <RealTimeTraffic
+              :isDraged.sync="isDraged"
+              :setParamData.sync="clickedParamData"
+              :modal.sync="realTimeModal"
+            />
+          </section>
+        </div>
+        <div
+          v-if="item.i == '2'"
+          style="padding: 11px; width: 100%; background-color: #fff"
+          :class="{ 'drag-box': box3 }"
+        >
+          <section class="group col-2">
+            <!--- API Top 5 area --->
+            <ApiTop5
+              @clickModalBtn="
+                (msg) => {
+                  showModal(msg);
+                }
+              "
+              :realTimeStat="realTimeApiStat"
+              :isCommError.sync="isServiceTop5CommError"
+            />
+
+            <!--- Service Top 5 area --->
+            <ServiceTop5
+              @clickModalBtn="
+                (msg) => {
+                  showModal(msg);
+                }
+              "
+              :realTimeStat="realTimeServiceStat"
+              :isCommError.sync="isServiceTop5CommError"
+            />
+          </section>
+        </div>
       </gridItem>
     </gridLayout>
   </article>
@@ -69,7 +112,7 @@ import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import TotalApiTraffic from '@/components/dash-board/TotalApiTraffic.vue';
 import ErrorStats from '@/components/dash-board/ErrorStats.vue';
 import ApiResponseAvg from '@/components/dash-board/ApiResponseAvg.vue';
-
+import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
 import DashBoardRepository from '@/repository/dash-board-repository';
 import type {
   RealTimeServiceStat,
@@ -228,9 +271,33 @@ onMounted(() => {
       errorStats.value = res.value as ErrorStatsType;
     })
     .catch(() => {});
+
+  dashBoardRepo
+    .getApiResponseStatus(API_RESPONSE_PARAM)
+    .then((res) => {
+      apiResponseStatus.value = res.value as ApiResponseStatus;
+    })
+    .catch(() => {});
 });
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
+const isShowModal = ref(false);
+const msgId = ref('');
+const msgType = ref('');
+const msgEndTime = ref('');
+const gseTimeInterval = ref(1440);
+const showModal = (msg: any) => {
+  isShowModal.value = true;
+  if (typeof msg.svcId === 'undefined') {
+    msgId.value = msg.sysId + '.' + msg.apiId;
+    msgType.value = 'api';
+    msgEndTime.value = realTimeApiStat.value.statBaseTm;
+  } else {
+    msgId.value = msg.svcId;
+    msgType.value = 'svc';
+    msgEndTime.value = realTimeServiceStat.value.statBaseTm;
+  }
+};
 
 //   dashBoardModule = getModule(DashBoardModule, this.$store);
 

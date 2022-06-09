@@ -8,6 +8,8 @@ import type {
   ErrorStatsType,
   ErrorStatsRequest,
   ErrorStatsDetailRequest,
+  ApiResponseRequest,
+  ApiResponseStatus,
 } from '@/types/DashBoardType';
 export default class DashBoardRepository {
   public totaltrafficDetail: TotalTrafficStat[] = [];
@@ -29,7 +31,6 @@ export default class DashBoardRepository {
     const response = await AxiosClient.getInstance()
       .get<GateWayResponse<TotalTrafficStat[]>>(`/getDashboardTrafficStatDetail`, param)
       .then((res) => {
-        console.log('getTrafficStatDetail response', res.data.value);
         return res.data.value;
       })
       .catch((err) => {
@@ -57,6 +58,30 @@ export default class DashBoardRepository {
         param
       );
       return Promise.resolve(response.data);
+    } catch (error: GateWayError | any) {
+      return Promise.reject(error);
+    }
+  }
+
+  async getApiResponseStatus(param: ApiResponseRequest) {
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<ApiResponseStatus>>(
+        `/getDashboardTrafficStus`,
+        param
+      );
+      return Promise.resolve(response.data);
+      // this.context.commit('setApiResponseStatus', response.data.value);
+    } catch (error: GateWayError | any) {
+      return Promise.reject(error);
+    }
+  }
+
+  async getApiResponseStatusDetail(param: object) {
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<ApiResponseStatus[]>>(
+        `/getDashboardTrafficStusDetail`,
+        param
+      );
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
     }
