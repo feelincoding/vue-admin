@@ -2,9 +2,9 @@
   <div class="comp">
     <div class="tb-tit">
       <h2 class="h2-tit">
-        {{ title }}
+        {{ props.title }}
         <span
-          >[Total :<em>{{ total }}</em
+          >[Total :<em>{{ props.total }}</em
           >]
         </span>
       </h2>
@@ -20,16 +20,16 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  title?: string;
-  total?: number;
-  isShowProgress?: boolean;
-}>();
-// const props = defineProps({
-//   title: { type: String, required: false, default: 'List' },
-//   total: { type: Number, required: false, default: 0 },
-//   isShowProgress: { type: Boolean, required: true },
-// });
+// const props = defineProps<{
+//   title: string;
+//   total: number;
+//   isShowProgress?: boolean;
+// }>();
+const props = defineProps({
+  title: { type: String || null, required: false, default: 'List' },
+  total: { type: Number, required: false, default: 0 },
+  // isShowProgress: { type: Boolean || undefined, required: true },
+});
 </script>
 
 <style scoped></style>

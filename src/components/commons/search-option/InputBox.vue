@@ -6,7 +6,7 @@
       id="sysName"
       class="input-box"
       :placeholder="props.placeholder"
-      :value="props.value"
+      :value="props.modelValue"
       @input="inputTxt($event)"
       @keyup="handleKeyup"
     />
@@ -16,9 +16,9 @@
 <script setup lang="ts">
 // const props = defineProps(['label', 'placeholder', 'value']);
 const props = defineProps<{
-  label?: string;
-  placeholder?: string;
-  value?: string;
+  label: string;
+  placeholder: string;
+  modelValue: string;
 }>();
 const emit = defineEmits<{
   (e: 'input', value: any): void;

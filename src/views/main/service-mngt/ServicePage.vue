@@ -7,7 +7,7 @@
         <!-- Input Box 옵션 -->
         <div class="search-cont">
           <InputBox
-            v-model="searchData['id']"
+            v-model="(searchData['id'] as string)"
             :label="$t('service.id')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"
@@ -15,7 +15,7 @@
         </div>
         <div class="search-cont">
           <InputBox
-            v-model="searchData['athnType']"
+            v-model="(searchData['athnType'] as string)"
             :label="$t('service.authentication_method')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"

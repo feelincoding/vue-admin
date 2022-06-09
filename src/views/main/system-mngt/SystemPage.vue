@@ -6,7 +6,7 @@
         <!-- Input Box 옵션 -->
         <div class="search-cont">
           <InputBox
-            v-model="searchData['id']"
+            v-model="(searchData['id'] as string)"
             :label="$t('system.id')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"
@@ -14,7 +14,7 @@
         </div>
         <div class="search-cont">
           <InputBox
-            v-model="searchData['tkcgrNm']"
+            v-model="(searchData['tkcgrNm'] as string)"
             :label="$t('system.tkcgrNm')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"
@@ -290,6 +290,7 @@ const onChangedPage = (page: number) => {
 
 const registerOnClickEvent = () => {
   router.push({ name: 'system-register' });
+  // router.push(to: '/system/register');
 };
 
 const getRoutePage = (page: string, id?: string): void => {
