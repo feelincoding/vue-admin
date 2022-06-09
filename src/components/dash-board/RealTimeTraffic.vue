@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="chart-wrap">
     <h3 class="h3-tit">실시간 Traffic</h3>
     <div ref="RealTimeTraffic" class="chart-group" id="real-time-traffic"></div>
@@ -262,4 +262,4 @@ export default class RealTimeTraffic extends Vue {
   width: 100%;
   height: 100%;
 }
-</style>
+</style> -->

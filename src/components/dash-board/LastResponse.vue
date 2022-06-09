@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="chart-wrap">
     <h3 class="h3-tit">전일대비/전주대비 응답시간 추이 (00:00 ~ 24:00)</h3>
     <ErrorWrapper v-show="isCommError" />
@@ -167,4 +167,4 @@ export default class LastResponse extends Vue {
     this.setChartData();
   }
 }
-</script>
+</script> -->

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="chart-wrap">
     <h3 class="h3-tit">Error stats (24Hour)</h3>
     <div class="dash-modal-background" v-if="modal === true" @click="modal = false"></div>
@@ -306,4 +306,4 @@ export default class ErrorStats extends Vue {
 .error-collapse-modal:hover {
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.3);
 }
-</style>
+</style> -->

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="chart-wrap">
     <h3 class="h3-tit">{{ $t('dash-board.service_top5_title') }}</h3>
 
@@ -54,4 +54,4 @@ export default class ApiTop5 extends Vue {
   }
 }
 </script>
-<style></style>
+<style></style> -->
