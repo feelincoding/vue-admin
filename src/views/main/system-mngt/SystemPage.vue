@@ -135,7 +135,7 @@ import ErrorCode from '@/error/ErrorCodes';
 
 import { useRoute } from 'vue-router';
 import router from '@/router';
-import bootstrap from 'bootstrap-vue-3';
+// import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
 
 const systemModule = new SystemModule();
@@ -187,71 +187,105 @@ watch(listOption, () => {
   }
 });
 onMounted(() => {
-  _getSystemList();
+  let param = {} as SearchCondition;
+  console.log('@@@@@');
+  if (Object.keys(route.query).filter((key) => key === 'id' && route.query[key] !== '').length > 0) {
+    param.id = route.query.id as string;
+    searchData.value.id = param.id;
+  }
+  if (Object.keys(route.query).filter((key) => key === 'tkcgrNm' && route.query[key] !== '').length > 0) {
+    param.tkcgrNm = route.query.tkcgrNm as string;
+    searchData.value.tkcgrNm = param.tkcgrNm;
+  }
+  console.log(route.query);
+  console.log('@@@@@');
+  // if (Object.entries(route.query).filter((x) => x[0] === 'id' && x[1] !== '').length > 0) {
+  //   param.id = route.query.id as string;
+  //   searchData.value.id = param.id;
+  // }
+  // if (Object.entries(route.query).filter((x) => x[0] === 'tkcgrNm' && x[1] !== '').length > 0) {
+  //   param.tkcgrNm = route.query.tkcgrNm as string;
+  //   searchData.value.tkcgrNm = param.tkcgrNm;
+  // }
+  if (Object.keys(route.query).includes('page')) param.page = route.query.page as string;
+
+  _getSystemList(param);
 });
 
-const _getSystemList = () => {
+const _getSystemList = (param: SearchCondition) => {
   isShowProgress.value = true;
+  // console.log('param : ', param);
+  systemModule
+    .getSystemList(param)
+    .then((res) => {
+      isShowProgress.value = false;
 
-  if (Object.keys(route.query).length > 0) {
-    if (Object.keys(route.query).includes('id')) searchData.value.id = route.query.id as string;
-    if (Object.keys(route.query).includes('tkcgrNm')) searchData.value.tkcgrNm = route.query.tkcgrNm as string;
-    if (Object.keys(route.query).includes('page')) searchData.value.page = route.query.page as string;
+      // console.log('res : ', res);
 
-    systemModule
-      .getSystemList(searchData.value)
-      .then((res) => {
+      listOption.value = res.value;
+      systemPagination.value = res.pagination as Pagination;
+    })
+    .catch((error: GateWayError) => {
+      if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
+        console.log('SYSTEM API Cancel');
+      } else {
         isShowProgress.value = false;
-
-        listOption.value = res.value;
-        systemPagination.value = res.pagination as Pagination;
-      })
-      .catch((error: GateWayError) => {
-        if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
-          console.log('SYSTEM API Cancel');
-        } else {
-          isShowProgress.value = false;
-          // $modal.show(`${$t('error.server_error')}`);
-        }
-      });
-  } else {
-    systemModule
-      .getSystemList()
-      .then((res) => {
-        isShowProgress.value = false;
-
-        listOption.value = res.value;
-        systemPagination.value = res.pagination as Pagination;
-      })
-      .catch((error) => {
-        if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
-          console.log('SYSTEM API Cancel');
-        } else {
-          isShowProgress.value = false;
-          // $modal.show(`${$t('error.server_error')}`);
-        }
-      });
-  }
+        // this.$modal.show(`${this.$t('error.server_error')}`);
+      }
+    });
 };
 
 const searchOnClieckEvent = () => {
-  getList();
+  console.log('searchOnClieckEvent', searchData.value.id);
+  delete searchData.value.page;
+  Object.keys(searchData.value).forEach((key) => {
+    const value = searchData.value[key as keyof SearchCondition];
+    if (value === '') delete searchData.value[key as keyof SearchCondition];
+  });
+
+  // for (const [key, value] of Object.entries(this.searchData)) {
+  //   if (value === '') delete searchData.value[key as keyof SearchCondition];
+  // }
+  getList('search');
 };
-const getList = () => {
-  if (Object.is(JSON.stringify(router.currentRoute.value.query), JSON.stringify(searchData.value))) {
-    _getSystemList();
+const getList = (option: string) => {
+  let param = {} as SearchCondition;
+
+  if (option === 'page') {
+    // 1. 페이지 이동
+    param.page = searchData.value.page;
+    // console.log('param : ', param);
+    // console.log('getList : ', option);
+
+    if (Object.keys(route.query).filter((key) => key === 'id' && route.query[key] !== '').length > 0) {
+      param.id = route.query.id as string;
+    }
+    if (Object.keys(route.query).filter((key) => key === 'tkcgrNm' && route.query[key] !== '').length > 0) {
+      param.tkcgrNm = route.query.tkcgrNm as string;
+    }
+
+    // if (Object.entries(route.query).filter((x) => x[0] === 'id' && x[1] !== '').length > 0)
+    //   param.id = route.query.id as string;
+    // if (Object.entries(route.query).filter((x) => x[0] === 'tkcgrNm' && x[1] !== '').length > 0)
+    //   param.tkcgrNm = route.query.tkcgrNm as string;
+  } else if (option === 'search') {
+    // 2. 검색 조건 변경
+    if (searchData.value.id !== undefined) param.id = searchData.value.id;
+    if (searchData.value.tkcgrNm !== undefined) param.tkcgrNm = searchData.value.tkcgrNm;
+  }
+
+  if (Object.is(JSON.stringify(router.currentRoute.value.query), JSON.stringify(param))) {
+    _getSystemList(param);
   } else {
     router.push({
       name: 'system',
-      query: {
-        ...searchData.value,
-      },
+      query: { ...param },
     });
   }
 };
 const onChangedPage = (page: number) => {
   searchData.value.page = String(page);
-  getList();
+  getList('page');
 };
 
 const registerOnClickEvent = () => {
@@ -273,7 +307,9 @@ const deleteSystem = async () => {
     .then(() => {
       closeModal();
       isDisabled.value = false;
-      _getSystemList();
+      searchData.value = {};
+
+      _getSystemList(searchData.value);
       // $toast.success($t('common.delete_success'), {
       //   toastClassName: ['toast-success-custom-class'],
       // });
