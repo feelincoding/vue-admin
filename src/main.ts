@@ -15,16 +15,8 @@ import '@/style/dash-board.css';
 import BootstrapVue3 from 'bootstrap-vue-3';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
-
-// import { createI18n } from 'vue-i18n';
-
-// const i18n = createI18n({
-//   locale: 'en',
-//   messages: {
-//     en: { hello: 'hi there!' },
-//     ja: { hello: 'こんにちは！' },
-//   },
-// });
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
 
 // import Datepicker
 import Datepicker from '@vuepic/vue-datepicker';
@@ -38,3 +30,4 @@ app.use(router);
 app.use(i18n);
 app.component('Datepicker', Datepicker);
 app.mount('#app');
+app.use(Toast);

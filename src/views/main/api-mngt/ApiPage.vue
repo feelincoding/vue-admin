@@ -129,7 +129,9 @@ import ErrorCode from '@/error/ErrorCodes';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import router from '@/router';
+import { useToast } from 'vue-toastification';
 
+const toast = useToast();
 const route = useRoute();
 const showModal = ref(false);
 const isModalProgress = ref(false);
@@ -221,9 +223,10 @@ const deleteApi = async () => {
     .then(() => {
       showModal.value = false;
       isModalProgress.value = false;
-      // this.$toast.success(this.$t('common.delete_success'), {
-      //   toastClassName: ['toast-success-custom-class'],
-      // });
+
+      toast.success(t('common.delete_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
     })
     .catch(() => {
       showModal.value = false;
