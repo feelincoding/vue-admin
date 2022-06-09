@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="chart-wrap">
     <h3 class="h3-tit">{{ $t('dash-board.api_top5_title') }}</h3>
     <ul class="list-wrap" style="margin-bottom: 0">
@@ -51,4 +51,4 @@ export default class ApiTop5 extends Vue {
     this.$emit('clickModalBtn', item);
   }
 }
-</script>
+</script> -->

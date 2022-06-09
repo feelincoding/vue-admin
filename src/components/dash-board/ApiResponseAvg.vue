@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="chart-wrap">
     <div class="dash-modal-background" v-if="modal === true" @click="modal = false"></div>
 
@@ -240,4 +240,4 @@ export default class ApiResponseAvg extends Vue {
   padding: 20px 30px;
   align-items: center;
 }
-</style>
+</style> -->
