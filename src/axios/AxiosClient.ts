@@ -21,7 +21,7 @@ export class AxiosClient {
     return AxiosClient.instance;
   }
 
-  public async get<T>(url: string, query?: any) {
+  public async get<T>(url: string, query?: any): Promise<T> {
     const cancelToken = Axios.CancelToken;
     this.source = cancelToken.source();
 
@@ -37,23 +37,19 @@ export class AxiosClient {
         return response.data;
       }
     } catch (error: Error | any) {
-      if (Axios.isCancel(error)) {
-        return Promise.reject(new GateWayError(ErrorCode.CANCEL_ERROR));
+      console.log('post error', error);
+      if (!error.response) {
+        throw new GateWayError(ErrorCode.NETWORK_ERROR);
       } else {
-        if (!error.response) {
-          throw new GateWayError(ErrorCode.NETWORK_ERROR);
-        } else {
-          if (error.response.status == ErrorCode.SESSION_ERROR) {
-            router.push({
-              name: 'login',
-              params: {
-                error_code: 'UNAUTHORIZED',
-              },
-            });
-          } else {
-            throw new GateWayError(error.response.status);
-          }
+        if (error.response.status == ErrorCode.SESSION_ERROR) {
+          router.push({
+            name: 'login',
+            params: {
+              error_code: 'UNAUTHORIZED',
+            },
+          });
         }
+        throw new GateWayError(error.response.status);
       }
     }
   }

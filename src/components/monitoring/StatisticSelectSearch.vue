@@ -4,41 +4,41 @@
       <h4 class="label-tit">기간 선택</h4>
       <div class="date-wrap">
         <div class="date-cont bg-white-date">
-          <date-picker
+          <Datepicker
             value-type="format"
             format="YYYY-MM-DD"
             placeholder="YYYY-MM-DD"
             :disabled-date="disabledAfterTodayAndAfterEndDay"
-          ></date-picker>
+          ></Datepicker>
         </div>
         <div class="date-cont bg-white-date">
-          <date-picker
-            type="time"
+          <Datepicker
+            timePicker
             value-type="HH:mm"
             format="HH:mm"
             placeholder="HH:mm"
             :disabled="startDate === ''"
             :disabled-datetime="disabledAfterNowOrAfterEndTime"
-          ></date-picker>
+          ></Datepicker>
         </div>
         <span class="text">~</span>
         <div class="date-cont bg-white-date">
-          <date-picker
+          <Datepicker
             value-type="format"
             format="YYYY-MM-DD"
             placeholder="YYYY-MM-DD"
             :disabled-date="disabledAfterTodayOrBeforeStartDay"
-          ></date-picker>
+          ></Datepicker>
         </div>
         <div class="date-cont bg-white-date">
-          <date-picker
-            type="time"
+          <Datepicker
+            timePicker
             value-type="HH:mm"
             format="HH:mm"
             placeholder="HH:mm"
             :disabled="endDate === ''"
             :disabled-datetime="disabledAfterNowOrBeforeStartTime"
-          ></date-picker>
+          ></Datepicker>
         </div>
       </div>
     </div>
@@ -154,7 +154,6 @@
 </template>
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
-import DatePicker from 'vue3-datepicker';
 const props = defineProps<{
   isFocus: boolean;
   propServiceList: string[] | null;
