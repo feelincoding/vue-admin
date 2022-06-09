@@ -2,10 +2,12 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
+    "target": "esnext",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "ES2020.Promise"]
   },
 
   "references": [
