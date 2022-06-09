@@ -83,8 +83,8 @@
                   </td>
                   <td @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
                     <p class="date-txt">
-                      <span> {{ list.updDt === '' ? getDate(list.cretDt) : getDate(list.updDt) }}</span
-                      ><span>{{ list.updDt === '' ? getHours(list.cretDt) : getHours(list.updDt) }}</span>
+                      <span> {{ getDate(list.updDt) }}</span
+                      ><span>{{ getHours(list.updDt) }}</span>
                     </p>
                   </td>
                   <td>

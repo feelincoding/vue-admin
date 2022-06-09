@@ -1,0 +1,212 @@
+<template>
+  <li>
+    <label class="label point">{{ inputNm }}</label>
+    <div class="form-cont">
+      <div class="form-group">
+        <select class="select-box lg" v-model="auth">
+          <option value="basic">Basic Auth</option>
+          <option value="jwt">JWT</option>
+        </select>
+      </div>
+
+      <div v-if="auth == 'basic'" class="auth-group">
+        <!-- Basic Auth -->
+        <ul class="domain-list lg">
+          <li>
+            <div class="auth-form">
+              <label class="label">ID :</label>
+              <input type="text" id="" class="input-box" placeholder="자동생성/변경불가" disabled v-model="basicId" />
+              <button @click="clicked" class="xs-btn">
+                <i v-show="!progress" class="serve"></i>
+                <b-spinner v-show="progress" small></b-spinner>
+              </button>
+            </div>
+          </li>
+          <li>
+            <div class="auth-form">
+              <label class="label">PW :</label>
+              <input type="text" id="" class="input-box" placeholder="자동생성/변경불가" disabled v-model="basicPw" />
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- // Basic Auth -->
+      <!-- JWT -->
+      <div v-if="auth == 'jwt'" class="auth-group">
+        <ul class="domain-list lg">
+          <li>
+            <div class="auth-form">
+              <label class="label">알고리즘 :</label>
+              <select class="select-box" v-model="algPick" @focus="noticeInput()">
+                <option disabled value="null">선택해주세요</option>
+                <option v-for="item in JWTalg" :key="item" :value="item">{{ item }}</option>
+              </select>
+            </div>
+          </li>
+          <li>
+            <div class="auth-form">
+              <label class="label">발급자 :</label>
+              <input type="text" id="" class="input-box" placeholder="" v-model="JWTissuer" @focus="noticeInput()" />
+            </div>
+          </li>
+          <li>
+            <div class="auth-form">
+              <label class="label">대상자 :</label>
+              <input type="text" id="" class="input-box" placeholder="" v-model="JWTsubject" @focus="noticeInput()" />
+            </div>
+          </li>
+          <li>
+            <div class="auth-form">
+              <label class="label">공개key :</label>
+              <textarea class="textarea" v-model="JWTpublicKey" @focus="noticeInput()"></textarea>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- /JWT -->
+      <p
+        v-if="
+          (showInput && algPick == 'null') ||
+          (showInput && JWTissuer == '') ||
+          (showInput && JWTsubject == '') ||
+          (showInput && JWTpublicKey == '') ||
+          (showInput && algPick == null) ||
+          (showInput && JWTissuer == null) ||
+          (showInput && JWTsubject == null) ||
+          (showInput && JWTpublicKey == null) ||
+          (auth == 'basic' && basicId == '') ||
+          (auth == 'basic' && basicId == null)
+        "
+        class="red-txt noti"
+      >
+        {{ $t('service.empty_check') }}
+      </p>
+    </div>
+  </li>
+</template>
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue';
+import { BSpinner } from 'bootstrap-vue-3';
+const props = defineProps<{
+  inputNm: string;
+  athn: string;
+  alg: string[];
+  issuer: string | null;
+  subject: string | null;
+  publicKey: string | null;
+  pickedAlg: string | null;
+  basicId: string | null;
+  basicPw: string | null;
+  isValid: boolean | null;
+  progress: boolean;
+}>();
+
+// defineProps({
+//   inputNm: { type: String, require: false, default: '' },
+//   athn: { type: String, require: false, default: '' },
+//   alg: { type: [String], require: false, default: [] },
+//   issuer: { type: String, require: false, default: '' },
+//   subject: { type: String, require: false, default: '' },
+//   publicKey: { type: String, require: false, default: '' },
+//   pickedAlg: { type: String, require: false, default: '' },
+//   basicId: { type: String || null, require: false },
+//   basicPw: { type: String || null, require: false },
+//   isValid: { type: Boolean, require: false, default: false },
+//   progress: { type: Boolean, require: false, default: false },
+// });
+const emit = defineEmits<{
+  (e: 'isValid', value: boolean | null): void;
+  (e: 'basicId', value: string | null): void;
+  (e: 'basicPw', value: string | null): void;
+  (e: 'pickedAlg', value: string | null): void;
+  (e: 'alg', value: string[]): void;
+  (e: 'issuer', value: string | null): void;
+  (e: 'subject', value: string | null): void;
+  (e: 'publicKey', value: string | null): void;
+  (e: 'auth', value: string | null): void;
+  (e: 'basicAuthClicked'): void;
+}>();
+
+const showInput = ref(false);
+
+watch(
+  () => props.basicId,
+  (val) => {
+    if (auth.value == 'basic') {
+      if (val == '' || val == null) {
+        emit('isValid', false);
+      } else {
+        emit('isValid', true);
+      }
+    }
+  }
+);
+
+const algPick = computed({
+  get: () => props.pickedAlg,
+  set: (val) => {
+    emit('pickedAlg', val as string);
+    if (auth.value == 'jwt') {
+      if (
+        algPick.value != 'null' &&
+        JWTissuer.value != '' &&
+        JWTsubject.value != '' &&
+        JWTpublicKey.value != '' &&
+        algPick.value != null &&
+        JWTissuer.value != null &&
+        JWTsubject.value != null &&
+        JWTpublicKey.value != null
+      ) {
+        emit('isValid', true);
+      } else {
+        emit('isValid', false);
+      }
+    }
+  },
+});
+
+const auth = computed({
+  get: () => props.athn,
+  set: (val) => {
+    showInput.value = false;
+    emit('auth', val as string);
+    emit('isValid', false);
+  },
+});
+
+const JWTalg = computed({
+  get: () => props.alg,
+  set: (val) => {
+    emit('alg', val);
+  },
+});
+
+const JWTissuer = computed({
+  get: () => props.issuer,
+  set: (val) => {
+    emit('issuer', val);
+  },
+});
+
+const JWTsubject = computed({
+  get: () => props.subject,
+  set: (val) => {
+    emit('subject', val);
+  },
+});
+
+const JWTpublicKey = computed({
+  get: () => props.publicKey,
+  set: (val) => {
+    emit('publicKey', val);
+  },
+});
+
+const clicked = () => {
+  emit('basicAuthClicked');
+};
+
+const noticeInput = () => {
+  showInput.value = true;
+};
+</script>
