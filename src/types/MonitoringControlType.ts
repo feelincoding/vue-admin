@@ -32,21 +32,6 @@ export interface EachApi {
   avgResTm: number; // 평균 응답시간
 }
 
-// 관제 api request type
-export interface ControlRequest {
-  statPerd: number;
-  sortBase: string;
-  retvCnt?: number;
-}
-
-// 관제 api detail props type
-export interface apiStatDetailProps {
-  msgId: string;
-  msgType: string;
-  msgEndTime: string;
-  msgTimeInterval: number;
-}
-
 // 관제 api response type
 export interface EachResponse {
   statPerd: number; // 통계 기준 시간
@@ -82,6 +67,34 @@ export interface FormatterType {
   dimensionNames: Array<string>;
   dimensionIndex: number;
   color: string;
+}
+
+// 관제 그래프 조회 request type
+export interface ControlRequest {
+  statPerd: number;
+  sortBase: string;
+  retvCnt?: number;
+}
+
+// 관제 상세 모달 props type
+export interface apiStatDetailProps {
+  msgId: string;
+  msgType: string;
+  msgEndTime: string;
+  msgTimeInterval: number;
+}
+
+// 관제 상세 모달 request type
+export interface ControlDetailRequest {
+  svcId?: string;
+  sysId?: string;
+  apiId?: string;
+  statBaseTm?: string;
+  statPerd?: number;
+  dayTrafcComprCnt?: number;
+  statBaseUnit?: string;
+  statStTm?: string;
+  statEndTm?: string;
 }
 
 // 서비스 stat type
@@ -155,7 +168,6 @@ export interface TrafcApi {
   failCnt: number; // 실패 건수
 }
 // 서비스 통계, Response -> 통계쪽 가져다 쓰자
-//
 export interface TrafficService {
   svcId: string;
   svcTrafc: ServiceTrafc[];

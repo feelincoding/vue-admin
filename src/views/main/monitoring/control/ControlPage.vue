@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import type { Ref } from 'vue';
 
 import { useRoute, type RouteLocationNormalizedLoaded } from 'vue-router';
@@ -29,7 +29,7 @@ interface NavState {
   controlApiState: boolean;
 }
 
-const navState: NavState = reactive({
+const navState: Ref<NavState> = ref({
   controlServiceState: false,
   controlApiState: false,
 });
@@ -40,11 +40,11 @@ watch(
   route,
   (newVal: RouteLocationNormalizedLoaded) => {
     if (newVal.name === 'control-service') {
-      navState.controlServiceState = true;
-      navState.controlApiState = false;
+      navState.value.controlServiceState = true;
+      navState.value.controlApiState = false;
     } else if (newVal.name === 'control-api') {
-      navState.controlServiceState = false;
-      navState.controlApiState = true;
+      navState.value.controlServiceState = false;
+      navState.value.controlApiState = true;
     }
   },
   { immediate: true, deep: true }
