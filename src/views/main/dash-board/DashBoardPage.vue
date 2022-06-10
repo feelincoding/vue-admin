@@ -39,14 +39,15 @@
               v-model:modal="trafficModal"
               @modalChange="changeTrafficModal"
               v-model:isDraged="isDraged"
-              :isCommError.sync="isTotalAPITrafficCommError"
+              v-model:isCommError="isTotalAPITrafficCommError"
             />
             <!--- Error stats (24Hour) area --->
             <ErrorStats
               v-model:errorStats="errorStats"
-              :modal.sync="errorModal"
+              v-model:isLoadData="isLoadData"
+              v-model:modal="errorModal"
+              @modalChange="changeErrorModal"
               :isDraged.sync="isDraged"
-              :isLoadData="isLoadData"
               :isCommError.sync="isErrorStatCommError"
             />
             <!--- API 평균 응답시간 / TPS area !! --->
@@ -80,7 +81,15 @@
         >
           <section class="group col-2">
             <!--- API Top 5 area --->
-            <ApiTop5 v-model:realTimeStat="realTimeApiStat" :isCommError.sync="isServiceTop5CommError" />
+            <ApiTop5
+              v-model:realTimeStat="realTimeApiStat"
+              :isCommError.sync="isServiceTop5CommError"
+              @clickModalBtn="
+                (msg) => {
+                  showModal(msg);
+                }
+              "
+            />
             <!--- Service Top 5 area --->
             <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
           </section>
@@ -100,6 +109,19 @@
         </div>
       </gridItem>
     </gridLayout>
+    <ApiDetailModal
+      v-if="isShowModal"
+      @close="isShowModal = false"
+      :msgId="msgId"
+      :msgType="msgType"
+      :msgEndTime="msgEndTime"
+      :msgTimeInterval="gseTimeInterval"
+    ></ApiDetailModal>
+    <RealTimeDetailModal
+      v-if="realTimeModal"
+      :modal.sync="realTimeModal"
+      :setParamData.sync="clickedParamData"
+    ></RealTimeDetailModal>
   </article>
 </template>
 <script setup lang="ts">
@@ -114,6 +136,7 @@ import ApiTop5 from '@/components/dash-board/ApiTop5.vue';
 import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
 import LastTraffic from '@/components/dash-board/LastTraffic.vue';
 import LastResponse from '@/components/dash-board/LastResponse.vue';
+import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
 import { convertBaseTime } from '@/utils/converter';
@@ -193,6 +216,9 @@ const changeTrafficModal = (show: boolean) => {
   trafficModal.value = show;
 };
 const errorModal = ref(false);
+const changeErrorModal = (show: boolean) => {
+  errorModal.value = show;
+};
 const avgModal = ref(false);
 const realTimeModal = ref(false);
 const draggable = ref(true);
@@ -326,6 +352,7 @@ const msgId = ref('');
 const msgType = ref('');
 const msgEndTime = ref('');
 const gseTimeInterval = ref(1440);
+
 const showModal = (msg: any) => {
   isShowModal.value = true;
   if (typeof msg.svcId === 'undefined') {

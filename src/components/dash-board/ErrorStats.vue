@@ -1,33 +1,33 @@
 <template>
   <div class="chart-wrap">
     <h3 class="h3-tit">Error stats (24Hour)</h3>
-    <div class="dash-modal-background" v-if="syncedModal === true" @click="syncedModal = false"></div>
     <div
       class="chart-group error-stats"
       :class="{
-        'error-collapse-modal': syncedModal == false,
-        'error-expand-modal': syncedModal == true,
+        'error-collapse-modal': modal == false,
+        'error-expand-modal': modal == true,
       }"
+      @click="toggleModal()"
       ref="totalErrorStatsRef"
     >
       <ErrorWrapper v-show="syncedIsCommError" />
       <div
-        v-show="syncedModal == false"
+        v-show="modal == false"
         id="errorStatsPie"
         :class="{
-          'dash-modal-detail-collapse': syncedModal == true,
-          'dash-modal-detail-expand': syncedModal == false,
+          'dash-modal-detail-collapse': modal == true,
+          'dash-modal-detail-expand': modal == false,
         }"
         class="error-pie"
       >
         실패율
       </div>
       <div
-        v-show="syncedModal == false"
+        v-show="modal == false"
         id="errorStateBar"
         :class="{
-          'dash-modal-detail-collapse': syncedModal == true,
-          'dash-modal-detail-expand': syncedModal == false,
+          'dash-modal-detail-collapse': modal == true,
+          'dash-modal-detail-expand': modal == false,
         }"
         class="error-chart"
       >
@@ -35,18 +35,18 @@
       </div>
 
       <div
-        v-show="syncedModal == true"
+        v-show="modal == true"
         :class="{
-          'dash-modal-detail-collapse': syncedModal == false,
-          'dash-modal-detail-expand': syncedModal == true,
+          'dash-modal-detail-collapse': modal == false,
+          'dash-modal-detail-expand': modal == true,
         }"
         onclick="event.stopPropagation()"
         style="width: 100%; height: 100%"
       >
         <h5 class="h5-tit">Error State Detail</h5>
-        <!-- <button @click="toggleModal()" style="position: absolute; right: 1%; top: 3%">
+        <button @click="toggleModal()" style="position: absolute; right: 1%; top: 3%">
           <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
-        </button> -->
+        </button>
         <div id="errorStateDetail" style="width: 100%; height: 100%"></div>
       </div>
     </div>
@@ -54,18 +54,23 @@
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted, onUpdated, ref, watch, type Ref } from 'vue';
-import * as echarts from 'echarts';
 
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 import type { ErrorStatsType } from '@/types/DashBoardType';
-import { getFailRateOption, getErrorDetailChartOption } from '@/components/dash-board/chart-options';
+import {
+  getFailRateOption,
+  getFailProgressChartOption,
+  getErrorDetailChartOption,
+} from '@/components/dash-board/chart-options';
+
+import { drawTotalApiTrafficChart } from '@/utils/chart';
 
 const props = defineProps({
   isLoadData: {
     type: Boolean,
     default: false,
   },
-  syncedModal: {
+  modal: {
     type: Boolean,
     default: false,
   },
@@ -74,34 +79,45 @@ const props = defineProps({
   },
   errorStats: {
     type: Object,
-    default: () => ({}),
+    default: {} as ErrorStatsType,
   },
   errorStatsDetail: {
-    type: Array,
-    default: () => [{}],
+    type: Object,
+    default: [] as ErrorStatsType[],
   },
   syncedIsCommError: {
     type: Boolean,
     default: false,
   },
 });
-const dom1 = ref({} as HTMLDivElement);
-const myChart1 = ref({} as echarts.EChartsType);
-const dom2 = ref({} as HTMLDivElement);
-const myChart2 = ref({} as echarts.EChartsType);
-const dom3 = ref({} as HTMLDivElement);
-const myChart3 = ref({} as echarts.EChartsType);
 
-const isModalDomInit = ref(false);
+const emit = defineEmits<{
+  (e: 'modalChange', show: boolean): void;
+}>();
 
+const errorRateChart = ref({} as echarts.EChartsType);
+const errorStateBarChart = ref({} as echarts.EChartsType);
+const modalChart = ref({} as echarts.EChartsType);
 onMounted(() => {
-  initChartAndDom();
+  errorRateChart.value = drawTotalApiTrafficChart('errorStatsPie', getFailRateOption(props.errorStats.failRate));
+
+  errorStateBarChart.value = drawTotalApiTrafficChart(
+    'errorStateBar',
+    getFailProgressChartOption(props.errorStats.miCnt, props.errorStats.maCnt, props.errorStats.crCnt)
+  );
+
   window.addEventListener('resize', observeSize);
 });
 
+const isModalDomInit = ref(false);
 onUpdated(() => {
   if (!isModalDomInit.value && props.syncedIsDraged === 1) {
-    initChartAndDomModal();
+    isModalDomInit.value = true;
+
+    modalChart.value = drawTotalApiTrafficChart(
+      'errorStateDetail',
+      getErrorDetailChartOption(props.errorStatsDetail as ErrorStatsType[])
+    );
   }
 });
 
@@ -109,113 +125,40 @@ onUnmounted(() => {
   window.removeEventListener('resize', observeSize);
 });
 
-const initChartAndDomModal = () => {
-  isModalDomInit.value = true;
-  dom3.value = document.getElementById('errorStateDetail') as HTMLDivElement;
-  myChart3.value = echarts.init(dom3.value);
-  // myChart3.value.setOption(getErrorDetailChartOption(props.errorStatsDetail));
-};
+watch(
+  () => props.errorStats,
+  () => {
+    errorRateChart.value.clear();
+    errorStateBarChart.value.clear();
 
-const initChartAndDom = () => {
-  dom1.value = document.getElementById('errorStatsPie') as HTMLDivElement;
-  myChart1.value = echarts.init(dom1.value);
-  myChart1.value.setOption(getFailRateOption(props.errorStats.failRate));
-  dom2.value = document.getElementById('errorStateBar') as HTMLDivElement;
-  myChart2.value = echarts.init(dom2.value);
-  myChart2.value.setOption(
-    getFailProgressChartOption(props.errorStats.miCnt, props.errorStats.maCnt, props.errorStats.crCnt)
-  );
-};
-
-const getFailProgressChartOption = (miCnt: number, maCnt: number, crCnt: number) => {
-  const errorStatsBarOption: echarts.EChartsOption = {
-    // tooltip: {
-    //   trigger: 'item',
-    // },
-    backgroundColor: '#FFFFFF',
-    xAxis: {
-      type: 'value',
-      max: miCnt + maCnt + crCnt,
-      axisLine: { show: false },
-      axisLabel: { show: false },
-      axisTick: { show: false },
-      splitLine: { show: false },
-    },
-    yAxis: [
-      {
-        data: ['Minor', 'Major', 'Critical'],
-        type: 'category',
-        axisLine: { show: false },
-        axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#000' },
-        axisTick: { show: false },
-        splitLine: { show: false },
-      },
-      {
-        type: 'category',
-        data: [
-          `${miCnt !== undefined ? miCnt.toLocaleString() : 0}`,
-          `${maCnt !== undefined ? maCnt.toLocaleString() : 0}`,
-          `${crCnt !== undefined ? crCnt.toLocaleString() : 0}`,
-        ],
-        axisLine: { show: false },
-        axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#000' },
-        axisTick: { show: false },
-        splitLine: { show: false },
-      },
-    ],
-    grid: {
-      top: 30,
-      left: 50,
-      bottom: 30,
-      right: 50,
-    },
-    series: [
-      {
-        data: [
-          {
-            value: miCnt,
-            itemStyle: {
-              color: '#FFE03D',
-            },
-          },
-          {
-            value: maCnt,
-            itemStyle: {
-              color: '#FF994F',
-            },
-          },
-          {
-            value: crCnt,
-            itemStyle: {
-              color: '#FF4E63',
-            },
-          },
-        ],
-        type: 'bar',
-        showBackground: true,
-        backgroundStyle: {
-          color: 'rgba(180, 180, 180, 0.5)',
-          borderRadius: [100, 100, 100, 100],
-        },
-        barWidth: '40%',
-        itemStyle: {
-          borderRadius: [100, 100, 100, 100],
-        },
-      },
-    ],
-  };
-
-  return errorStatsBarOption;
-};
-
-const resizeChart = () => {
-  myChart1.value.resize();
-  myChart2.value.resize();
-  if (isModalDomInit.value == true) {
-    myChart3.value.resize();
+    errorRateChart.value.setOption(getFailRateOption(props.errorStats.failRate));
+    errorStateBarChart.value.setOption(
+      getFailProgressChartOption(props.errorStats.miCnt, props.errorStats.maCnt, props.errorStats.crCnt)
+    );
   }
+);
+
+// Modal 동작 관련 메서드
+const showModal = () => {
+  if (props.isLoadData) {
+    return;
+  }
+  if (props.syncedIsDraged === 2) {
+    emit('modalChange', false);
+    return;
+  }
+  emit('modalChange', true);
+};
+const closeModal = () => {
+  emit('modalChange', false);
 };
 
+const toggleModal = () => {
+  props.modal ? closeModal() : showModal();
+  observeSize();
+};
+
+//resize 관련 메서드
 const width1 = ref(0);
 const height1 = ref(0);
 const totalErrorStatsRef = ref<HTMLDivElement | null>(null);
@@ -231,62 +174,12 @@ const observeSize = () => {
 };
 
 watch(width1, () => {
-  resizeChart();
-});
-watch(
-  () => props.errorStats,
-  () => {
-    myChart1.value.clear();
-    myChart2.value.clear();
-
-    myChart1.value.setOption(getFailRateOption(props.errorStats.failRate));
-    myChart2.value.setOption(
-      getFailProgressChartOption(props.errorStats.miCnt, props.errorStats.maCnt, props.errorStats.crCnt)
-    );
+  errorRateChart.value.resize();
+  errorStateBarChart.value.resize();
+  if (isModalDomInit.value == true) {
+    modalChart.value.resize();
   }
-);
-// watch(
-//   () => props.errorStatsDetail,
-//   () => {
-//     console.log('^&&', props.errorStats);
-
-//     myChart3.value.setOption(getErrorDetailChartOption(props.errorStatsDetail));
-//   }
-// );
-
-// showModal() {
-//   if (props.isLoadData) {
-//     return;
-//   }
-//   if (props.syncedIsDraged === 2) {
-//     //emit 써야함
-//     // props.syncedIsDraged = 1;
-//     return;
-//   }
-//   //emit 써야함
-//   // props.syncedModal = true;
-// }
-
-// closeModal() {
-//   //emit 써야함
-//   // props.syncedModal = false;
-// }
-
-// toggleModal() {
-//   this.syncedModal ? this.closeModal() : this.showModal();
-//   this.observeSize();
-// }
-// @Watch('syncedModal')
-// onModalChange() {
-//   if (this.isModalDomInit) {
-//     this.myChart3.clear();
-//   }
-
-//   // if (!this.syncedModal) {
-//   //   console.log('ErrorClearded!!');
-//   //   this.myChart3.clear();
-//   // }
-// }
+});
 </script>
 <style scoped>
 .error-stats {

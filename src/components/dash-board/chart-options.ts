@@ -872,6 +872,160 @@ export function getFailRateOption(failRate: number) {
   return errorStatsPieOption;
 }
 
+export const timerOption: echarts.EChartsOption = {
+  graphic: {
+    elements: [
+      {
+        type: 'group',
+        left: 'center',
+        top: 'center',
+        children: new Array(7).fill(0).map((val, i) => ({
+          type: 'rect',
+          x: i * 12,
+          shape: {
+            x: 0,
+            y: -10,
+            width: 4,
+            height: 20,
+          },
+          style: {
+            fill: '#8041F7',
+          },
+          keyframeAnimation: {
+            duration: 800,
+            delay: i * 200,
+            loop: true,
+            keyframes: [
+              {
+                percent: 0.5,
+                scaleY: 0.3,
+                easing: 'cubicIn',
+              },
+              {
+                percent: 1,
+                scaleY: 1,
+                easing: 'cubicOut',
+              },
+            ],
+          },
+        })),
+      },
+    ],
+  },
+};
+
+export function getTimerOption(chartCountPercentData: number, chartCountTotalData: number) {
+  const timerOption: echarts.EChartsOption = {
+    title: {
+      show: false,
+    },
+
+    backgroundColor: '#FFFFFF',
+    series: [
+      {
+        center: ['40%', '58%'],
+        name: 'Access From',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+
+        label: {
+          show: false,
+        },
+
+        labelLine: {
+          show: false,
+        },
+        data: [{ value: chartCountPercentData }, { value: chartCountTotalData }],
+        emphasis: {
+          disabled: true,
+        },
+      },
+    ],
+    color: ['#000000', '#D5D5D5'],
+  };
+
+  return timerOption;
+}
+
+export function getFailProgressChartOption(miCnt: number, maCnt: number, crCnt: number) {
+  const errorStatsBarOption: echarts.EChartsOption = {
+    backgroundColor: '#FFFFFF',
+    xAxis: {
+      type: 'value',
+      max: miCnt + maCnt + crCnt,
+      axisLine: { show: false },
+      axisLabel: { show: false },
+      axisTick: { show: false },
+      splitLine: { show: false },
+    },
+    yAxis: [
+      {
+        data: ['Minor', 'Major', 'Critical'],
+        type: 'category',
+        axisLine: { show: false },
+        axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#000' },
+        axisTick: { show: false },
+        splitLine: { show: false },
+      },
+      {
+        type: 'category',
+        data: [
+          `${miCnt !== undefined ? miCnt.toLocaleString() : 0}`,
+          `${maCnt !== undefined ? maCnt.toLocaleString() : 0}`,
+          `${crCnt !== undefined ? crCnt.toLocaleString() : 0}`,
+        ],
+        axisLine: { show: false },
+        axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#000' },
+        axisTick: { show: false },
+        splitLine: { show: false },
+      },
+    ],
+    grid: {
+      top: 30,
+      left: 50,
+      bottom: 30,
+      right: 50,
+    },
+    series: [
+      {
+        data: [
+          {
+            value: miCnt,
+            itemStyle: {
+              color: '#FFE03D',
+            },
+          },
+          {
+            value: maCnt,
+            itemStyle: {
+              color: '#FF994F',
+            },
+          },
+          {
+            value: crCnt,
+            itemStyle: {
+              color: '#FF4E63',
+            },
+          },
+        ],
+        type: 'bar',
+        showBackground: true,
+        backgroundStyle: {
+          color: 'rgba(180, 180, 180, 0.5)',
+          borderRadius: [100, 100, 100, 100],
+        },
+        barWidth: '40%',
+        itemStyle: {
+          borderRadius: [100, 100, 100, 100],
+        },
+      },
+    ],
+  };
+
+  return errorStatsBarOption;
+}
+
 export function getErrorDetailChartOption(detail: ErrorStatsType[]) {
   const errorStatsDetailOption: echarts.EChartsOption = {
     tooltip: {
@@ -971,80 +1125,4 @@ export function getErrorDetailChartOption(detail: ErrorStatsType[]) {
   };
 
   return errorStatsDetailOption;
-}
-
-export const timerOption: echarts.EChartsOption = {
-  graphic: {
-    elements: [
-      {
-        type: 'group',
-        left: 'center',
-        top: 'center',
-        children: new Array(7).fill(0).map((val, i) => ({
-          type: 'rect',
-          x: i * 12,
-          shape: {
-            x: 0,
-            y: -10,
-            width: 4,
-            height: 20,
-          },
-          style: {
-            fill: '#8041F7',
-          },
-          keyframeAnimation: {
-            duration: 800,
-            delay: i * 200,
-            loop: true,
-            keyframes: [
-              {
-                percent: 0.5,
-                scaleY: 0.3,
-                easing: 'cubicIn',
-              },
-              {
-                percent: 1,
-                scaleY: 1,
-                easing: 'cubicOut',
-              },
-            ],
-          },
-        })),
-      },
-    ],
-  },
-};
-
-export function getTimerOption(chartCountPercentData: number, chartCountTotalData: number) {
-  const timerOption: echarts.EChartsOption = {
-    title: {
-      show: false,
-    },
-
-    backgroundColor: '#FFFFFF',
-    series: [
-      {
-        center: ['40%', '58%'],
-        name: 'Access From',
-        type: 'pie',
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
-
-        label: {
-          show: false,
-        },
-
-        labelLine: {
-          show: false,
-        },
-        data: [{ value: chartCountPercentData }, { value: chartCountTotalData }],
-        emphasis: {
-          disabled: true,
-        },
-      },
-    ],
-    color: ['#000000', '#D5D5D5'],
-  };
-
-  return timerOption;
 }

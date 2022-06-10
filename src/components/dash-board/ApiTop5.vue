@@ -30,7 +30,7 @@ import type { ApiStat } from '@/types/DashBoardType';
 const props = defineProps({
   realTimeStat: {
     type: Object,
-    default: () => ({}),
+    default: {} as ApiStat,
   },
   syncedIsCommError: {
     type: Boolean,

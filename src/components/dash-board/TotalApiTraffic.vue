@@ -106,62 +106,39 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: 'modalChange', status: boolean): void;
+  (e: 'modalChange', show: boolean): void;
 }>();
 
-const myChart1 = shallowRef({} as echarts.EChartsType);
-const myChart2 = shallowRef({} as echarts.EChartsType);
-const myChart3 = shallowRef({} as echarts.EChartsType);
+const totalChart = shallowRef({} as echarts.EChartsType);
+const successChart = shallowRef({} as echarts.EChartsType);
+const failChart = shallowRef({} as echarts.EChartsType);
 const dom4 = ref({} as HTMLDivElement);
-const myChart4 = shallowRef({} as echarts.EChartsType);
-
-const isModalDomInit = ref(false);
+const modalChart = shallowRef({} as echarts.EChartsType);
 
 onMounted(() => {
-  myChart1.value = drawTotalApiTrafficChart(
+  totalChart.value = drawTotalApiTrafficChart(
     'totalApiTrafficTotal',
     getTotalApiTrafficOption(props.totalApiTraffic.totCnt)
   );
-  myChart2.value = drawTotalApiTrafficChart(
+  successChart.value = drawTotalApiTrafficChart(
     'totalApiTrafficSuccess',
     getSuccessApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt)
   );
-  myChart3.value = drawTotalApiTrafficChart(
+  failChart.value = drawTotalApiTrafficChart(
     'totalApiTrafficFail',
     getFailApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt)
   );
   window.addEventListener('resize', observeSize);
 });
 
-watch(
-  () => props.totalApiTraffic,
-  () => {
-    myChart1.value.clear();
-    myChart2.value.clear();
-    myChart3.value.clear();
-
-    myChart1.value.setOption(getTotalApiTrafficOption(props.totalApiTraffic.totCnt));
-    myChart2.value.setOption(getSuccessApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt));
-    myChart3.value.setOption(getFailApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt));
-  }
-);
-
-watch(props.totalApiTrafficDetail, () => {
-  setTimeout(() => {
-    myChart4.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
-  }, 400);
-});
-
-const setDetailChart = () => {
-  isModalDomInit.value = true;
-  dom4.value = document.getElementById('totalApiTrafficDetail') as HTMLDivElement;
-  myChart4.value = echarts.init(dom4.value);
-  myChart4.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
-};
+const isModalDomInit = ref(false);
 
 onUpdated(() => {
-  if (!isModalDomInit && props.syncedIsDraged === 1) {
-    setDetailChart();
+  if (!isModalDomInit.value && props.syncedIsDraged === 1) {
+    isModalDomInit.value = true;
+    dom4.value = document.getElementById('totalApiTrafficDetail') as HTMLDivElement;
+    modalChart.value = echarts.init(dom4.value);
+    modalChart.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
   }
 });
 
@@ -169,6 +146,28 @@ onUnmounted(() => {
   window.removeEventListener('resize', observeSize);
 });
 
+watch(
+  () => props.totalApiTraffic,
+  () => {
+    totalChart.value.clear();
+    successChart.value.clear();
+    failChart.value.clear();
+
+    totalChart.value.setOption(getTotalApiTrafficOption(props.totalApiTraffic.totCnt));
+    successChart.value.setOption(
+      getSuccessApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt)
+    );
+    failChart.value.setOption(getFailApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt));
+  }
+);
+
+watch(props.totalApiTrafficDetail, () => {
+  setTimeout(() => {
+    modalChart.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
+  }, 400);
+});
+
+// Modal 동작 관련 메서드
 const showModal = () => {
   if (props.isLoadData) {
     return;
@@ -205,11 +204,11 @@ const observeSize = () => {
 watch(width1, () => {
   console.log('resize!!');
 
-  myChart1.value.resize();
-  myChart2.value.resize();
-  myChart3.value.resize();
+  totalChart.value.resize();
+  successChart.value.resize();
+  failChart.value.resize();
   if (isModalDomInit.value == true) {
-    myChart4.value.resize();
+    modalChart.value.resize();
   }
 });
 </script>
