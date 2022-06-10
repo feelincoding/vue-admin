@@ -45,33 +45,34 @@
 <script setup lang="ts">
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { computed, ref, watch, type Ref } from 'vue';
-const props = defineProps({
-  inputNm: { type: String, require: false, default: '' },
-  placeholderStart: { type: String, require: false, default: '' },
-  placeholderEnd: { type: String, require: false, default: '' },
-  startDt: { type: String || null, require: false, default: null },
-  endDt: { type: String || null, require: false, default: null },
-  isValid: { type: Boolean, require: false, default: true },
-});
+import { computed, ref, watch } from 'vue';
+import type { Ref } from 'vue';
+const props = defineProps<{
+  inputNm: string;
+  placeholderStart: string;
+  placeholderEnd: string;
+  startDt: string | null;
+  endDt: string | null;
+  isValid: Boolean | null;
+}>();
 
 const showStart = ref(false);
 const showEnd = ref(false);
 const showCount = ref(false);
 
 const emit = defineEmits<{
-  (e: 'isValid', value: boolean): void;
-  (e: 'startDt', value: string | null): void;
-  (e: 'endDt', value: string | null): void;
+  (e: 'update:isValid', value: boolean): void;
+  (e: 'update:startDt', value: string | null): void;
+  (e: 'update:endDt', value: string | null): void;
 }>();
 
 const start: Ref<string | null> = computed({
   get: () => props.startDt,
   set: (val: string | null) => {
     if (val == null || val == '') {
-      emit('startDt', val);
+      emit('update:startDt', val);
     } else {
-      emit('startDt', val + ' 00:00:00');
+      emit('update:startDt', val + ' 00:00:00');
     }
   },
 });
@@ -79,26 +80,26 @@ const end: Ref<string | null> = computed({
   get: () => props.endDt,
   set: (val: string | null) => {
     if (val == null || val == '') {
-      emit('endDt', val);
+      emit('update:endDt', val);
     } else {
-      emit('endDt', val + ' 00:00:00');
+      emit('update:endDt', val + ' 00:00:00');
     }
   },
 });
 
 watch(start, () => {
   if (start.value == null || end.value == null || start.value == '' || end.value == '') {
-    emit('isValid', false);
+    emit('update:isValid', false);
   } else {
-    emit('isValid', true);
+    emit('update:isValid', true);
   }
 });
 
 watch(end, () => {
   if (start.value == null || end.value == null || start.value == '' || end.value == '') {
-    emit('isValid', false);
+    emit('update:isValid', false);
   } else {
-    emit('isValid', true);
+    emit('update:isValid', true);
   }
 });
 
