@@ -130,7 +130,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import router from '@/router';
 import { useToast } from 'vue-toastification';
-import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
+import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 
 const toast = useToast();
 const route = useRoute();
@@ -215,30 +215,28 @@ const fetchApiList = () => {
       }
     });
 };
-const modal = inject(modalInjectionKey)!!;
+const modal = inject(modalInjectionKey) as ModalFunction;
 
 const deleteApi = async () => {
-  modal().show(t('error.server_error'));
-  modal().hide();
-  // const query = { id: deleteMsg.value.id, sysId: deleteMsg.value.sysId };
-  // isModalProgress.value = true;
+  const query = { id: deleteMsg.value.id, sysId: deleteMsg.value.sysId };
+  isModalProgress.value = true;
 
-  // await apiModule
-  //   .deleteApi(query)
-  //   .then(() => {
-  //     showModal.value = false;
-  //     isModalProgress.value = false;
-  //     toast.success(t('common.delete_success'), {
-  //       toastClassName: ['toast-success-custom-class'],
-  //     });
-  //   })
-  //   .catch(() => {
-  //     showModal.value = false;
-  //     isModalProgress.value = false;
-  //     modal().show(t('error.server_error'));
-  //   });
+  await apiModule
+    .deleteApi(query)
+    .then(() => {
+      showModal.value = false;
+      isModalProgress.value = false;
+      toast.success(t('common.delete_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
+    })
+    .catch(() => {
+      showModal.value = false;
+      isModalProgress.value = false;
+      modal().show(t('error.server_error'));
+    });
 
-  // fetchApiList();
+  fetchApiList();
 };
 
 // for searching
