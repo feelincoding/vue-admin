@@ -112,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, type Ref } from 'vue';
+import { ref, watch, onMounted, type Ref, inject } from 'vue';
 import ListLayout from '@/components/layout/ListLayout.vue';
 import ListForm from '@/components/commons/ListForm.vue';
 import ListRow from '@/components/api-mngt/list/ListRow.vue';
@@ -130,6 +130,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import router from '@/router';
 import { useToast } from 'vue-toastification';
+import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 
 const toast = useToast();
 const route = useRoute();
@@ -210,20 +211,21 @@ const fetchApiList = () => {
         console.log('API API Cancel');
       } else {
         isShowProgress.value = false;
-        // this.$modal.show(`${this.$t('error.server_error')}`);
+        modal!().show(t('error.server_error'));
       }
     });
 };
+const modal = inject(modalInjectionKey) as ModalFunction;
 
 const deleteApi = async () => {
   const query = { id: deleteMsg.value.id, sysId: deleteMsg.value.sysId };
   isModalProgress.value = true;
+
   await apiModule
     .deleteApi(query)
     .then(() => {
       showModal.value = false;
       isModalProgress.value = false;
-
       toast.success(t('common.delete_success'), {
         toastClassName: ['toast-success-custom-class'],
       });
@@ -231,7 +233,7 @@ const deleteApi = async () => {
     .catch(() => {
       showModal.value = false;
       isModalProgress.value = false;
-      // this.$modal.show(`${this.$t('error.server_error')}`);
+      modal().show(t('error.server_error'));
     });
 
   fetchApiList();

@@ -5,11 +5,11 @@
       <router-view />
       <MainFooter></MainFooter>
       <ModalLayout
-        v-if="showAlert"
+        v-if="showModal"
         :alert="true"
         errorTitle="정보"
-        :errorDesc="message"
-        @close="showAlert = false"
+        :errorDesc="modalMessage"
+        @close="showModal = false"
         size="s"
       >
         <!-- <template v-slot:modalContainer> {{ message }} </template> -->
@@ -21,12 +21,27 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
-
+import { provide } from 'vue';
 import MainHeader from '@/components/layout/header/MainHeader.vue';
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
-const showAlert = ref(false);
-const message = ref('');
+import { modalInjectionKey, type IModal, type ModalFunction } from '@/plugins/modal/ModalPlugin';
+const showModal = ref(false);
+const modalMessage = ref('');
+
+const updateScore: ModalFunction = function () {
+  return {
+    show: function (message: string): void {
+      showModal.value = true;
+      modalMessage.value = message;
+    },
+    hide: function (): void {
+      showModal.value = false;
+    },
+  };
+};
+
+provide(modalInjectionKey, updateScore);
 </script>
 
 <style scoped></style>
