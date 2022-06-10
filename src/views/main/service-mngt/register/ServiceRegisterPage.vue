@@ -11,71 +11,71 @@
           <TextDebounceForm
             type="text"
             :inputNm="$t('service.id')"
-            :check="(isDuplicatedId as boolean)"
+            :check="isDuplicatedId"
             :placeholder="$t('service.idEx')"
-            v-model="formData.id"
+            v-model:value="formData.id"
             @input="duplicateCheckId()"
-            :isValid.sync="idValid"
+            v-model:isValid="idValid"
           />
-          <DateGroup
+          <!-- <DateGroup
             :inputNm="$t('service.date')"
             placeholderStart="YYYY-MM-DD"
             placeholderENd="YYYY-MM-DD"
-            :startDt.sync="formData.svcStDt"
-            :endDt.sync="formData.svcEndDt"
-            :isValid.sync="dateValid"
-          />
+            v-model:startDt="formData.svcStDt"
+            v-model:endDt="formData.svcEndDt"
+            v-model:isValid="dateValid"
+          /> -->
           <AuthReqGroup
             @basicAuthClicked="basicAuthClicked"
             :inputNm="$t('service.authentication_method')"
             :basicId="formData.athn.basic.id"
             :basicPw="formData.athn.basic.pw"
-            :athn.sync="formData.athnType"
-            :alg.sync="jwtAlgList"
-            :pickedAlg.sync="formData.athn.jwt.alg"
-            :issuer.sync="formData.athn.jwt.iss"
-            :subject.sync="formData.athn.jwt.aud"
-            :publicKey.sync="formData.athn.jwt.pubKey"
-            :isValid.sync="authValid"
+            v-model:athn="formData.athnType"
+            v-model:alg="jwtAlgList"
+            v-model:pickedAlg="formData.athn.jwt.alg"
+            v-model:issuer="formData.athn.jwt.iss"
+            v-model:subject="formData.athn.jwt.aud"
+            v-model:publicKey="formData.athn.jwt.pubKey"
+            v-model:isValid="authValid"
             :progress="isBasicAuthProgress"
           />
           <ApiAuthReqGroup inputNm="권한설정" @showApiAuth="showApiAuth" :setCheck="apiAuthValid" />
           <SlaReqGroup
             :inputNm="$t('service.SLA_mngt')"
-            :secVal.sync="formData.sla.sec"
-            :minVal.sync="formData.sla.min"
-            :hourVal.sync="formData.sla.hr"
-            :dayVal.sync="formData.sla.day"
-            :monthVal.sync="formData.sla.mon"
-            :onSec.sync="slaSec"
-            :onMin.sync="slaMin"
-            :onHr.sync="slaHr"
-            :onDay.sync="slaDay"
-            :onMon.sync="slaMon"
+            v-model:secVal="formData.sla.sec"
+            v-model:minVal="formData.sla.min"
+            v-model:hourVal="formData.sla.hr"
+            v-model:dayVal="formData.sla.day"
+            v-model:monthVal="formData.sla.mon"
+            v-model:onSec="slaSec"
+            v-model:onMin="slaMin"
+            v-model:onHr="slaHr"
+            v-model:onDay="slaDay"
+            v-model:onMon="slaMon"
           />
           <InputGroup
             type="text"
             :inputNm="$t('service.tkcgrNm')"
             :placeholder="$t('service.tkcgrNmEx')"
-            :value.sync="formData.tkcgrNm"
-            :isValid.sync="tkcgrNmValid"
+            v-model:value="formData.tkcgrNm"
+            v-model:isValid="tkcgrNmValid"
           />
           <InputGroup
             type="text"
             :inputNm="$t('service.tkcgrPos')"
             :placeholder="$t('service.tkcgrPosEx')"
-            :value.sync="formData.tkcgrPos"
-            :isValid.sync="tkcgrPosValid"
+            v-model:value="formData.tkcgrPos"
+            v-model:isValid="tkcgrPosValid"
           />
           <InputGroup
             type="text"
             :inputNm="$t('service.tkcgrEml')"
-            :placeholder="$t('service.tkcgrEmlEx')"
+            placeholder="kt0601@kt.com"
             inputClass="input-box lg check-ok"
-            :value.sync="formData.tkcgrEml"
-            :isValid.sync="tkcgrEmlValid"
+            v-model:value="formData.tkcgrEml"
+            v-model:isValid="tkcgrEmlValid"
           />
-          <SysExGroup :inputNm="$t('service.desc')" v-model="formData.desc" />
+          <SysExGroup :inputNm="$t('service.desc')" v-model:value="formData.desc" />
           <ModalLayout size="s" v-if="modal">
             <template v-slot:modalHeader
               ><h2 class="h1-tit">{{ $t('service.register') }}</h2>
@@ -145,7 +145,6 @@ import ApiAuthModal from '@/components/service-mngt/ApiAuthModal.vue';
 import ApiAuthReqGroup from '@/components/service-mngt/ApiAuthReqGroup.vue';
 import ServiceRepository from '@/repository/service-repository';
 
-import { useRoute } from 'vue-router';
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';

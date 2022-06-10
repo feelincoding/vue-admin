@@ -21,40 +21,42 @@
 </template>
 <script setup lang="ts">
 import { checkEnglishNumber, checkLength } from '@/utils/validation';
-import { ref, watch, type Ref } from 'vue';
-
-const props = defineProps({
-  inputNm: { type: String, require: false, default: '' },
-  type: { type: String, require: false, default: '' },
-  placeholder: { type: String, require: false, default: '' },
-  check: { type: Boolean || null, require: false, default: null },
-  value: { type: String, require: false, default: '' },
-  active: { type: String, require: false, default: '' },
-  isValid: { type: Boolean || null, require: false, default: null },
-});
-const emit = defineEmits<{
-  (e: 'isValid', value: boolean | null): void;
-  (e: 'value', value: string | null): void;
-  (e: 'input', value: string | null): void;
+import { computed, ref, watch } from 'vue';
+import type { Ref } from 'vue';
+const props = defineProps<{
+  inputNm: string;
+  type: string;
+  value: string;
+  placeholder: string;
+  check: boolean | null;
+  isValid?: Boolean | null;
+  disabled?: boolean;
 }>();
 
-const text = ref('');
+const emit = defineEmits<{
+  (e: 'update:isValid', value: boolean | null): void;
+  (e: 'update:value', value: string | null): void;
+}>();
+
 const emptyChk = ref(false);
 const notiMessage: Ref<{ valid: boolean | null; msg: string }> = ref({ valid: null, msg: '' });
 
 watch(notiMessage, (val) => {
-  emit('isValid', val.valid);
+  emit('update:isValid', val.valid);
 });
 
-watch(text, (val) => {
-  if (checkLength(val, 1, 20) && checkEnglishNumber(val)) {
-    notiMessage.value = { valid: true, msg: '' };
-  } else if (val == '') {
-    notiMessage.value = { valid: false, msg: '' };
-  } else {
-    // notiMessage.value = { valid: false, msg: $t('service.valid_check_id') as string };
-  }
-  emit('input', val);
+const text = computed({
+  get: () => props.value,
+  set: (val) => {
+    if (checkLength(val, 1, 20) && checkEnglishNumber(val)) {
+      notiMessage.value = { valid: true, msg: '' };
+    } else if (val == '') {
+      notiMessage.value = { valid: false, msg: '' };
+    } else {
+      notiMessage.value = { valid: false, msg: $t('service.valid_check_id') as string };
+    }
+    emit('update:value', val);
+  },
 });
 
 const notice = () => {

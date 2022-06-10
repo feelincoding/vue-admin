@@ -115,15 +115,15 @@ const props = defineProps<{
 //   progress: { type: Boolean, require: false, default: false },
 // });
 const emit = defineEmits<{
-  (e: 'isValid', value: boolean | null): void;
-  (e: 'basicId', value: string | null): void;
-  (e: 'basicPw', value: string | null): void;
-  (e: 'pickedAlg', value: string | null): void;
-  (e: 'alg', value: string[]): void;
-  (e: 'issuer', value: string | null): void;
-  (e: 'subject', value: string | null): void;
-  (e: 'publicKey', value: string | null): void;
-  (e: 'auth', value: string | null): void;
+  (e: 'update:isValid', value: boolean | null): void;
+  (e: 'update:basicId', value: string | null): void;
+  (e: 'update:basicPw', value: string | null): void;
+  (e: 'update:pickedAlg', value: string | null): void;
+  (e: 'update:alg', value: string[]): void;
+  (e: 'update:issuer', value: string | null): void;
+  (e: 'update:subject', value: string | null): void;
+  (e: 'update:publicKey', value: string | null): void;
+  (e: 'update:athn', value: string): void;
   (e: 'basicAuthClicked'): void;
 }>();
 
@@ -134,9 +134,9 @@ watch(
   (val) => {
     if (auth.value == 'basic') {
       if (val == '' || val == null) {
-        emit('isValid', false);
+        emit('update:isValid', false);
       } else {
-        emit('isValid', true);
+        emit('update:isValid', true);
       }
     }
   }
@@ -145,7 +145,7 @@ watch(
 const algPick = computed({
   get: () => props.pickedAlg,
   set: (val) => {
-    emit('pickedAlg', val as string);
+    emit('update:pickedAlg', val);
     if (auth.value == 'jwt') {
       if (
         algPick.value != 'null' &&
@@ -157,9 +157,9 @@ const algPick = computed({
         JWTsubject.value != null &&
         JWTpublicKey.value != null
       ) {
-        emit('isValid', true);
+        emit('update:isValid', true);
       } else {
-        emit('isValid', false);
+        emit('update:isValid', false);
       }
     }
   },
@@ -169,36 +169,36 @@ const auth = computed({
   get: () => props.athn,
   set: (val) => {
     showInput.value = false;
-    emit('auth', val as string);
-    emit('isValid', false);
+    emit('update:athn', val);
+    emit('update:isValid', false);
   },
 });
 
 const JWTalg = computed({
   get: () => props.alg,
   set: (val) => {
-    emit('alg', val);
+    emit('update:alg', val);
   },
 });
 
 const JWTissuer = computed({
   get: () => props.issuer,
   set: (val) => {
-    emit('issuer', val);
+    emit('update:issuer', val);
   },
 });
 
 const JWTsubject = computed({
   get: () => props.subject,
   set: (val) => {
-    emit('subject', val);
+    emit('update:subject', val);
   },
 });
 
 const JWTpublicKey = computed({
   get: () => props.publicKey,
   set: (val) => {
-    emit('publicKey', val);
+    emit('update:publicKey', val);
   },
 });
 

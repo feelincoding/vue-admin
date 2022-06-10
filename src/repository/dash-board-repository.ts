@@ -12,6 +12,8 @@ import type {
   ApiResponseStatus,
   RealTimeApiStat,
   RealTimeServiceStat,
+  LastTrafficType,
+  LastResponseType,
 } from '@/types/DashBoardType';
 export default class DashBoardRepository {
   public totaltrafficDetail: TotalTrafficStat[] = [];
@@ -122,7 +124,6 @@ export default class DashBoardRepository {
           `/realtimeServiceStat`,
           param
         );
-        console.log('ccs2', response.data.value);
         return Promise.resolve(response.data);
       } catch (error: GateWayError | any) {
         return Promise.reject(error);
@@ -137,6 +138,24 @@ export default class DashBoardRepository {
       } catch (error: GateWayError | any) {
         return Promise.reject(error);
       }
+    }
+  }
+
+  async getLastTrafficCount() {
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<LastTrafficType[]>>('/getTrafficCount');
+      return Promise.resolve(response.data);
+    } catch (error: GateWayError | any) {
+      return Promise.reject(error);
+    }
+  }
+
+  async getLastResponseList() {
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<LastResponseType[]>>('getTrafficResTime');
+      return Promise.resolve(response.data);
+    } catch (error: GateWayError | any) {
+      return Promise.reject(error);
     }
   }
 }

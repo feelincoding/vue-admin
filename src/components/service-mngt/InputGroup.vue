@@ -30,8 +30,8 @@ const props = defineProps<{
   type: string;
   placeholder: string;
   value: string | null;
-  disabled: Boolean;
-  isValid: Boolean;
+  disabled?: Boolean;
+  isValid: Boolean | null;
 }>();
 // const props = defineProps({
 //   inputNm: { type: String, require: false, default: '' },
@@ -42,8 +42,8 @@ const props = defineProps<{
 //   isValid: { type: Boolean, require: false, default: false },
 // });
 const emit = defineEmits<{
-  (e: 'isValid', value: boolean | null): void;
-  (e: 'value', value: string | null): void;
+  (e: 'update:isValid', value: boolean | null): void;
+  (e: 'update:value', value: string | null): void;
 }>();
 
 const emptyChk = ref(false);
@@ -51,7 +51,7 @@ const emptyChk = ref(false);
 const notiMessage: Ref<{ valid: boolean | null; msg: string }> = ref({ valid: null, msg: '' });
 
 watch(notiMessage, (res) => {
-  emit('isValid', res.valid);
+  emit('update:isValid', res.valid);
 });
 
 const text = computed({
@@ -88,7 +88,7 @@ const text = computed({
           break;
       }
     }
-    emit('value', val);
+    emit('update:value', val);
   },
 });
 
