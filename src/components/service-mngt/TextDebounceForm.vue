@@ -5,6 +5,7 @@
       <input
         :type="type"
         :placeholder="placeholder"
+        :disabled="props.disabled"
         v-model="text"
         :class="{
           'check-ok': notiMessage.valid === true && check === true,

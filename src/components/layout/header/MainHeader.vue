@@ -5,41 +5,35 @@
     </aside>
     <nav id="navi">
       <ul>
-        <li :class="{ on: navState.dashboardState }">
-          <router-link :to="`${dashBoardPath}`" @click="changeNavState('dashboardState')">Home</router-link>
+        <li :class="{ on: navState.dashboardState }" @click="changeNavState('dashboardState')">
+          <router-link :to="`${dashBoardPath}`">Home</router-link>
         </li>
-        <li :class="{ on: navState.systemState }">
-          <router-link :to="`${systemPath}`" @click="changeNavState('systemState')">시스템 관리</router-link>
+        <li :class="{ on: navState.systemState }" @click="changeNavState('systemState')">
+          <router-link :to="`${systemPath}`">시스템 관리</router-link>
         </li>
-        <li :class="{ on: navState.apiState }">
-          <router-link :to="`${apiPath}`" @click="changeNavState('apiState')">API관리</router-link>
+        <li :class="{ on: navState.apiState }" @click="changeNavState('apiState')">
+          <router-link :to="`${apiPath}`">API관리</router-link>
         </li>
-        <li :class="{ on: navState.serviceState }">
-          <router-link :to="`${servicePath}`" @click="changeNavState('serviceState')">서비스 관리</router-link>
+        <li :class="{ on: navState.serviceState }" @click="changeNavState('serviceState')">
+          <router-link :to="`${servicePath}`">서비스 관리</router-link>
         </li>
-        <li :class="{ on: navState.monitoringState }">
-          <a href="javascript:void(0)" @click="changeShowMonitoring">모니터링</a>
+        <li :class="{ on: navState.monitoringState }" @click="changeShowMonitoring">
+          <a href="javascript:void(0)">모니터링</a>
           <Transition name="fade" appear>
             <div class="depth-menu" v-show="navState.showMonitoring">
               <ul>
-                <li>
+                <li @click="changeNavState('monitoringState')">
                   <i><img src="@/assets/user_ico.svg" alt="관제" /></i>
                   <!-- <router-link :to="`${monitoringPath}`">모니터링</router-link> -->
-                  <router-link :to="`${monitoringPath}/control`" @click="changeNavState('monitoringState')"
-                    >관제</router-link
-                  >
+                  <router-link :to="`${monitoringPath}/control`">관제</router-link>
                 </li>
-                <li>
+                <li @click="changeNavState('monitoringState')">
                   <i><img src="@/assets/stati_ico.svg" alt="통계" /></i>
-                  <router-link :to="`${monitoringPath}/statistic`" @click="changeNavState('monitoringState')"
-                    >통계</router-link
-                  >
+                  <router-link :to="`${monitoringPath}/statistic`">통계</router-link>
                 </li>
-                <li>
+                <li @click="changeNavState('monitoringState')">
                   <i><img src="@/assets/traffic_ico.svg" alt="트래픽" /></i>
-                  <router-link :to="`${monitoringPath}/traffic`" @click="changeNavState('monitoringState')"
-                    >트래픽</router-link
-                  >
+                  <router-link :to="`${monitoringPath}/traffic`">트래픽</router-link>
                 </li>
               </ul>
             </div>
@@ -58,6 +52,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import { SYSTEM, SERVICE, API, MONITORING, MANAGEMENT } from '@/router/Names';
+import { ref, type Ref } from 'vue';
 
 interface NavState {
   [key: string]: boolean;
@@ -71,7 +66,7 @@ interface NavState {
   showManagement: boolean;
 }
 
-const navState: NavState = {
+const navState: Ref<NavState> = ref({
   dashBoardState: true,
   systemState: false,
   apiState: false,
@@ -80,26 +75,26 @@ const navState: NavState = {
   managementState: false,
   showMonitoring: false,
   showManagement: false,
-};
+});
 
 const changeShowMonitoring = () => {
-  if (!navState.showMonitoring) {
-    navState.showMonitoring = true;
-    if (navState.showManagement) {
-      navState.showManagement = false;
+  if (!navState.value.showMonitoring) {
+    navState.value.showMonitoring = true;
+    if (navState.value.showManagement) {
+      navState.value.showManagement = false;
     }
   } else {
-    navState.showMonitoring = false;
+    navState.value.showMonitoring = false;
   }
-  console.log(navState.showMonitoring);
+  console.log(navState.value.showMonitoring);
 };
 
 const changeNavState = (state: string) => {
   console.log(state);
   for (const key of Object.keys(navState)) {
-    navState[key] = false;
+    navState.value[key] = false;
   }
-  navState[state] = true;
+  navState.value[state] = true;
 };
 
 const dashBoardPath = '/dashboard';

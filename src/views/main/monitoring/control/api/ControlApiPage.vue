@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import type { Ref } from 'vue';
 import type { ControlRequest, RealTimeStat, ApiStat, apiStatDetailProps } from '@/types/MonitoringControlType';

@@ -1,7 +1,7 @@
 <template>
   <article class="dashboard">
     <!--- refresh play/pause area --->
-    <TimeCheck :isLoadData.sync="isLoadData" />
+    <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
     <gridLayout
       :layout="layout"
       :col-num="1"
@@ -35,17 +35,19 @@
             <!--- Total API Traffic (24Hour) area --->
             <TotalApiTraffic
               v-model:totalApiTraffic="totalTraffic"
-              :modal.sync="trafficModal"
-              :isDraged.sync="isDraged"
-              :isLoadData="isLoadData"
-              :isCommError.sync="isTotalAPITrafficCommError"
+              v-model:isLoadData="isLoadData"
+              v-model:modal="trafficModal"
+              @modalChange="changeTrafficModal"
+              v-model:isDraged="isDraged"
+              v-model:isCommError="isTotalAPITrafficCommError"
             />
             <!--- Error stats (24Hour) area --->
             <ErrorStats
               v-model:errorStats="errorStats"
-              :modal.sync="errorModal"
+              v-model:isLoadData="isLoadData"
+              v-model:modal="errorModal"
+              @modalChange="changeErrorModal"
               :isDraged.sync="isDraged"
-              :isLoadData="isLoadData"
               :isCommError.sync="isErrorStatCommError"
             />
             <!--- API 평균 응답시간 / TPS area !! --->
@@ -79,7 +81,15 @@
         >
           <section class="group col-2">
             <!--- API Top 5 area --->
-            <ApiTop5 v-model:realTimeStat="realTimeApiStat" :isCommError.sync="isServiceTop5CommError" />
+            <ApiTop5
+              v-model:realTimeStat="realTimeApiStat"
+              :isCommError.sync="isServiceTop5CommError"
+              @clickModalBtn="
+                (msg) => {
+                  showModal(msg);
+                }
+              "
+            />
             <!--- Service Top 5 area --->
             <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
           </section>
@@ -99,6 +109,19 @@
         </div>
       </gridItem>
     </gridLayout>
+    <ApiDetailModal
+      v-if="isShowModal"
+      @close="isShowModal = false"
+      :msgId="msgId"
+      :msgType="msgType"
+      :msgEndTime="msgEndTime"
+      :msgTimeInterval="gseTimeInterval"
+    ></ApiDetailModal>
+    <RealTimeDetailModal
+      v-if="realTimeModal"
+      :modal.sync="realTimeModal"
+      :setParamData.sync="clickedParamData"
+    ></RealTimeDetailModal>
   </article>
 </template>
 <script setup lang="ts">
@@ -113,8 +136,11 @@ import ApiTop5 from '@/components/dash-board/ApiTop5.vue';
 import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
 import LastTraffic from '@/components/dash-board/LastTraffic.vue';
 import LastResponse from '@/components/dash-board/LastResponse.vue';
+import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
+import { convertBaseTime } from '@/utils/converter';
+
 import type {
   RealTimeServiceStat,
   TotalTrafficStat,
@@ -186,7 +212,13 @@ const lastResponseList: Ref<LastResponseType[]> = ref({} as LastResponseType[]);
 
 const isLoadData = ref(false);
 const trafficModal = ref(false);
+const changeTrafficModal = (show: boolean) => {
+  trafficModal.value = show;
+};
 const errorModal = ref(false);
+const changeErrorModal = (show: boolean) => {
+  errorModal.value = show;
+};
 const avgModal = ref(false);
 const realTimeModal = ref(false);
 const draggable = ref(true);
@@ -246,68 +278,73 @@ const dragEvent = (i: string) => {
 };
 
 const dashBoardRepo = new DashBoardRepository();
-// const getTotalTrafficDetail = (): TotalTrafficStat[] => {
-//   // return {
-//   //   svcId: null,
-//   //   statBaseTm: '2022-06-09T15:05:09.381613',
-//   //   totCnt: 24985,
-//   //   sucesCnt: 20426,
-//   //   failCnt: 4559,
-//   // };
-//   const temp = dashBoardRepo.getTrafficStatDetail();
-//   return [];
-// };
-
 onMounted(() => {
-  dashBoardRepo
-    .getTotalAPITraffic(TOTAL_TRAFFIC_PARAM)
-    .then((res) => {
-      totalTraffic.value = res.value as TotalTrafficStat;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getErrorStats(ERROR_STATS_PARAM)
-    .then((res) => {
-      errorStats.value = res.value as ErrorStatsType;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getApiResponseStatus(API_RESPONSE_PARAM)
-    .then((res) => {
-      apiResponseStatus.value = res.value as ApiResponseStatus;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getRealTimeApiStat(REAL_TIME_PARAM)
-    .then((res) => {
-      realTimeApiStat.value = res.value as RealTimeApiStat;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getRealTimeServiceStat(REAL_TIME_PARAM)
-    .then((res) => {
-      realTimeServiceStat.value = res.value as RealTimeServiceStat;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getLastTrafficCount()
-    .then((res) => {
-      lastTrafficList.value = res.value as LastTrafficType[];
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getLastResponseList()
-    .then((res) => {
-      lastResponseList.value = res.value as LastResponseType[];
-    })
-    .catch(() => {});
+  requestAllApi();
 });
+
+const requestAllApi = () => {
+  const request = [
+    dashBoardRepo.getTotalAPITraffic(TOTAL_TRAFFIC_PARAM),
+    dashBoardRepo.getErrorStats(ERROR_STATS_PARAM),
+    dashBoardRepo.getApiResponseStatus(API_RESPONSE_PARAM),
+    dashBoardRepo.getRealTimeApiStat(REAL_TIME_PARAM),
+    dashBoardRepo.getRealTimeServiceStat(REAL_TIME_PARAM),
+    dashBoardRepo.getLastTrafficCount(),
+    dashBoardRepo.getLastResponseList(),
+  ];
+
+  isLoadData.value = true;
+
+  Promise.allSettled(request).then((results) => {
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        if (index == 0) {
+          totalTraffic.value = result.value as TotalTrafficStat;
+          isTotalAPITrafficCommError.value = false;
+          TOTAL_DETAIL_TRAFFIC_PARAM.statBaseTm = convertBaseTime(totalTraffic.value.statBaseTm);
+        } else if (index == 1) {
+          errorStats.value = result.value as ErrorStatsType;
+          isErrorStatCommError.value = false;
+          ERROR_STATS_DETAIL_PARAM.statBaseTm = convertBaseTime(errorStats.value.statBaseTm);
+        } else if (index == 2) {
+          apiResponseStatus.value = result.value as ApiResponseStatus;
+          isApiResponseStusCommError.value = false;
+          API_RESPONSE_DETAIL_PARAM.statBaseTm = convertBaseTime(apiResponseStatus.value.statBaseTm);
+        } else if (index == 3) {
+          realTimeApiStat.value = result.value as RealTimeApiStat;
+          isApiTop5CommError.value = false;
+        } else if (index == 4) {
+          realTimeServiceStat.value = result.value as RealTimeServiceStat;
+          isServiceTop5CommError.value = false;
+        } else if (index == 5) {
+          lastTrafficList.value = result.value as LastTrafficType[];
+          isLastTrafficCommError.value = false;
+        } else if (index == 6) {
+          lastResponseList.value = result.value as LastResponseType[];
+          isLastResponseCommError.value = false;
+        }
+      } else {
+        if (index == 0) {
+          isTotalAPITrafficCommError.value = true;
+        } else if (index == 1) {
+          isErrorStatCommError.value = true;
+        } else if (index == 2) {
+          isApiResponseStusCommError.value = true;
+        } else if (index == 3) {
+          isApiTop5CommError.value = true;
+        } else if (index == 4) {
+          isServiceTop5CommError.value = true;
+        } else if (index == 5) {
+          isLastTrafficCommError.value = true;
+        } else if (index == 6) {
+          isLastResponseCommError.value = true;
+        }
+      }
+    });
+
+    isLoadData.value = false;
+  });
+};
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
 const isShowModal = ref(false);
@@ -315,6 +352,7 @@ const msgId = ref('');
 const msgType = ref('');
 const msgEndTime = ref('');
 const gseTimeInterval = ref(1440);
+
 const showModal = (msg: any) => {
   isShowModal.value = true;
   if (typeof msg.svcId === 'undefined') {
@@ -327,243 +365,6 @@ const showModal = (msg: any) => {
     msgEndTime.value = realTimeServiceStat.value.statBaseTm;
   }
 };
-
-//   dashBoardModule = getModule(DashBoardModule, this.$store);
-
-//   modalOpenCheck() {
-//     if (this.trafficModal == false && this.errorModal == false && this.avgModal == false) {
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-
-//   isErrorStatCommError = false;
-//   isTotalAPITrafficCommError = false;
-//   isApiResponseStusCommError = false;
-//   isApiTop5CommError = false;
-//   isServiceTop5CommError = false;
-//   isLastTrafficCommError = false;
-//   isLastResponseCommError = false;
-
-//   mounted() {
-//     this.requestAllApi();
-//   }
-
-//   requestAllApi() {
-//     const request = [
-//       this.dashBoardModule.getTotalAPITraffic(TOTAL_TRAFFIC_PARAM),
-//       this.dashBoardModule.getErrorStats(ERROR_STATS_PARAM),
-//       this.dashBoardModule.getApiResponseStatus(API_RESPONSE_PARAM),
-//       this.dashBoardModule.getRealTimeApiStat(REAL_TIME_PARAM),
-//       this.dashBoardModule.getRealTimeServiceStat(REAL_TIME_PARAM),
-//       this.dashBoardModule.getLastTrafficCount(),
-//       this.dashBoardModule.getLastResponseList(),
-//     ];
-
-//     this.isLoadData = true;
-
-//     Promise.allSettled(request).then((results) => {
-//       results.forEach((result, index) => {
-//         if (result.status === 'fulfilled') {
-//           if (index == 0) {
-//             this.totalTraffic = result.value as TotalTrafficStat;
-//             this.isTotalAPITrafficCommError = false;
-//             TOTAL_DETAIL_TRAFFIC_PARAM.statBaseTm = convertBaseTime(this.totalTraffic.statBaseTm);
-//           } else if (index == 1) {
-//             this.errorStats = result.value as ErrorStatsType;
-//             this.isErrorStatCommError = false;
-//             ERROR_STATS_DETAIL_PARAM.statBaseTm = convertBaseTime(this.errorStats.statBaseTm);
-//           } else if (index == 2) {
-//             this.apiResponseStatus = result.value as ApiResponseStatus;
-//             this.isApiResponseStusCommError = false;
-//             API_RESPONSE_DETAIL_PARAM.statBaseTm = convertBaseTime(this.apiResponseStatus.statBaseTm);
-//           } else if (index == 3) {
-//             this.realTimeApiStat = result.value as RealTimeApiStat;
-//             this.isApiTop5CommError = false;
-//           } else if (index == 4) {
-//             this.realTimeServiceStat = result.value as RealTimeServiceStat;
-//             this.isServiceTop5CommError = false;
-//           } else if (index == 5) {
-//             this.lastTrafficList = result.value as LastTrafficType[];
-//             this.isLastTrafficCommError = false;
-//           } else if (index == 6) {
-//             this.lastResponseList = result.value as LastResponseType[];
-//             this.isLastResponseCommError = false;
-//           }
-//         } else {
-//           if (index == 0) {
-//             this.isTotalAPITrafficCommError = true;
-//           } else if (index == 1) {
-//             this.isErrorStatCommError = true;
-//           } else if (index == 2) {
-//             this.isApiResponseStusCommError = true;
-//           } else if (index == 3) {
-//             this.isApiTop5CommError = true;
-//           } else if (index == 4) {
-//             this.isServiceTop5CommError = true;
-//           } else if (index == 5) {
-//             this.isLastTrafficCommError = true;
-//           } else if (index == 6) {
-//             this.isLastResponseCommError = true;
-//           }
-//         }
-//       });
-
-//       this.isLoadData = false;
-//     });
-//   }
-
-//   delay(ms: number) {
-//     return new Promise((resolve) => setTimeout(resolve, ms));
-//   }
-
-//   @Watch('trafficModal')
-//   async onTrafficModalChange(val: boolean) {
-//     this.dashBoardModule.release();
-//     if (val) {
-//       await this.delay(300);
-//       this.dashBoardModule.getTrafficStatDetail(TOTAL_DETAIL_TRAFFIC_PARAM).catch((error: GateWayError) => {
-//         if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
-//           // console.log('CANCEL');
-//         }
-//       });
-//     }
-//   }
-
-//   @Watch('errorModal')
-//   async onErrorChange(isOpen: boolean) {
-//     this.dashBoardModule.release();
-//     if (isOpen) {
-//       await this.delay(300);
-//       this.dashBoardModule.getErrorStatsDetail(ERROR_STATS_DETAIL_PARAM).catch((error: GateWayError) => {
-//         if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
-//           // console.log('CANCEL');
-//         }
-//       });
-//     }
-//   }
-
-//   @Watch('avgModal')
-//   async onAvgModalChange(val: boolean) {
-//     this.dashBoardModule.release();
-//     if (val) {
-//       await this.delay(300);
-//       this.dashBoardModule.getApiResponseStatusDetail(API_RESPONSE_DETAIL_PARAM).catch((error: GateWayError) => {
-//         if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
-//           // console.log('CANCEL');
-//         }
-//       });
-//     }
-//   }
-
-//   get totalTrafficDetail(): TotalTrafficStat[] {
-//     return this.dashBoardModule.totaltrafficDetail;
-//   }
-
-//   get apiResponseStatusDetail(): ApiResponseStatus[] {
-//     return this.dashBoardModule.apiResponseStatusDetail;
-//   }
-
-//   get errorStatsDetail(): ErrorStatsType[] {
-//     return this.dashBoardModule.errorStatsDetail;
-//   }
-
-//   allModalClose() {
-//     this.trafficModal = false;
-//     this.errorModal = false;
-//     this.avgModal = false;
-//   }
-
-//   isShowModal = false;
-//   msgId = '';
-//   msgType = '';
-//   msgEndTime = '';
-//   gseTimeInterval = 1440;
-//   showModal(msg: any) {
-//     this.isShowModal = true;
-//     if (typeof msg.svcId === 'undefined') {
-//       this.msgId = msg.sysId + '.' + msg.apiId;
-//       this.msgType = 'api';
-//       this.msgEndTime = this.realTimeApiStat.statBaseTm;
-//     } else {
-//       this.msgId = msg.svcId;
-//       this.msgType = 'svc';
-//       this.msgEndTime = this.realTimeServiceStat.statBaseTm;
-//     }
-//   }
-
-//   isLoadData = false;
-//   trafficModal = false;
-//   errorModal = false;
-//   avgModal = false;
-//   realTimeModal = false;
-//   draggable = true;
-
-//   clickedParamData = {};
-
-//   layout = [
-//     { x: 0, y: 0, w: 6, h: 22, i: '0' },
-//     { x: 0, y: 1, w: 6, h: 22, i: '1' },
-//     { x: 0, y: 2, w: 6, h: 34, i: '2' },
-//     { x: 0, y: 3, w: 6, h: 25, i: '3' },
-//   ];
-
-//   onCallBack() {
-//     this.requestAllApi();
-//   }
-
-//   isDraged = 0;
-//   layoutUpdatedEvent() {
-//     // 최초 1회는 막아야한다.
-//     // this.isDraged == 0 : 최초 로딩시
-//     // this.isDraged == 1 : 드래그를 안한 상태
-//     // this.isDraged == 2 : 드래그를 한 상태
-//     if (this.isDraged === 0) {
-//       this.isDraged = 1;
-//       return;
-//     } else if (this.isDraged === 1) {
-//       this.isDraged = 2;
-//       return;
-//     }
-//   }
-//   box1 = false;
-//   box2 = false;
-//   box3 = false;
-//   box4 = false;
-//   dragEvent(i: string) {
-//     if (i == '0') {
-//       this.box1 = true;
-//     } else if (i == '1') {
-//       this.box2 = true;
-//     } else if (i == '2') {
-//       this.box3 = true;
-//     } else if (i == '3') {
-//       this.box4 = true;
-//     }
-//     window.addEventListener('mouseup', (e) => {
-//       this.box1 = false;
-//       this.box2 = false;
-//       this.box3 = false;
-//       this.box4 = false;
-//     });
-//   }
-
-//   @Watch('realTimeApiStat')
-//   test() {
-//     this.setTop5Height();
-//   }
-//   top5Count = 0;
-//   setTop5Height() {
-//     if (this.realTimeApiStat.apiStat.length < 5 && this.realTimeServiceStat.svcStat.length < 5) {
-//       if (this.realTimeApiStat.apiStat.length < this.realTimeServiceStat.svcStat.length) {
-//         this.top5Count = 5 - this.realTimeServiceStat.svcStat.length;
-//       } else {
-//         this.top5Count = 5 - this.realTimeApiStat.apiStat.length;
-//       }
-//       this.layout[2].h = 33 - 3 * this.top5Count;
-//     }
-//   }
 </script>
 <style>
 .total-modal-z-index {

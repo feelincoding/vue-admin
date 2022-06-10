@@ -17,14 +17,13 @@
             @input="duplicateCheckId()"
             v-model:isValid="idValid"
           />
-          <!-- <DateGroup
+          <DateGroup
             :inputNm="$t('service.date')"
             placeholderStart="YYYY-MM-DD"
-            placeholderENd="YYYY-MM-DD"
             v-model:startDt="formData.svcStDt"
             v-model:endDt="formData.svcEndDt"
             v-model:isValid="dateValid"
-          /> -->
+          />
           <AuthReqGroup
             @basicAuthClicked="basicAuthClicked"
             :inputNm="$t('service.authentication_method')"
@@ -76,7 +75,7 @@
             v-model:isValid="tkcgrEmlValid"
           />
           <SysExGroup :inputNm="$t('service.desc')" v-model:value="formData.desc" />
-          <ModalLayout size="s" v-if="modal">
+          <ModalLayout size="s" v-if="registerModal">
             <template v-slot:modalHeader
               ><h2 class="h1-tit">{{ $t('service.register') }}</h2>
             </template>
@@ -130,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue';
+import { ref, reactive, watch, onMounted, inject } from 'vue';
 import type { Ref } from 'vue';
 import ContentLayout from '@/components/layout/ContentLayout.vue';
 import InputGroup from '@/components/service-mngt/InputGroup.vue';
@@ -144,11 +143,13 @@ import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import ApiAuthModal from '@/components/service-mngt/ApiAuthModal.vue';
 import ApiAuthReqGroup from '@/components/service-mngt/ApiAuthReqGroup.vue';
 import ServiceRepository from '@/repository/service-repository';
+import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
 
+const modal = inject(modalInjectionKey) as ModalFunction;
 const serviceRepository = new ServiceRepository();
 const jwtAlgList: Ref<string[]> = ref([]);
 const apiAuthList: Ref<ApiAuthResponse[]> = ref({} as ApiAuthResponse[]);
@@ -176,7 +177,7 @@ const slaHr = ref(false);
 const slaDay = ref(false);
 const slaMon = ref(false);
 
-const modal = ref(false);
+const registerModal = ref(false);
 const timerId = ref(0);
 const isDuplicatedId: Ref<boolean | null> = ref(null);
 const formData: Ref<ServiceRegisterRequest> = ref({
@@ -255,17 +256,17 @@ const modalShow = () => {
     ) {
       // $modal.show(`${$t('service.empty_check_message')}`);
     } else {
-      modal.value = true;
+      registerModal.value = true;
     }
   }
 };
 
 const modalHide = () => {
-  modal.value = false;
+  registerModal.value = false;
 };
 
 const submit = () => {
-  modal.value = false;
+  registerModal.value = false;
   isRegisterProgress.value = true;
   serviceRepository
     .createService(formData.value)

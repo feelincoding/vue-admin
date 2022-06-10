@@ -16,14 +16,14 @@
             v-model:value="formData.id"
             :disabled="true"
           />
-          <!-- <DateGroup
+          <DateGroup
             :inputNm="$t('service.date')"
             placeholderStart="YYYY-MM-DD"
             placeholderENd="YYYY-MM-DD"
             v-model:startDt="formData.svcStDt"
             v-model:endDt="formData.svcEndDt"
             v-model:isValid="dateValid"
-          /> -->
+          />
           <AuthReqGroup
             @basicAuthClicked="basicAuthClicked"
             :inputNm="$t('service.authentication_method')"
@@ -75,20 +75,14 @@
             v-model:isValid="tkcgrEmlValid"
           />
           <SysExGroup :inputNm="$t('service.desc')" v-model:value="formData.desc" />
-          <ModalLayout size="s" v-if="modal">
+          <ModalLayout size="s" v-if="modifyModal">
             <template v-slot:modalHeader
-              ><h2 class="h1-tit">{{ $t('service.register') }}</h2>
+              ><h1 class="h1-tit">{{ $t('service.modify') }}</h1>
             </template>
             <template v-slot:modalContainer>
-              <p v-if="!isRegisterProgress" class="text">{{ $t('service.register_message') }}</p>
-              <div v-if="isRegisterProgress" style="width: 100%; text-align: center">
-                <b-spinner
-                  v-show="isRegisterProgress"
-                  style="width: 2.5rem; height: 2.5rem"
-                  label="Large Spinner"
-                ></b-spinner>
-              </div>
-            </template>
+              <p v-if="!isShowProgress" class="text">{{ $t('service.modify_message') }}</p>
+              <div v-if="isShowProgress" style="width: 100%; text-align: center"></div
+            ></template>
             <template v-slot:modalFooter
               ><button class="lg-btn purple-btn" @click="editService()">
                 {{ $t('common.ok') }}</button
@@ -102,10 +96,10 @@
       <template v-if="!isShowProgress" v-slot:buttons>
         <div class="btn-wrap">
           <button class="lg-btn purple-btn" @click="modalShow()" :disabled="isRegisterProgress">
-            {{ $t('common.register') }}
+            {{ $t('common.modify') }}
             <b-spinner variant="light" v-show="isRegisterProgress" small></b-spinner>
           </button>
-          <button class="lg-btn white-btn" @click="$router.go(-1)" :disabled="isRegisterProgress">
+          <button class="lg-btn white-btn" @click="$router.back()" :disabled="isRegisterProgress">
             {{ $t('common.cancel') }}
           </button>
         </div>
@@ -129,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue';
+import { ref, reactive, watch, onMounted, inject } from 'vue';
 import type { Ref } from 'vue';
 import ContentLayout from '@/components/layout/ContentLayout.vue';
 import InputGroup from '@/components/service-mngt/InputGroup.vue';
@@ -143,11 +137,14 @@ import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import ApiAuthModal from '@/components/service-mngt/ApiAuthModal.vue';
 import ApiAuthReqGroup from '@/components/service-mngt/ApiAuthReqGroup.vue';
 import ServiceRepository from '@/repository/service-repository';
+import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 
 import { useRoute } from 'vue-router';
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
+
+const modal = inject(modalInjectionKey) as ModalFunction;
 const route = useRoute();
 const serviceRepository = new ServiceRepository();
 const jwtAlgList: Ref<string[]> = ref([]);
@@ -174,7 +171,7 @@ const slaHr = ref(false);
 const slaDay = ref(false);
 const slaMon = ref(false);
 
-const modal = ref(false);
+const modifyModal = ref(false);
 const isDuplicatedId: Ref<boolean | null> = ref(null);
 const formData: Ref<ServiceModifyRequest> = ref({
   id: '',
@@ -251,17 +248,17 @@ const modalShow = () => {
     ) {
       // $modal.show(`${$t('service.empty_check_message')}`);
     } else {
-      modal.value = true;
+      modifyModal.value = true;
     }
   }
 };
 
 const modalHide = () => {
-  modal.value = false;
+  modifyModal.value = false;
 };
 
 const editService = () => {
-  modal.value = false;
+  modifyModal.value = false;
   isRegisterProgress.value = true;
   serviceRepository
     .editService(formData.value)

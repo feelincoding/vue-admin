@@ -18,7 +18,7 @@
 const props = defineProps<{
   label: string;
   placeholder: string;
-  modelValue: string;
+  modelValue?: string;
 }>();
 const emit = defineEmits<{
   (e: 'input', value: any): void;
@@ -31,7 +31,7 @@ const inputTxt = (event: any) => {
 };
 
 const handleKeyup = (event: any) => {
-  if(event.keyCode === 13) {
+  if (event.keyCode === 13) {
     emit('submit');
   }
 };
