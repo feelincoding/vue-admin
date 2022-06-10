@@ -58,6 +58,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import { SYSTEM, SERVICE, API, MONITORING, MANAGEMENT } from '@/router/Names';
+import { ref, type Ref } from 'vue';
 
 interface NavState {
   [key: string]: boolean;
@@ -71,7 +72,7 @@ interface NavState {
   showManagement: boolean;
 }
 
-const navState: NavState = {
+const navState: Ref<NavState> = ref({
   dashBoardState: true,
   systemState: false,
   apiState: false,
@@ -80,26 +81,26 @@ const navState: NavState = {
   managementState: false,
   showMonitoring: false,
   showManagement: false,
-};
+});
 
 const changeShowMonitoring = () => {
-  if (!navState.showMonitoring) {
-    navState.showMonitoring = true;
-    if (navState.showManagement) {
-      navState.showManagement = false;
+  if (!navState.value.showMonitoring) {
+    navState.value.showMonitoring = true;
+    if (navState.value.showManagement) {
+      navState.value.showManagement = false;
     }
   } else {
-    navState.showMonitoring = false;
+    navState.value.showMonitoring = false;
   }
-  console.log(navState.showMonitoring);
+  console.log(navState.value.showMonitoring);
 };
 
 const changeNavState = (state: string) => {
   console.log(state);
   for (const key of Object.keys(navState)) {
-    navState[key] = false;
+    navState.value[key] = false;
   }
-  navState[state] = true;
+  navState.value[state] = true;
 };
 
 const dashBoardPath = '/dashboard';
