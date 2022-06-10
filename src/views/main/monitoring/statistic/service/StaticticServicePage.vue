@@ -31,6 +31,7 @@ import MonitoringStatisticRepository from '@/repository/monitoring-statistic-rep
 import type { StatResponse } from '@/types/MonitoringStatisticType';
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
 import StatisticSelectSearch from '@/components/monitoring/StatisticSelectSearch.vue';
+import ServiceRow from '@/components/monitoring/ServiceRow.vue';
 const props = defineProps<{
   isSearchFocus: boolean;
 }>();
@@ -44,9 +45,9 @@ let serviceList: Ref<StatResponse | null> = ref(null);
 let searchSvcList: Ref<string[]> = ref([]);
 
 onMounted(() => {
-  if (props.isSearchFocus) {
-    statRepository.getSearchSvcList('');
-  }
+  statRepository.getSearchSvcList('').then((res) => {
+    searchSvcList.value = res;
+  });
 });
 
 watch(serviceList, () => {
@@ -66,7 +67,8 @@ function getSearchOption(event: any) {
   isShowProgress.value = true;
   statRepository
     .getServiceList(event)
-    .then(() => {
+    .then((res) => {
+      serviceList.value = res;
       isShowProgress.value = false;
     })
     .catch((err) => {

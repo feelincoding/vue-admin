@@ -4,12 +4,6 @@ import type { Data, GateWayResponse } from '@/types/GateWayResponse';
 import type { StatResponse, ApiSearch } from '@/types/MonitoringStatisticType';
 
 export default class MonitoringStatisticRepository {
-  public apiList: StatResponse = {} as StatResponse;
-  public serviceList: StatResponse = {} as StatResponse;
-
-  public searchSvcList: string[] = [];
-  public searchApiList: ApiSearch[] = [];
-
   async getServiceList(param: object) {
     const response = await AxiosClient.getInstance()
       .get<GateWayResponse<StatResponse>>(`/stat/services`, param)
@@ -39,7 +33,7 @@ export default class MonitoringStatisticRepository {
 
   async getSearchSvcList(param?: string) {
     const response = await AxiosClient.getInstance()
-      .get<GateWayResponse<string>>('/stat/getServiceId', {
+      .get<GateWayResponse<string[]>>('/stat/getServiceId', {
         keyword: param ? param : '',
       })
       .then((res) => {

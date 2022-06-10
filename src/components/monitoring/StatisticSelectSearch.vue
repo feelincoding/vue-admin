@@ -4,41 +4,7 @@
       <h4 class="label-tit">기간 선택</h4>
       <div class="date-wrap">
         <div class="date-cont bg-white-date">
-          <Datepicker
-            value-type="format"
-            format="YYYY-MM-DD"
-            placeholder="YYYY-MM-DD"
-            :disabled-date="disabledAfterTodayAndAfterEndDay"
-          ></Datepicker>
-        </div>
-        <div class="date-cont bg-white-date">
-          <Datepicker
-            timePicker
-            value-type="HH:mm"
-            format="HH:mm"
-            placeholder="HH:mm"
-            :disabled="startDate === ''"
-            :disabled-datetime="disabledAfterNowOrAfterEndTime"
-          ></Datepicker>
-        </div>
-        <span class="text">~</span>
-        <div class="date-cont bg-white-date">
-          <Datepicker
-            value-type="format"
-            format="YYYY-MM-DD"
-            placeholder="YYYY-MM-DD"
-            :disabled-date="disabledAfterTodayOrBeforeStartDay"
-          ></Datepicker>
-        </div>
-        <div class="date-cont bg-white-date">
-          <Datepicker
-            timePicker
-            value-type="HH:mm"
-            format="HH:mm"
-            placeholder="HH:mm"
-            :disabled="endDate === ''"
-            :disabled-datetime="disabledAfterNowOrBeforeStartTime"
-          ></Datepicker>
+          <Datepicker range multiCalendars locale="ko-KR" v-model="date" :format="format" />
         </div>
       </div>
     </div>
@@ -153,17 +119,13 @@
   </div>
 </template>
 <script setup lang="ts">
+import type { ApiSearch } from '@/types/MonitoringStatisticType';
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
 const props = defineProps<{
   isFocus: boolean;
   propServiceList: string[] | null;
   tab: string;
-  propApiList:
-    | {
-        sysId: string;
-        apis: string[];
-      }[]
-    | null;
+  propApiList: ApiSearch[] | null;
 }>();
 
 const emit = defineEmits<{
@@ -241,72 +203,33 @@ function unselectAPI(event: any) {
   const api = event.target.title as string;
   selectedAPI.value = selectedAPI.value.filter((item: string) => item !== api);
 }
-const startDate = ref('');
-const startTime = ref('');
-const endDate = ref('');
-const endTime = ref('');
-function setInitialTime() {
-  const now = new Date();
-  const yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
-  startDate.value =
-    yesterday.getFullYear() +
-    '-' +
-    (yesterday.getMonth() < 9 ? '0' + (yesterday.getMonth() + 1) : yesterday.getMonth() + 1) +
-    '-' +
-    yesterday.getDate();
-  startTime.value = yesterday.toTimeString().slice(0, 5);
-  endDate.value =
-    now.getFullYear() +
-    '-' +
-    (now.getMonth() < 9 ? '0' + (now.getMonth() + 1) : now.getMonth() + 1) +
-    '-' +
-    now.getDate();
-  endTime.value = now.toTimeString().slice(0, 5);
-}
+
+const date: Ref<Date[]> = ref([]);
+const format = (dates: Date[]) => {
+  return `${dates[0].toISOString().slice(0, 10)} ${dates[0].toTimeString().slice(0, 5)} ~ ${dates[1]
+    .toISOString()
+    .slice(0, 10)} ${dates[1].toTimeString().slice(0, 5)}`;
+};
 onMounted(() => {
-  setInitialTime();
+  const endDate = new Date();
+  const startDate = new Date(new Date().setDate(endDate.getDate() - 7));
+  date.value = [startDate, endDate];
 });
-function disabledAfterTodayAndAfterEndDay(date: Date) {
-  const today = new Date();
-  const endDay = new Date(endDate.value + ' ' + (endTime.value ? endTime.value : '23:59:59'));
-  return date > today || date > endDay;
-}
-function disabledAfterNowOrAfterEndTime(date: Date) {
-  const now = new Date();
-  const tmpEndTime = endTime.value ? new Date(endDate.value + 'T' + endTime.value) : new Date();
-  const compDate = new Date(startDate.value + 'T' + date.toTimeString().slice(0, 8));
-  return compDate > now || compDate > tmpEndTime;
-}
-
-function disabledAfterTodayOrBeforeStartDay(date: Date) {
-  const today = new Date();
-  const startDay = startDate.value ? new Date(startDate.value + 'T' + '00:00:00') : new Date(0);
-  return date > today || date < startDay;
-}
-
-function disabledAfterNowOrBeforeStartTime(date: Date) {
-  const now = new Date();
-  const tmpStartTime = startTime.value ? new Date(startDate.value + 'T' + startTime.value) : new Date(0);
-  const compDate = new Date(endDate.value + 'T' + date.toTimeString().slice(0, 8));
-  return compDate >= now || compDate <= tmpStartTime;
-}
 
 function handleClickSearch() {
-  if (startDate.value === '' || endDate.value === '') {
-    alert('시작일과 종료일을 선택해주세요.');
-    return;
-  }
+  console.log(date.value[0].toISOString().slice(0, 19));
+
   if (props.tab === 'service') {
     emit('search', {
       svcId: selectedServices.value,
-      statStTm: startDate.value + ' ' + (startTime.value ? startTime.value : '00:00'),
-      statEndTm: endDate.value + ' ' + (endTime.value ? endTime.value : '00:00'),
+      statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
+      statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
     });
   } else {
     emit('search', {
       apiId: selectedAPI.value,
-      statStTm: startDate.value + ' ' + (startTime.value ? startTime.value : '00:00'),
-      statEndTm: endDate.value + ' ' + (endTime.value ? endTime.value : '00:00'),
+      statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
+      statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
     });
   }
 }
