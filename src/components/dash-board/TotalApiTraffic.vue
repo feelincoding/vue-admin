@@ -121,8 +121,6 @@ onMounted(() => {
 watch(
   () => props.totalApiTraffic,
   () => {
-    console.log('^&&', props.totalApiTraffic);
-
     myChart1.value.clear();
     myChart2.value.clear();
     myChart3.value.clear();

@@ -79,26 +79,9 @@
         >
           <section class="group col-2">
             <!--- API Top 5 area --->
-            <ApiTop5
-              @clickModalBtn="
-                (msg) => {
-                  showModal(msg);
-                }
-              "
-              :realTimeStat="realTimeApiStat"
-              :isCommError.sync="isServiceTop5CommError"
-            />
-
+            <ApiTop5 v-model:realTimeStat="realTimeApiStat" :isCommError.sync="isServiceTop5CommError" />
             <!--- Service Top 5 area --->
-            <ServiceTop5
-              @clickModalBtn="
-                (msg) => {
-                  showModal(msg);
-                }
-              "
-              :realTimeStat="realTimeServiceStat"
-              :isCommError.sync="isServiceTop5CommError"
-            />
+            <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
           </section>
         </div>
       </gridItem>
@@ -113,6 +96,9 @@ import TotalApiTraffic from '@/components/dash-board/TotalApiTraffic.vue';
 import ErrorStats from '@/components/dash-board/ErrorStats.vue';
 import ApiResponseAvg from '@/components/dash-board/ApiResponseAvg.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
+import ApiTop5 from '@/components/dash-board/ApiTop5.vue';
+import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
+
 import DashBoardRepository from '@/repository/dash-board-repository';
 import type {
   RealTimeServiceStat,
@@ -276,6 +262,20 @@ onMounted(() => {
     .getApiResponseStatus(API_RESPONSE_PARAM)
     .then((res) => {
       apiResponseStatus.value = res.value as ApiResponseStatus;
+    })
+    .catch(() => {});
+
+  dashBoardRepo
+    .getRealTimeApiStat(REAL_TIME_PARAM)
+    .then((res) => {
+      realTimeApiStat.value = res.value as RealTimeApiStat;
+    })
+    .catch(() => {});
+
+  dashBoardRepo
+    .getRealTimeServiceStat(REAL_TIME_PARAM)
+    .then((res) => {
+      realTimeServiceStat.value = res.value as RealTimeServiceStat;
     })
     .catch(() => {});
 });

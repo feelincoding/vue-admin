@@ -1,10 +1,9 @@
-<!-- <template>
+<template>
   <div class="chart-wrap">
     <h3 class="h3-tit">{{ $t('dash-board.service_top5_title') }}</h3>
 
     <ul class="list-wrap" style="margin-bottom: 0">
-      <ErrorWrapper v-show="isCommError" />
-
+      <ErrorWrapper v-show="syncedIsCommError" />
       <li v-for="(item, index) in top5List" :key="index">
         <p class="id-txt">{{ item.svcId }}</p>
         <dl>
@@ -25,33 +24,41 @@
     </ul>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue, Prop, Watch, PropSync } from 'vue-property-decorator';
+<script setup lang="ts">
+import { ref, watch, type Ref } from 'vue';
 import ProgressBar from '@/components/commons/ProgressBar.vue';
-import ApiDetailModal from '@/components/commons/modal/ApiDetailModal.vue';
-import { RealTimeServiceStat, ServiceStat } from '@/types/DashBoardType';
+import type { ServiceStat } from '@/types/DashBoardType';
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 
-@Component({
-  components: {
-    ProgressBar,
-    ApiDetailModal,
-    ErrorWrapper,
+const props = defineProps({
+  realTimeStat: {
+    type: Object,
+    default: () => ({}),
   },
-})
-export default class ApiTop5 extends Vue {
-  @Prop() realTimeStat!: RealTimeServiceStat;
-  @PropSync('isCommError', { type: Boolean, default: false }) syncedIsCommError!: boolean;
-  serviceDetailData?: ServiceStat;
-  showApiDetailModal = false;
-  top5List: ServiceStat[] = [];
-  @Watch('realTimeStat')
-  onRealTimeStatChange() {
-    this.top5List = this.realTimeStat.svcStat.sort((a, b) => b.totCnt - a.totCnt).slice(0, 5);
+  syncedIsCommError: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const serviceDetailData: Ref<ServiceStat> = ref({} as ServiceStat);
+const top5List: Ref<ServiceStat[]> = ref([]);
+const showApiDetailModal = ref(false);
+
+watch(
+  () => props.realTimeStat,
+  () => {
+    console.log('ccs', props.realTimeStat.svcStat);
+    top5List.value = props.realTimeStat.svcStat
+      .sort((a: { totCnt: number }, b: { totCnt: number }) => b.totCnt - a.totCnt)
+      .slice(0, 5);
   }
-  clickModalBtn(item: ServiceStat) {
-    this.$emit('clickModalBtn', item);
-  }
-}
+);
+
+const emit = defineEmits<{
+  (e: 'clickModalBtn', value: ServiceStat | null): void;
+}>();
+const clickModalBtn = (item: ServiceStat) => {
+  emit('clickModalBtn', item);
+};
 </script>
-<style></style> -->

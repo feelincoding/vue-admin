@@ -236,8 +236,6 @@ watch(width1, () => {
 watch(
   () => props.errorStats,
   () => {
-    console.log('^&&', props.errorStats);
-
     myChart1.value.clear();
     myChart2.value.clear();
 

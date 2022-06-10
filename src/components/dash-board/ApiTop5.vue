@@ -1,8 +1,8 @@
-<!-- <template>
+<template>
   <div class="chart-wrap">
     <h3 class="h3-tit">{{ $t('dash-board.api_top5_title') }}</h3>
     <ul class="list-wrap" style="margin-bottom: 0">
-      <ErrorWrapper v-show="isCommError" />
+      <ErrorWrapper v-show="syncedIsCommError" />
       <li v-for="(item, index) in top5List" :key="index">
         <p class="id-txt">{{ item.sysId }}.{{ item.apiId }}</p>
         <dl>
@@ -21,34 +21,40 @@
     </ul>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue, Prop, Watch, PropSync } from 'vue-property-decorator';
+<script setup lang="ts">
+import { ref, watch, type Ref } from 'vue';
 import ProgressBar from '@/components/commons/ProgressBar.vue';
-import ApiDetailModal from '@/components/commons/modal/ApiDetailModal.vue';
-import { RealTimeApiStat, ApiStat } from '@/types/DashBoardType';
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
+import type { ApiStat } from '@/types/DashBoardType';
 
-@Component({
-  components: {
-    ProgressBar,
-    ApiDetailModal,
-    ErrorWrapper,
+const props = defineProps({
+  realTimeStat: {
+    type: Object,
+    default: () => ({}),
   },
-})
-export default class ApiTop5 extends Vue {
-  @Prop() realTimeStat!: RealTimeApiStat;
-  @PropSync('isCommError', { type: Boolean, default: false }) syncedIsCommError!: boolean;
-  apiDetailData!: ApiStat;
-  top5List: ApiStat[] = [];
-  isShowModal = false;
+  syncedIsCommError: {
+    type: Boolean,
+    default: false,
+  },
+});
+const emit = defineEmits<{
+  (e: 'clickModalBtn', value: ApiStat | null): void;
+}>();
 
-  @Watch('realTimeStat')
-  onRealTimeStatChange() {
-    this.top5List = this.realTimeStat.apiStat.sort((a, b) => b.totCnt - a.totCnt).slice(0, 5);
-  }
+const apiDetailData: Ref<ApiStat> = ref({} as ApiStat);
+const top5List: Ref<ApiStat[]> = ref([]);
+const isShowModal = ref(false);
 
-  clickModalBtn(item: ApiStat) {
-    this.$emit('clickModalBtn', item);
+watch(
+  () => props.realTimeStat,
+  () => {
+    top5List.value = props.realTimeStat.apiStat
+      .sort((a: { totCnt: number }, b: { totCnt: number }) => b.totCnt - a.totCnt)
+      .slice(0, 5);
   }
-}
-</script> -->
+);
+
+const clickModalBtn = (item: ApiStat) => {
+  emit('clickModalBtn', item);
+};
+</script>

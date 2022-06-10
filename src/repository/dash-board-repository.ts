@@ -10,6 +10,8 @@ import type {
   ErrorStatsDetailRequest,
   ApiResponseRequest,
   ApiResponseStatus,
+  RealTimeApiStat,
+  RealTimeServiceStat,
 } from '@/types/DashBoardType';
 export default class DashBoardRepository {
   public totaltrafficDetail: TotalTrafficStat[] = [];
@@ -84,6 +86,57 @@ export default class DashBoardRepository {
       );
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
+    }
+  }
+
+  async getRealTimeApiStat(param: { statPerd: number; sortBase: string; retvCnt?: number }) {
+    if (!param.retvCnt) {
+      try {
+        const response = await AxiosClient.getInstance().get<GateWayResponse<RealTimeApiStat>>(
+          `/realtimeApiStat`,
+          param
+        );
+        console.log('ccs1', response.data.value);
+
+        return Promise.resolve(response.data);
+      } catch (error: GateWayError | any) {
+        return Promise.reject(error);
+      }
+    } else {
+      try {
+        const response = await AxiosClient.getInstance().get<GateWayResponse<RealTimeApiStat>>(
+          `/realtimeApiStat`,
+          param
+        );
+        return Promise.resolve(response.data);
+      } catch (error: GateWayError | any) {
+        return Promise.reject(error);
+      }
+    }
+  }
+
+  async getRealTimeServiceStat(param: { statPerd: number; sortBase: string; retvCnt?: number }) {
+    if (!param.retvCnt) {
+      try {
+        const response = await AxiosClient.getInstance().get<GateWayResponse<RealTimeServiceStat>>(
+          `/realtimeServiceStat`,
+          param
+        );
+        console.log('ccs2', response.data.value);
+        return Promise.resolve(response.data);
+      } catch (error: GateWayError | any) {
+        return Promise.reject(error);
+      }
+    } else {
+      try {
+        const response = await AxiosClient.getInstance().get<GateWayResponse<RealTimeServiceStat>>(
+          `/realtimeServiceStat`,
+          param
+        );
+        return Promise.resolve(response.data);
+      } catch (error: GateWayError | any) {
+        return Promise.reject(error);
+      }
     }
   }
 }
