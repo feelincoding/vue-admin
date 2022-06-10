@@ -418,7 +418,6 @@ onMounted(() => {
     .then((res) => {
       isShowProgress.value = false;
       formData.value = res[0].value;
-      console.log(formData.value.desc);
       jwtAlgList.value = res[1].value;
     })
     .catch(() => {

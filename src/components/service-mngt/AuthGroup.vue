@@ -42,17 +42,15 @@
     </div>
   </li>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-@Component
-export default class AuthGroup extends Vue {
-  @Prop() inputNm!: string;
-  @Prop() athn!: string;
-  @Prop() id!: string | null;
-  @Prop() pw!: string | null;
-  @Prop() alg!: string | null;
-  @Prop() iss!: string | null;
-  @Prop() aud!: string | null;
-  @Prop() pubKey!: string | null;
-}
+<script setup lang="ts">
+defineProps<{
+  inputNm: string;
+  athn: string;
+  id?: string | null;
+  pw?: string | null;
+  alg?: string | null;
+  iss?: string | null;
+  aud?: string | null;
+  pubKey?: string | null;
+}>();
 </script>

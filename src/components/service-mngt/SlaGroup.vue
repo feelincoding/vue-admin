@@ -27,16 +27,13 @@
     </div>
   </li>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-
-@Component
-export default class SlaGroup extends Vue {
-  @Prop() public inputNm!: string | null;
-  @Prop({ default: null }) secVal!: number | null;
-  @Prop({ default: null }) minVal!: number | null;
-  @Prop({ default: null }) hourVal!: number | null;
-  @Prop({ default: null }) dayVal!: number | null;
-  @Prop({ default: null }) monthVal!: number | null;
-}
+<script setup lang="ts">
+defineProps<{
+  inputNm: string;
+  secVal?: number | null;
+  minVal?: number | null;
+  hourVal?: number | null;
+  dayVal?: number | null;
+  monthVal?: number | null;
+}>();
 </script>

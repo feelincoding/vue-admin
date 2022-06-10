@@ -6,12 +6,9 @@
     </div>
   </li>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-
-@Component
-export default class InfoGroup extends Vue {
-  @Prop() public inputNm!: string | null;
-  @Prop() public value!: string | number | null;
-}
+<script setup lang="ts">
+defineProps<{
+  inputNm: string;
+  value?: string | number | null;
+}>();
 </script>

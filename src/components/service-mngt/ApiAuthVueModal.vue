@@ -54,51 +54,53 @@
   </transition>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import { ApiAuthResponse } from '@/types/ServiceType';
-import { BSpinner } from 'bootstrap-vue';
+<script setup lang="ts">
+import type { ApiAuthResponse } from '@/types/ServiceType';
+import { BSpinner } from 'bootstrap-vue-3';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
+import { ref, watch } from 'vue';
+import type { Ref } from 'vue';
+const props = defineProps<{
+  setCheckedApiList: ApiAuthResponse[];
+  setIsApiAuthProgress: boolean;
+  setShowApiAuthModal: boolean;
+  setCountApiList: number;
+}>();
+const emit = defineEmits<{
+  (e: 'hideApiAuth'): void;
+}>();
 
-@Component({
-  components: {
-    BSpinner,
-    ModalLayout,
-  },
-})
-export default class ApiAuthVueModal extends Vue {
-  @Prop({ default: () => [] }) setCheckedApiList!: ApiAuthResponse[];
-  @Prop({ default: false }) setIsApiAuthProgress!: boolean;
-  @Prop({ default: false }) setShowApiAuthModal!: boolean;
-  @Prop({ default: 0 }) setCountApiList!: number;
-
-  searchText = '';
-  countApiList = 0;
-  @Watch('setCountApiList')
-  onCountSetApiList(val: number) {
-    this.countApiList = val;
+const checkedApiList: Ref<ApiAuthResponse[]> = ref([]);
+const searchText = ref('');
+const countApiList = ref(0);
+const isApiAuthProgress = ref(false);
+const showApiAuthModal = ref(false);
+watch(
+  () => props.setCountApiList,
+  (val) => {
+    countApiList.value = val;
   }
-
-  checkedApiList: ApiAuthResponse[] = [];
-  @Watch('setCheckedApiList')
-  checkedApiListChanged(val: ApiAuthResponse[]) {
-    this.checkedApiList = val;
+);
+watch(
+  () => props.setCheckedApiList,
+  (val) => {
+    checkedApiList.value = val;
   }
-
-  isApiAuthProgress = false;
-  @Watch('setIsApiAuthProgress')
-  isApiAuthProgressChanged(val: boolean) {
-    this.isApiAuthProgress = val;
+);
+watch(
+  () => props.setIsApiAuthProgress,
+  (val) => {
+    isApiAuthProgress.value = val;
   }
-
-  showApiAuthModal = false;
-  @Watch('setShowApiAuthModal')
-  showApiAuthModalChanged(val: boolean) {
-    this.showApiAuthModal = val;
+);
+watch(
+  () => props.setShowApiAuthModal,
+  (val) => {
+    showApiAuthModal.value = val;
   }
+);
 
-  hideApiAuth() {
-    this.$emit('hideApiAuth');
-  }
-}
+const hideApiAuth = () => {
+  emit('hideApiAuth');
+};
 </script>
