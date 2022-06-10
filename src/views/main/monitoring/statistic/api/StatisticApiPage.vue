@@ -10,7 +10,7 @@
 
     <div class="service-list" v-if="apiList != undefined && apiList.apiStat != undefined && apiList.apiStat.length > 0">
       <ul>
-        <!-- <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" /> -->
+        <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
       </ul>
     </div>
     <div class="service-list" v-else>
@@ -29,6 +29,7 @@ import MonitoringStatisticRepository from '@/repository/monitoring-statistic-rep
 import type { ApiSearch, StatResponse } from '@/types/MonitoringStatisticType';
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
 import StatisticSelectSearch from '@/components/monitoring/StatisticSelectSearch.vue';
+import ApiRow from '@/components/monitoring/ApiRow.vue';
 const props = defineProps<{
   isSearchFocus: boolean;
 }>();
