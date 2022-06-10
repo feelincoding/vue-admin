@@ -1,6 +1,6 @@
 <template>
   <section class="time-wrap" style="height: 28px">
-    <span v-show="!isPlay && !isLoadData">{{ $t('dash_board.pause_time') + ':' + getPause() }} </span>
+    <span v-show="!isPlay && !isLoadData">{{ $t('dash_board.pause_time') + ':' + getPauseTime() }} </span>
     <button>
       <i><img src="@/assets/pause_ico.svg" v-show="isPlay && !isLoadData" @click="onCountPause()" alt="pause" /></i>
       <i><img src="@/assets/play_arrow.svg" v-show="!isPlay && !isLoadData" @click="onCountStart()" alt="play" /></i>
@@ -10,10 +10,10 @@
   </section>
 </template>
 <script setup lang="ts">
-import { onMounted, onUpdated, ref, watch } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import { getPauseTime } from '@/utils/converter';
-import * as echarts from 'echarts';
 import { timerOption, getTimerOption } from '@/components/dash-board/chart-options';
+import { drawTotalApiTrafficChart } from '@/utils/chart';
 
 const INTERVAL_VALUE = 60;
 
@@ -40,21 +40,69 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  setCountChart();
+  // 60초 카운트 차트(Pie) Init & Draw
+  countChart.value = drawTotalApiTrafficChart(
+    'timer',
+    getTimerOption(chartCountPercentData.value, chartCountTotalData.value)
+  );
+  window.addEventListener('resize', observeSize);
 });
 
 onUpdated(() => {
+  // Dom이 Init되지 않았을 때만 Init
   if (!isProgressDomInit.value) {
-    initChartAndDomProgress();
+    isProgressDomInit.value = true;
+    loadingChart.value = drawTotalApiTrafficChart('progressChart', timerOption);
   }
   observeSize();
 });
 
-const initChartAndDomProgress = () => {
-  isProgressDomInit.value = true;
-  setProgressChart();
+onUnmounted(() => {
+  window.removeEventListener('resize', observeSize);
+});
+
+watch(
+  () => props.isLoadData,
+  () => {
+    console.log('changed LoadData!!', props.isLoadData);
+    if (props.isLoadData) {
+      clearInterval(intervalId.value);
+    } else {
+      onCountStart();
+    }
+  }
+);
+
+const setTimer = async () => {
+  if (timer.value >= INTERVAL_VALUE) {
+    timer.value = 0;
+    chartCountPercentData.value = 0;
+    chartCountTotalData.value = 100;
+    props.callBack();
+    return;
+  }
+
+  timer.value++;
+  chartCountPercentData.value = (timer.value / INTERVAL_VALUE) * 100;
+  chartCountTotalData.value = ((INTERVAL_VALUE - timer.value) / INTERVAL_VALUE) * 100;
 };
 
+const onCountPause = () => {
+  isPlay.value = false;
+  clearInterval(intervalId.value);
+};
+
+const onCountStart = () => {
+  console.log('onCountStart');
+  isPlay.value = true;
+  intervalId.value = setInterval(setTimer, 1000);
+};
+
+watch(chartCountTotalData, () => {
+  countChart.value.setOption(getTimerOption(chartCountPercentData.value, chartCountTotalData.value));
+});
+
+// resize 관련 함수들
 const width1 = ref(0);
 const height1 = ref(0);
 const progressChartRef = ref<HTMLDivElement | null>(null);
@@ -72,65 +120,6 @@ const observeSize = () => {
 watch(width1, () => {
   loadingChart.value.resize();
   countChart.value.resize();
-});
-
-watch(
-  () => props.isLoadData,
-  () => {
-    console.log('changed LoadData!!', props.isLoadData);
-    if (props.isLoadData) {
-      clearInterval(intervalId.value);
-    } else {
-      onCountStart();
-    }
-  }
-);
-
-const setCountChart = () => {
-  const dom = document.getElementById('timer') as HTMLDivElement;
-  countChart.value = echarts.init(dom);
-  countChart.value.setOption(getTimerOption(chartCountPercentData.value, chartCountTotalData.value));
-};
-const setProgressChart = () => {
-  var chartDom = document.getElementById('progressChart') as HTMLDivElement;
-  loadingChart.value = echarts.init(chartDom);
-  loadingChart.value.setOption(timerOption);
-};
-
-const setTimer = async () => {
-  if (timer.value >= INTERVAL_VALUE) {
-    timer.value = 0;
-    chartCountPercentData.value = 0;
-    chartCountTotalData.value = 100;
-    props.callBack();
-    return;
-  }
-
-  timer.value++;
-  chartCountPercentData.value = (timer.value / INTERVAL_VALUE) * 100;
-  chartCountTotalData.value = ((INTERVAL_VALUE - timer.value) / INTERVAL_VALUE) * 100;
-};
-const countTimer = () => {
-  intervalId.value = setInterval(setTimer, 1000);
-};
-
-const getPause = () => {
-  return getPauseTime();
-};
-
-const onCountPause = () => {
-  isPlay.value = false;
-  clearInterval(intervalId.value);
-};
-
-const onCountStart = () => {
-  console.log('onCountStart');
-  isPlay.value = true;
-  countTimer();
-};
-
-watch(chartCountTotalData, () => {
-  countChart.value.setOption(getTimerOption(chartCountPercentData.value, chartCountTotalData.value));
 });
 </script>
 

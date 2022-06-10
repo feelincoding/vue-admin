@@ -5,8 +5,8 @@
     <div
       class="chart-group api-traffic"
       :class="{
-        'total-collapse-modal': syncedModal == false,
-        'total-expand-modal': syncedModal == true,
+        'total-collapse-modal': modal == false,
+        'total-expand-modal': modal == true,
       }"
       @click="toggleModal()"
       ref="totalApiTrafficRef"
@@ -15,32 +15,32 @@
       <ErrorWrapper v-show="syncedIsCommError" />
       <div
         id="totalApiTrafficTotal"
-        v-show="syncedModal == false"
+        v-show="modal == false"
         :class="{
-          'dash-modal-detail-collapse': syncedModal == true,
-          'dash-modal-detail-expand': syncedModal == false,
+          'dash-modal-detail-collapse': modal == true,
+          'dash-modal-detail-expand': modal == false,
         }"
         class="api-pie"
       >
         전체
       </div>
       <div
-        v-show="syncedModal == false"
+        v-show="modal == false"
         id="totalApiTrafficSuccess"
         :class="{
-          'dash-modal-detail-collapse': syncedModal == true,
-          'dash-modal-detail-expand': syncedModal == false,
+          'dash-modal-detail-collapse': modal == true,
+          'dash-modal-detail-expand': modal == false,
         }"
         class="api-pie"
       >
         성공
       </div>
       <div
-        v-show="syncedModal == false"
+        v-show="modal == false"
         id="totalApiTrafficFail"
         :class="{
-          'dash-modal-detail-collapse': syncedModal == true,
-          'dash-modal-detail-expand': syncedModal == false,
+          'dash-modal-detail-collapse': modal == true,
+          'dash-modal-detail-expand': modal == false,
         }"
         class="api-pie"
       >
@@ -48,11 +48,11 @@
       </div>
 
       <div
-        v-show="syncedModal == true"
+        v-show="modal == true"
         onclick="event.stopPropagation()"
         :class="{
-          'dash-modal-detail-collapse': syncedModal == false,
-          'dash-modal-detail-expand': syncedModal == true,
+          'dash-modal-detail-collapse': modal == false,
+          'dash-modal-detail-expand': modal == true,
         }"
         style="width: 100%; height: 100%"
       >
@@ -66,7 +66,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, onUpdated, ref, watch, type Ref } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, shallowRef, watch } from 'vue';
 import { drawTotalApiTrafficChart } from '@/utils/chart';
 
 import * as echarts from 'echarts';
@@ -84,7 +84,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  syncedModal: {
+  modal: {
     type: Boolean,
     default: false,
   },
@@ -105,16 +105,31 @@ const props = defineProps({
   },
 });
 
-const myChart1 = ref({} as echarts.EChartsType);
-const myChart2 = ref({} as echarts.EChartsType);
-const myChart3 = ref({} as echarts.EChartsType);
+const emit = defineEmits<{
+  (e: 'modalChange', status: boolean): void;
+}>();
+
+const myChart1 = shallowRef({} as echarts.EChartsType);
+const myChart2 = shallowRef({} as echarts.EChartsType);
+const myChart3 = shallowRef({} as echarts.EChartsType);
 const dom4 = ref({} as HTMLDivElement);
-const myChart4 = ref({} as echarts.EChartsType);
+const myChart4 = shallowRef({} as echarts.EChartsType);
 
 const isModalDomInit = ref(false);
 
 onMounted(() => {
-  setChartData();
+  myChart1.value = drawTotalApiTrafficChart(
+    'totalApiTrafficTotal',
+    getTotalApiTrafficOption(props.totalApiTraffic.totCnt)
+  );
+  myChart2.value = drawTotalApiTrafficChart(
+    'totalApiTrafficSuccess',
+    getSuccessApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt)
+  );
+  myChart3.value = drawTotalApiTrafficChart(
+    'totalApiTrafficFail',
+    getFailApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt)
+  );
   window.addEventListener('resize', observeSize);
 });
 
@@ -137,21 +152,6 @@ watch(props.totalApiTrafficDetail, () => {
   }, 400);
 });
 
-const setChartData = () => {
-  myChart1.value = drawTotalApiTrafficChart(
-    'totalApiTrafficTotal',
-    getTotalApiTrafficOption(props.totalApiTraffic.totCnt)
-  );
-  myChart2.value = drawTotalApiTrafficChart(
-    'totalApiTrafficSuccess',
-    getSuccessApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt)
-  );
-  myChart3.value = drawTotalApiTrafficChart(
-    'totalApiTrafficFail',
-    getFailApiTrafficOption(props.totalApiTraffic.sucesCnt, props.totalApiTraffic.failCnt)
-  );
-};
-
 const setDetailChart = () => {
   isModalDomInit.value = true;
   dom4.value = document.getElementById('totalApiTrafficDetail') as HTMLDivElement;
@@ -159,6 +159,36 @@ const setDetailChart = () => {
   myChart4.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
 };
 
+onUpdated(() => {
+  if (!isModalDomInit && props.syncedIsDraged === 1) {
+    setDetailChart();
+  }
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', observeSize);
+});
+
+const showModal = () => {
+  if (props.isLoadData) {
+    return;
+  }
+  if (props.syncedIsDraged === 2) {
+    emit('modalChange', false);
+    return;
+  }
+  emit('modalChange', true);
+};
+const closeModal = () => {
+  emit('modalChange', false);
+};
+
+const toggleModal = () => {
+  props.modal ? closeModal() : showModal();
+  observeSize();
+};
+
+// resize 관련 메서드
 const width1 = ref(0);
 const height1 = ref(0);
 const totalApiTrafficRef = ref<HTMLDivElement | null>(null);
@@ -173,64 +203,17 @@ const observeSize = () => {
   ro.observe(totalApiTrafficRef.value as HTMLDivElement);
 };
 watch(width1, () => {
-  resizeChart();
-});
+  console.log('resize!!');
 
-onMounted(() => {
-  setChartData();
-  window.addEventListener('resize', observeSize);
-});
-
-onUpdated(() => {
-  if (!isModalDomInit && props.syncedIsDraged === 1) {
-    setDetailChart();
-  }
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', observeSize);
-});
-
-const resizeChart = () => {
   myChart1.value.resize();
   myChart2.value.resize();
   myChart3.value.resize();
   if (isModalDomInit.value == true) {
     myChart4.value.resize();
   }
-};
-
-const showModal = () => {
-  if (props.isLoadData) {
-    return;
-  }
-  if (props.syncedIsDraged === 2) {
-    // 이렇게 쓰면 안됨. Emit같은걸 쓰거나..
-    //props.syncedIsDraged = 1;
-
-    return;
-  }
-  // 이렇게 쓰면 안됨. Emit같은걸 쓰거나..
-  // props.syncedModal = true;
-};
-const closeModal = () => {
-  // 이렇게 쓰면 안됨. Emit같은걸 쓰거나..
-  // props.syncedModal = false;
-};
-
-const toggleModal = () => {
-  props.syncedModal ? closeModal() : showModal();
-  observeSize();
-};
-
-// watch(props.syncedModal, () => {
-//   if (props.syncedModal) {
-//     showModal();
-//   } else {
-//     closeModal();
-//   }
-// });
+});
 </script>
+
 <style scoped>
 .total-collapse-modal {
   width: 31.2%;

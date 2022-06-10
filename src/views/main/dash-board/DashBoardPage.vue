@@ -35,9 +35,10 @@
             <!--- Total API Traffic (24Hour) area --->
             <TotalApiTraffic
               v-model:totalApiTraffic="totalTraffic"
-              :modal.sync="trafficModal"
-              :isDraged.sync="isDraged"
-              :isLoadData="isLoadData"
+              v-model:isLoadData="isLoadData"
+              v-model:modal="trafficModal"
+              @modalChange="changeTrafficModal"
+              v-model:isDraged="isDraged"
               :isCommError.sync="isTotalAPITrafficCommError"
             />
             <!--- Error stats (24Hour) area --->
@@ -188,6 +189,9 @@ const lastResponseList: Ref<LastResponseType[]> = ref({} as LastResponseType[]);
 
 const isLoadData = ref(false);
 const trafficModal = ref(false);
+const changeTrafficModal = (show: boolean) => {
+  trafficModal.value = show;
+};
 const errorModal = ref(false);
 const avgModal = ref(false);
 const realTimeModal = ref(false);

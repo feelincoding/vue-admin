@@ -973,7 +973,7 @@ export function getErrorDetailChartOption(detail: ErrorStatsType[]) {
   return errorStatsDetailOption;
 }
 
-export const timerOption = {
+export const timerOption: echarts.EChartsOption = {
   graphic: {
     elements: [
       {
