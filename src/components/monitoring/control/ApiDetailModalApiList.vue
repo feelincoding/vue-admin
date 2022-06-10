@@ -1,6 +1,9 @@
 <template>
   <li>
-    <div class="list-comp">
+    <div
+      class="list-comp"
+      @click="kind === 'svc' ? (showStatiDetailBlock = !showStatiDetailBlock) : (showStatiDetailBlock = true)"
+    >
       <div class="stati-group">
         <h4 class="h4-tit">{{ item.sysId }}.{{ item.apiId }}</h4>
         <div class="other-cont">
@@ -27,11 +30,7 @@
         </div>
       </div>
 
-      <button
-        v-if="kind === 'svc' ? true : false"
-        class="more-btn"
-        @click="showStatiDetailBlock = !showStatiDetailBlock"
-      >
+      <button v-if="kind === 'svc' ? true : false" class="more-btn">
         <i
           ><img :src="showStatiDetailBlock ? dropUp : dropDown" :alt="$t('common.more')" :title="$t('common.more')"
         /></i>
@@ -108,7 +107,6 @@ const startIndex = ref(0);
 if (props.kind === 'api') {
   showStatiDetailBlock.value = true;
 }
-// console.log('ApiDetailModalApiList: ', item);
 for (let i = 0; i < props.item.rsltStat.length; i++) {
   if (props.item.rsltStat[i].rsltType === 'F') {
     errorCheck.value = true;

@@ -8,25 +8,19 @@
           </div>
           <div class="pop-header">
             <h1 class="h1-tit">{{ msgId }}</h1>
-            <!-- <h1 class="h1-tit">{{ apiDetailData.sysId == undefined ? apiDetailData.svcId : apiDetailData.apiId }}</h1> -->
             <button @click="emit('close')">
               <i><img src="@/assets/close.svg" :alt="$t('common.close')" :title="$t('common.close')" /></i>
             </button>
           </div>
           <div class="pop-container">
             <div class="col-2 pop-chart" style="width: 100%">
-              <!-- <div class="pop-chart col-2" v-show="!isShowProgress"> -->
               <div class="chart-div" id="stacked-area-chart-servicetop5"></div>
               <div class="chart-div" id="stacked-horizontal-bar-servicetop5"></div>
             </div>
             <div class="stati-wrap" v-if="isShow && !isShowProgress">
-              <!-- <div class="stati-wrap" v-if="isShow"> -->
               <div class="tit-wrap" v-if="msgType == 'svc' && serviceList.svcStat">
                 <h3 class="h3-tit">{{ $t('control.api_list') }}</h3>
-                <p class="total">
-                  {{ $t('common.total') }} : {{ serviceList.svcStat[0].apiStat.length }}
-                  <!-- <span>{{ apiDetailData.sysId == undefined ? apiDetailData.totCnt : apiDetailData.totCnt }}</span> -->
-                </p>
+                <p class="total">{{ $t('common.total') }} : {{ serviceList.svcStat[0].apiStat.length }}</p>
               </div>
               <div class="stati-list">
                 <ul v-if="msgType == 'svc' && serviceList.svcStat !== undefined">
@@ -90,6 +84,9 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
+const isShow = ref(false);
+const isShowProgress = ref(false);
+
 // 1. 7일 그래프(모달 오른쪽), 실시간 *** 통계 상세 - 일별 트래픽 비교
 const realtimeServiceStatDetailList: Ref<RealtimeServiceStatDetail[]> = ref([]);
 const realtimeApiStatDetailList: Ref<RealtimeApiStatDetail[]> = ref([]);
@@ -98,15 +95,8 @@ const realtimeApiStatDetailList: Ref<RealtimeApiStatDetail[]> = ref([]);
 const trafficService: Ref<TrafficService[]> = ref([]);
 const trafficApi: Ref<TrafficApi[]> = ref([]);
 
-// 3. 리스트, *** 통계
-const serviceList: Ref<StatResponse> = ref({} as StatResponse);
-const apiList: Ref<StatResponse> = ref({} as StatResponse);
-
-const isShow = ref(false);
-const isShowProgress = ref(false);
-
+// 2-1. 차트 옵션
 const myAreaChart = shallowRef({} as EChartsType);
-// const myAreaChartOption = ref({} as echarts.EChartsOption);
 const myAreaChartApiTop5AWeekTransitionSeries: Ref<echarts.LineSeriesOption[]> = ref([]);
 
 const getAreaOption = () => {
@@ -114,7 +104,6 @@ const getAreaOption = () => {
   let successData = [];
   let failData = [];
   let xAxisData = [];
-  // console.log('getAreaOption msgType : ' + msgType);
   if (props.msgType == 'svc') {
     for (let index = 0; index < trafficService.value[0].svcTrafc.length; index++) {
       totalData.push(trafficService.value[0].svcTrafc[index].totCnt);
@@ -190,18 +179,19 @@ const getAreaOption = () => {
   return option;
 };
 
-const myBarChart = shallowRef({} as EChartsType);
-// const myBarChartOption = ref({} as echarts.EChartsOption);
-const myBarChartApiTop5AWeekTransitionSeries: Ref<echarts.LineSeriesOption[]> = ref([]);
-
-const setBarChart = () => {
-  const barDom = document.getElementById('stacked-horizontal-bar-servicetop5') as HTMLDivElement;
-
-  myBarChart.value = echarts.init(barDom);
-  // console.log('myBarChart : ', myBarChart);
-
-  myBarChart.value.setOption(getBarOption());
+const setAreaChart = () => {
+  const areaDom = document.getElementById('stacked-area-chart-servicetop5') as HTMLDivElement;
+  myAreaChart.value = echarts.init(areaDom);
+  myAreaChart.value.setOption(getAreaOption());
 };
+
+// 3. 리스트, *** 통계
+const serviceList: Ref<StatResponse> = ref({} as StatResponse);
+const apiList: Ref<StatResponse> = ref({} as StatResponse);
+
+// 3-1. 차트 옵션
+const myBarChart = shallowRef({} as EChartsType);
+const myBarChartApiTop5AWeekTransitionSeries: Ref<echarts.LineSeriesOption[]> = ref([]);
 
 const getBarOption = () => {
   let successData = [];
@@ -227,7 +217,6 @@ const getBarOption = () => {
       } else {
         yAxisData.unshift(realtimeApiStatDetailList.value[index].statBaseDt.slice(5, 10));
       }
-      // yAxisData.unshift(realtimeApiStatDetailList[index].statBaseDt.slice(5, 10));
     }
   }
 
@@ -281,12 +270,23 @@ const getBarOption = () => {
   return option;
 };
 
-const setAreaChart = () => {
-  const areaDom = document.getElementById('stacked-area-chart-servicetop5') as HTMLDivElement;
+const setBarChart = () => {
+  const barDom = document.getElementById('stacked-horizontal-bar-servicetop5') as HTMLDivElement;
+  myBarChart.value = echarts.init(barDom);
+  myBarChart.value.setOption(getBarOption());
+};
 
-  myAreaChart.value = echarts.init(areaDom);
+// 차트 관련 함수
+const domInitArea = () => {
+  setAreaChart();
 
-  myAreaChart.value.setOption(getAreaOption());
+  window.addEventListener(
+    'resize',
+    () => {
+      chartResizeArea();
+    },
+    { passive: true }
+  );
 };
 
 const domInitBar = () => {
@@ -300,30 +300,6 @@ const domInitBar = () => {
     { passive: true }
   );
 };
-
-const domInitArea = () => {
-  setAreaChart();
-
-  window.addEventListener(
-    'resize',
-    () => {
-      chartResizeArea();
-    },
-    { passive: true }
-  );
-};
-
-// const domDisposeBar = () => {
-//   if (myBarChart != null && myBarChart != undefined) {
-//     myBarChart.value.dispose();
-//   }
-// };
-
-// const domDisposeArea = () => {
-//   if (myAreaChart != null && myAreaChart != undefined) {
-//     myAreaChart.value.dispose();
-//   }
-// };
 
 const chartResizeBar = () => {
   myBarChart.value.resize();
@@ -341,47 +317,29 @@ const getTimeArr = (endTime: string, timeInterval: number): string[] => {
 
   let yearEnd = tempEndTime.getFullYear();
   let monthEnd = String(tempEndTime.getMonth() + 1).padStart(2, '0');
-  // let dateEnd = tempEndTime.getDate();
   let dateEnd = String(tempEndTime.getDate()).padStart(2, '0');
-
   let hoursEnd = String(tempEndTime.getHours()).padStart(2, '0');
   let minutesEnd = String(tempEndTime.getMinutes()).padStart(2, '0');
 
   let yearStart = tempStartTime.getFullYear();
   let monthStart = String(tempStartTime.getMonth() + 1).padStart(2, '0');
-  // let dateStart = tempStartTime.getDate();
   let dateStart = String(tempStartTime.getDate()).padStart(2, '0');
   let hoursStart = String(tempStartTime.getHours()).padStart(2, '0');
   let minutesStart = String(tempStartTime.getMinutes()).padStart(2, '0');
 
   return [
     `${yearEnd}-${monthEnd}-${dateEnd} ${hoursEnd}:${minutesEnd}`,
-    // `${yearEnd}-${monthEnd}-${dateEnd} ${hoursEnd}:${String(Number(minutesEnd) - 1)}`,
     `${yearStart}-${monthStart}-${dateStart} ${hoursStart}:${minutesStart}`,
   ];
 };
 
-/**
- * // 1. 7일 그래프(모달 오른쪽), 실시간 *** 통계 상세 - 일별 트래픽 비교
-const realtimeServiceStatDetailList: Ref<RealtimeServiceStatDetail[]> = ref([]);
-const realtimeApiStatDetailList: Ref<RealtimeApiStatDetail[]> = ref([]);
-
-// 2. 기준시간별 추이(모달 왼쪽),*** 트래픽 추이
-const trafficService: Ref<TrafficService[]> = ref([]);
-const trafficApi: Ref<TrafficApi[]> = ref([]);
-
-// 3. 리스트, *** 통계
-const serviceList: Ref<StatResponse> = ref({} as StatResponse);
-const apiList: Ref<StatResponse> = ref({} as StatResponse);
- * 
- */
-
+// cycle hook
 onMounted(() => {
-  isShowProgress.value = true;
-  // console.log('ApiDetailModal param: ', msgId, msgType, msgEndTime, msgTimeInterval);
   disableScrolling();
+  isShowProgress.value = true;
   const timeArr = getTimeArr(props.msgEndTime, props.msgTimeInterval);
-  // console.log('timeArr:', timeArr);
+
+  // service 조회
   if (props.msgType === 'svc') {
     // 1. 오른쪽 그래프
     const barGraphParam: ControlDetailRequest = {
@@ -410,7 +368,6 @@ onMounted(() => {
     const promise3 = statisticRepository.getServiceList(listParam);
     Promise.all([promise1, promise2, promise3])
       .then((res) => {
-        console.log('res:', res);
         realtimeServiceStatDetailList.value = res[0];
         trafficService.value = res[1];
         serviceList.value = res[2];
@@ -429,10 +386,8 @@ onMounted(() => {
           // modal.show(`${t('error.server_error')}`);
         }
       });
-    // monitoringControlModule.getRealtimeServiceStatDetailList(barGraphParam);
-    // monitoringControlModule.getTrafficService(areaGraphParam);
-    // statModule.getServiceList(listParam);
-    // // console.log('serviceList', serviceList.svcStats?.length);
+
+    //api 조회
   } else if (props.msgType === 'api') {
     // 1. 오른쪽 그래프
     const barGraphParam: ControlDetailRequest = {
@@ -482,55 +437,32 @@ onMounted(() => {
           // $modal.show(`${$t('error.server_error')}`);
         }
       });
-    // monitoringControlModule.getRealtimeApiStatDetailList(barGraphParam);
-    // monitoringControlModule.getTrafficApi(areaGraphParam);
-    // statModule.getApiList(listParam);
-    // // console.log('apiList', apiList.apiStats);
   }
 });
 
-// checkApi = 0;
-// @Watch('checkApi')
-// onCheckApiChanged() {
-//   if (checkApi >= 3) {
-//     isShow = true;
-//     isShowProgress = false;
-//     checkApi = 0;
-//   }
-// }
-
-watch(realtimeServiceStatDetailList.value, () => {
-  myBarChart.value.setOption(getBarOption());
-  // checkApi += 1;
-});
-
-//   watch(trafcServicesList.value, () => {
-//       myAreaChart.value.setOption(getAreaOption());
-//     // checkApi += 1;
-//   })
-
-watch(serviceList.value, () => {
-  isShow.value = true;
-  // checkApi += 1;
-});
-
-watch(realtimeApiStatDetailList.value, () => {
-  myBarChart.value.setOption(getBarOption());
-  // checkApi += 1;
-});
-
-//   watch(trafcApiList, () => {
-//       myAreaChart.value.setOption(getAreaOption());
-//      // checkApi += 1;
-//   })
-
-watch(apiList.value, () => {
-  isShow.value = true;
-  // checkApi += 1;
-});
 onUnmounted(() => {
+  window.removeEventListener('resize', () => {
+    chartResizeArea();
+    chartResizeBar();
+  });
   enableScrolling();
 });
+
+// watch(realtimeServiceStatDetailList.value, () => {
+//   myBarChart.value.setOption(getBarOption());
+// });
+
+// watch(serviceList.value, () => {
+//   isShow.value = true;
+// });
+
+// watch(realtimeApiStatDetailList.value, () => {
+//   myBarChart.value.setOption(getBarOption());
+// });
+
+// watch(apiList.value, () => {
+//   isShow.value = true;
+// });
 </script>
 <style>
 /***   popup   ***/
