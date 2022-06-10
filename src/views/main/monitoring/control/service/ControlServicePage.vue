@@ -106,12 +106,6 @@ watch(
   { immediate: true, deep: true }
 );
 
-onMounted(() => {
-  controlRepository.getServiceList(searchData.value).then((res) => {
-    serviceList.value = res;
-  });
-});
-
 const getServiceList = (orderBy: string, list: RealTimeStat) => {
   return orderBy === 'totCnt'
     ? controlSort.sortServiceListByCnt(list)
@@ -123,8 +117,9 @@ const getServiceList = (orderBy: string, list: RealTimeStat) => {
 };
 
 const handleTime = (event: any) => {
-  searchData.value.statPerd = event;
   isShowProgress.value = true;
+  searchData.value.statPerd = event;
+  if (searchData.value.sortBase === undefined) searchData.value.sortBase = 'totCnt';
   controlRepository
     .getServiceList(searchData.value)
     .then((res) => {

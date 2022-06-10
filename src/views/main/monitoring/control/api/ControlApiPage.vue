@@ -100,12 +100,6 @@ watch(
   { immediate: true, deep: true }
 );
 
-onMounted(() => {
-  controlRepository.getApiList(searchData.value).then((res) => {
-    apiList.value = res;
-  });
-});
-
 const getApiList = (orderBy: string, list: RealTimeStat) => {
   return orderBy === 'totCnt'
     ? controlSort.sortApiListByCnt(list)
@@ -117,8 +111,9 @@ const getApiList = (orderBy: string, list: RealTimeStat) => {
 };
 
 const handleTime = (event: any) => {
-  searchData.value.statPerd = event;
   isShowProgress.value = true;
+  searchData.value.statPerd = event;
+  if (searchData.value.sortBase === undefined) searchData.value.sortBase = 'totCnt';
   controlRepository
     .getApiList(searchData.value)
     .then((res) => {
