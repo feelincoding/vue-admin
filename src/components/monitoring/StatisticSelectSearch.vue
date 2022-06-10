@@ -4,7 +4,7 @@
       <h4 class="label-tit">기간 선택</h4>
       <div class="date-wrap">
         <div class="date-cont bg-white-date">
-          <Datepicker range multiCalendars locale="ko-KR" v-model="date" :format="format" />
+          <Datepicker range multiCalendars locale="ko-KR" v-model="date" :format="format" :maxDate="new Date()" />
         </div>
       </div>
     </div>

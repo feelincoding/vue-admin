@@ -132,7 +132,8 @@
   </li>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref, watch, type Ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+import type { Ref } from 'vue';
 const props = defineProps<{
   inputNm: string;
   secVal: Number | null;
@@ -160,16 +161,16 @@ const props = defineProps<{
 //   onMon: { type: Boolean, require: false, default: false },
 // });
 const emit = defineEmits<{
-  (e: 'onSec', value: boolean): void;
-  (e: 'onMin', value: boolean): void;
-  (e: 'onHr', value: boolean): void;
-  (e: 'onDay', value: boolean): void;
-  (e: 'onMon', value: boolean): void;
-  (e: 'secVal', value: number | null): void;
-  (e: 'minVal', value: number | null): void;
-  (e: 'hourVal', value: number | null): void;
-  (e: 'dayVal', value: number | null): void;
-  (e: 'monthVal', value: number | null): void;
+  (e: 'update:onSec', value: boolean): void;
+  (e: 'update:onMin', value: boolean): void;
+  (e: 'update:onHr', value: boolean): void;
+  (e: 'update:onDay', value: boolean): void;
+  (e: 'update:onMon', value: boolean): void;
+  (e: 'update:secVal', value: number | null): void;
+  (e: 'update:minVal', value: number | null): void;
+  (e: 'update:hourVal', value: number | null): void;
+  (e: 'update:dayVal', value: number | null): void;
+  (e: 'update:monthVal', value: number | null): void;
 }>();
 
 const none = ref(false);
@@ -180,19 +181,19 @@ const showDay = ref(false);
 const showMon = ref(false);
 
 watch(showSec, (val) => {
-  emit('onSec', val);
+  emit('update:onSec', val);
 });
 watch(showMin, (val) => {
-  emit('onMin', val);
+  emit('update:onMin', val);
 });
 watch(showHr, (val) => {
-  emit('onHr', val);
+  emit('update:onHr', val);
 });
 watch(showDay, (val) => {
-  emit('onDay', val);
+  emit('update:onDay', val);
 });
 watch(showMon, (val) => {
-  emit('onMon', val);
+  emit('update:onMon', val);
 });
 
 const sec: Ref<number | null> = computed({
@@ -203,7 +204,7 @@ const sec: Ref<number | null> = computed({
     return props.secVal as number | null;
   },
   set: (val: number | null) => {
-    emit('secVal', val);
+    emit('update:secVal', val);
   },
 });
 
@@ -215,19 +216,19 @@ const min: Ref<number | null> = computed({
     return props.minVal as number | null;
   },
   set: (val: number | null) => {
-    emit('minVal', val);
+    emit('update:minVal', val);
   },
 });
 
 const hour: Ref<number | null> = computed({
   get: () => {
     if (props.hourVal != null) {
-      showMin.value = true;
+      showHr.value = true;
     }
     return props.hourVal as number | null;
   },
   set: (val: number | null) => {
-    emit('hourVal', val);
+    emit('update:hourVal', val);
   },
 });
 
@@ -239,7 +240,7 @@ const day: Ref<number | null> = computed({
     return props.dayVal as number | null;
   },
   set: (val: number | null) => {
-    emit('dayVal', val);
+    emit('update:dayVal', val);
   },
 });
 
@@ -251,7 +252,7 @@ const month: Ref<number | null> = computed({
     return props.monthVal as number | null;
   },
   set: (val: number | null) => {
-    emit('monthVal', val);
+    emit('update:monthVal', val);
   },
 });
 

@@ -40,15 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import type { Ref } from 'vue';
 import type {
-  ApiStat,
-  apiStatDetailProps,
   ControlRequest,
   RealTimeStat,
   ServiceStat,
+  ApiStat,
+  apiStatDetailProps,
 } from '@/types/MonitoringControlType';
 import type { GateWayError } from '@/error/GateWayError';
 
@@ -57,8 +57,8 @@ import CardSort from '@/components/monitoring/control/CardSort.vue';
 import ControlCard from '@/components/monitoring/control/ControlCard.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
 
-import MonitoringControlRepository from '@/repository/monitoring-control-repository';
 import ControlSort from '@/components/monitoring/control/controlSort';
+import MonitoringControlRepository from '@/repository/monitoring-control-repository';
 
 import ErrorCode from '@/error/ErrorCodes';
 
@@ -66,20 +66,17 @@ const controlSort = new ControlSort();
 const controlRepository = new MonitoringControlRepository();
 
 const searchData: Ref<ControlRequest> = ref({} as ControlRequest);
-
 const apiDetailProps: Ref<apiStatDetailProps> = ref({
   msgId: '',
   msgType: '',
   msgEndTime: '',
   msgTimeInterval: 0,
 });
-
 const serviceList: Ref<RealTimeStat> = ref({
   statBaseTm: '',
   statPerd: 0,
-  svcStat: [],
+  svcStat: [] as ServiceStat[],
 });
-
 const apiDetailData: Ref<ApiStat> = ref({
   sysId: '',
   apiId: '',
@@ -100,12 +97,6 @@ const isSort = ref(false);
 const isShowProgress = ref(false);
 const showApiDetailModal = ref(false);
 
-onMounted(() => {
-  controlRepository.getServiceList(searchData.value).then((res) => {
-    serviceList.value = res;
-  });
-});
-
 watch(
   () => searchData.value.sortBase,
   (val: string) => {
@@ -123,17 +114,12 @@ const getServiceList = (orderBy: string, list: RealTimeStat) => {
     : orderBy === 'tps'
     ? controlSort.sortServiceListByTps(list)
     : controlSort.sortServiceListByResTm(list);
-
-  // if (orderBy === 'cnt') serviceList = monitoringControlModule.sortServiceListByCnt;
-  // else if (orderBy === 'failRate') serviceList = monitoringControlModule.sortServiceListByFailRate;
-  // else if (orderBy === 'tps') serviceList = monitoringControlModule.sortServiceListByTps;
-  // else if (orderBy === 'resTm') serviceList = monitoringControlModule.sortServiceListByResTm;
 };
 
 const handleTime = (event: any) => {
-  // console.log('기준시간 emit ', event);
-  searchData.value.statPerd = event;
   isShowProgress.value = true;
+  searchData.value.statPerd = event;
+  if (searchData.value.sortBase === undefined) searchData.value.sortBase = 'totCnt';
   controlRepository
     .getServiceList(searchData.value)
     .then((res) => {
@@ -151,16 +137,10 @@ const handleTime = (event: any) => {
 };
 
 const handleSort = (event: any) => {
-  // console.log('정렬기준 emit ', event);
   searchData.value.sortBase = event;
 };
 
-const closeModal = () => {
-  showApiDetailModal.value = false;
-};
-
 const handleVal = (msg: any) => {
-  console.log('상세 모달 props');
   apiDetailData.value = msg;
 
   apiDetailProps.value.msgId = msg.svcId;
@@ -169,6 +149,10 @@ const handleVal = (msg: any) => {
   apiDetailProps.value.msgTimeInterval = searchData.value.statPerd;
 
   showApiDetailModal.value = true;
+};
+
+const closeModal = () => {
+  showApiDetailModal.value = false;
 };
 </script>
 
