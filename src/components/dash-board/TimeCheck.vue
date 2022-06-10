@@ -128,6 +128,10 @@ const onCountStart = () => {
   isPlay.value = true;
   countTimer();
 };
+
+watch(chartCountTotalData, () => {
+  countChart.value.setOption(getTimerOption(chartCountPercentData.value, chartCountTotalData.value));
+});
 </script>
 
 <style>
