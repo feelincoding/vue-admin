@@ -178,77 +178,6 @@ export function getTpsDetailOption(detail: ApiResponseStatus[]) {
   return tpsDetailOption;
 }
 
-// export const avgDetailOption: echarts.EChartsOption = {
-//   color: '#FFBF00',
-//   tooltip: {
-//     trigger: 'axis',
-//     axisPointer: {
-//       type: 'cross',
-//       label: {
-//         backgroundColor: '#6a7985',
-//       },
-//     },
-//   },
-
-//   grid: {
-//     top: '5%',
-//     left: '2%',
-//     right: '4%',
-//     bottom: '3%',
-//     containLabel: true,
-//   },
-//   xAxis: [
-//     {
-//       type: 'category',
-//       boundaryGap: false,
-//       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-//       axisLine: { show: true, lineStyle: { color: '#FFF6E5' } },
-//       axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#FFF6E5' },
-//     },
-//   ],
-//   yAxis: [
-//     {
-//       type: 'value',
-//       // splitLine: { show: true, lineStyle: { color: '#000' } },
-//       axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#FFF6E5' },
-//     },
-//   ],
-//   series: [
-//     {
-//       type: 'line',
-//       stack: 'Total',
-//       smooth: true,
-//       lineStyle: {
-//         width: 0,
-//       },
-//       showSymbol: false,
-//       label: {
-//         show: true,
-//         position: 'top',
-//       },
-//       areaStyle: {
-//         opacity: 0.8,
-//         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-//           {
-//             offset: 0,
-//             color: '#1EDBD2',
-//           },
-//           {
-//             offset: 1,
-//             color: '#00BDB4',
-//           },
-//         ]),
-//       },
-//       emphasis: {
-//         focus: 'series',
-//       },
-//       data: [220, 302, 181, 234, 210, 290, 150],
-//       zlevel: 5,
-//       z: 5,
-//     },
-//   ],
-// };
-
 export const tpsDetailOption: echarts.EChartsOption = {
   color: '#FFBF00',
   tooltip: {
@@ -531,106 +460,6 @@ export function getFailApiTrafficOption(sucesCnt: number, failCnt: number) {
   return successApiTrafficOption;
 }
 
-// export const totalApiTrafficSuccsessOption: echarts.EChartsOption = {
-//   title: {
-//     text: '성공',
-//     left: 'center',
-//     top: 'bottom',
-//     textStyle: {
-//       color: '#FFF6E5',
-//       fontSize: '17',
-//     },
-//   },
-//   // tooltip: {
-//   //   trigger: 'item',
-//   // },
-//   backgroundColor: '#FFA800',
-//   series: [
-//     {
-//       name: 'Access From',
-//       type: 'pie',
-//       radius: ['57%', '80%'],
-//       avoidLabelOverlap: false,
-
-//       label: {
-//         show: true,
-//         position: 'center',
-//         formatter: ['{data|4000}', '{qt|건}'].join('\n'),
-//         rich: {
-//           data: {
-//             fontSize: '18',
-//             color: '#FFF6E5',
-//             fontWeight: 'bold',
-//           },
-//           qt: {
-//             fontSize: '14',
-//             color: '#FFF6E5',
-//           },
-//         },
-//       },
-//       data: [
-//         { value: 4000, name: '성공' },
-//         { value: 320, name: '실패' },
-//       ],
-//       center: ['50%', '35%'],
-//       emphasis: {
-//         disabled: true,
-//       },
-//     },
-//   ],
-//   color: ['#FFF6E5', 'rgba(255, 255, 255, 0)'],
-// };
-
-// export const totalApiTrafficFailOption: echarts.EChartsOption = {
-//   title: {
-//     text: '실패',
-//     left: 'center',
-//     top: 'bottom',
-//     textStyle: {
-//       color: '#FFF6E5',
-//       fontSize: '17',
-//     },
-//   },
-//   // tooltip: {
-//   //   trigger: 'item',
-//   // },
-//   backgroundColor: '#FFA800',
-//   series: [
-//     {
-//       name: 'Access From',
-//       type: 'pie',
-//       radius: ['57%', '80%'],
-//       avoidLabelOverlap: false,
-
-//       label: {
-//         show: true,
-//         position: 'center',
-//         formatter: ['{data|320}', '{qt|건}'].join('\n'),
-//         rich: {
-//           data: {
-//             fontSize: '18',
-//             color: '#FFF6E5',
-//             fontWeight: 'bold',
-//           },
-//           qt: {
-//             fontSize: '14',
-//             color: '#FFF6E5',
-//           },
-//         },
-//       },
-//       data: [
-//         { value: 320, name: '실패' },
-//         { value: 4000, name: '성공' },
-//       ],
-//       center: ['50%', '35%'],
-//       emphasis: {
-//         disabled: true,
-//       },
-//     },
-//   ],
-//   color: ['#FFF6E5', 'rgba(255, 255, 255, 0)'],
-// };
-
 export function getDetailApiTrafficOption(detail: TotalTrafficStat[]) {
   const totalApiTrafficDetailOption: echarts.EChartsOption = {
     color: '#FFBF00',
@@ -810,48 +639,6 @@ export function getDetailApiTrafficOption(detail: TotalTrafficStat[]) {
   };
   return totalApiTrafficDetailOption;
 }
-
-export const timerOption = {
-  graphic: {
-    elements: [
-      {
-        type: 'group',
-        left: 'center',
-        top: 'center',
-        children: new Array(7).fill(0).map((val, i) => ({
-          type: 'rect',
-          x: i * 12,
-          shape: {
-            x: 0,
-            y: -10,
-            width: 4,
-            height: 20,
-          },
-          style: {
-            fill: '#8041F7',
-          },
-          keyframeAnimation: {
-            duration: 800,
-            delay: i * 200,
-            loop: true,
-            keyframes: [
-              {
-                percent: 0.5,
-                scaleY: 0.3,
-                easing: 'cubicIn',
-              },
-              {
-                percent: 1,
-                scaleY: 1,
-                easing: 'cubicOut',
-              },
-            ],
-          },
-        })),
-      },
-    ],
-  },
-};
 
 export const realTimeTrafficModalOption = {
   color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
@@ -1184,4 +971,80 @@ export function getErrorDetailChartOption(detail: ErrorStatsType[]) {
   };
 
   return errorStatsDetailOption;
+}
+
+export const timerOption = {
+  graphic: {
+    elements: [
+      {
+        type: 'group',
+        left: 'center',
+        top: 'center',
+        children: new Array(7).fill(0).map((val, i) => ({
+          type: 'rect',
+          x: i * 12,
+          shape: {
+            x: 0,
+            y: -10,
+            width: 4,
+            height: 20,
+          },
+          style: {
+            fill: '#8041F7',
+          },
+          keyframeAnimation: {
+            duration: 800,
+            delay: i * 200,
+            loop: true,
+            keyframes: [
+              {
+                percent: 0.5,
+                scaleY: 0.3,
+                easing: 'cubicIn',
+              },
+              {
+                percent: 1,
+                scaleY: 1,
+                easing: 'cubicOut',
+              },
+            ],
+          },
+        })),
+      },
+    ],
+  },
+};
+
+export function getTimerOption(chartCountPercentData: number, chartCountTotalData: number) {
+  const timerOption: echarts.EChartsOption = {
+    title: {
+      show: false,
+    },
+
+    backgroundColor: '#FFFFFF',
+    series: [
+      {
+        center: ['40%', '58%'],
+        name: 'Access From',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+
+        label: {
+          show: false,
+        },
+
+        labelLine: {
+          show: false,
+        },
+        data: [{ value: chartCountPercentData }, { value: chartCountTotalData }],
+        emphasis: {
+          disabled: true,
+        },
+      },
+    ],
+    color: ['#000000', '#D5D5D5'],
+  };
+
+  return timerOption;
 }

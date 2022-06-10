@@ -1,7 +1,7 @@
 <template>
   <article class="dashboard">
     <!--- refresh play/pause area --->
-    <TimeCheck :isLoadData.sync="isLoadData" />
+    <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
     <gridLayout
       :layout="layout"
       :col-num="1"
@@ -115,6 +115,8 @@ import LastTraffic from '@/components/dash-board/LastTraffic.vue';
 import LastResponse from '@/components/dash-board/LastResponse.vue';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
+import { convertBaseTime } from '@/utils/converter';
+
 import type {
   RealTimeServiceStat,
   TotalTrafficStat,
@@ -246,68 +248,73 @@ const dragEvent = (i: string) => {
 };
 
 const dashBoardRepo = new DashBoardRepository();
-// const getTotalTrafficDetail = (): TotalTrafficStat[] => {
-//   // return {
-//   //   svcId: null,
-//   //   statBaseTm: '2022-06-09T15:05:09.381613',
-//   //   totCnt: 24985,
-//   //   sucesCnt: 20426,
-//   //   failCnt: 4559,
-//   // };
-//   const temp = dashBoardRepo.getTrafficStatDetail();
-//   return [];
-// };
-
 onMounted(() => {
-  dashBoardRepo
-    .getTotalAPITraffic(TOTAL_TRAFFIC_PARAM)
-    .then((res) => {
-      totalTraffic.value = res.value as TotalTrafficStat;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getErrorStats(ERROR_STATS_PARAM)
-    .then((res) => {
-      errorStats.value = res.value as ErrorStatsType;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getApiResponseStatus(API_RESPONSE_PARAM)
-    .then((res) => {
-      apiResponseStatus.value = res.value as ApiResponseStatus;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getRealTimeApiStat(REAL_TIME_PARAM)
-    .then((res) => {
-      realTimeApiStat.value = res.value as RealTimeApiStat;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getRealTimeServiceStat(REAL_TIME_PARAM)
-    .then((res) => {
-      realTimeServiceStat.value = res.value as RealTimeServiceStat;
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getLastTrafficCount()
-    .then((res) => {
-      lastTrafficList.value = res.value as LastTrafficType[];
-    })
-    .catch(() => {});
-
-  dashBoardRepo
-    .getLastResponseList()
-    .then((res) => {
-      lastResponseList.value = res.value as LastResponseType[];
-    })
-    .catch(() => {});
+  requestAllApi();
 });
+
+const requestAllApi = () => {
+  const request = [
+    dashBoardRepo.getTotalAPITraffic(TOTAL_TRAFFIC_PARAM),
+    dashBoardRepo.getErrorStats(ERROR_STATS_PARAM),
+    dashBoardRepo.getApiResponseStatus(API_RESPONSE_PARAM),
+    dashBoardRepo.getRealTimeApiStat(REAL_TIME_PARAM),
+    dashBoardRepo.getRealTimeServiceStat(REAL_TIME_PARAM),
+    dashBoardRepo.getLastTrafficCount(),
+    dashBoardRepo.getLastResponseList(),
+  ];
+
+  isLoadData.value = true;
+
+  Promise.allSettled(request).then((results) => {
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        if (index == 0) {
+          totalTraffic.value = result.value as TotalTrafficStat;
+          isTotalAPITrafficCommError.value = false;
+          TOTAL_DETAIL_TRAFFIC_PARAM.statBaseTm = convertBaseTime(totalTraffic.value.statBaseTm);
+        } else if (index == 1) {
+          errorStats.value = result.value as ErrorStatsType;
+          isErrorStatCommError.value = false;
+          ERROR_STATS_DETAIL_PARAM.statBaseTm = convertBaseTime(errorStats.value.statBaseTm);
+        } else if (index == 2) {
+          apiResponseStatus.value = result.value as ApiResponseStatus;
+          isApiResponseStusCommError.value = false;
+          API_RESPONSE_DETAIL_PARAM.statBaseTm = convertBaseTime(apiResponseStatus.value.statBaseTm);
+        } else if (index == 3) {
+          realTimeApiStat.value = result.value as RealTimeApiStat;
+          isApiTop5CommError.value = false;
+        } else if (index == 4) {
+          realTimeServiceStat.value = result.value as RealTimeServiceStat;
+          isServiceTop5CommError.value = false;
+        } else if (index == 5) {
+          lastTrafficList.value = result.value as LastTrafficType[];
+          isLastTrafficCommError.value = false;
+        } else if (index == 6) {
+          lastResponseList.value = result.value as LastResponseType[];
+          isLastResponseCommError.value = false;
+        }
+      } else {
+        if (index == 0) {
+          isTotalAPITrafficCommError.value = true;
+        } else if (index == 1) {
+          isErrorStatCommError.value = true;
+        } else if (index == 2) {
+          isApiResponseStusCommError.value = true;
+        } else if (index == 3) {
+          isApiTop5CommError.value = true;
+        } else if (index == 4) {
+          isServiceTop5CommError.value = true;
+        } else if (index == 5) {
+          isLastTrafficCommError.value = true;
+        } else if (index == 6) {
+          isLastResponseCommError.value = true;
+        }
+      }
+    });
+
+    isLoadData.value = false;
+  });
+};
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
 const isShowModal = ref(false);

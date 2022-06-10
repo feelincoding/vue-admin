@@ -16,15 +16,14 @@ import type {
   LastResponseType,
 } from '@/types/DashBoardType';
 export default class DashBoardRepository {
-  public totaltrafficDetail: TotalTrafficStat[] = [];
-
+  // Total API Traffic
   async getTotalAPITraffic(param: TrafficRequestType) {
     try {
       const response = await AxiosClient.getInstance().get<GateWayResponse<TotalTrafficStat>>(
         `/getDashboardTrafficStat`,
         param
       );
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       console.log(error);
       return Promise.reject(error);
@@ -49,7 +48,7 @@ export default class DashBoardRepository {
         `/getDashboardErrorStat`,
         param
       );
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
     }
@@ -73,7 +72,7 @@ export default class DashBoardRepository {
         `/getDashboardTrafficStus`,
         param
       );
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.value);
       // this.context.commit('setApiResponseStatus', response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
@@ -100,7 +99,7 @@ export default class DashBoardRepository {
         );
         console.log('ccs1', response.data.value);
 
-        return Promise.resolve(response.data);
+        return Promise.resolve(response.data.value);
       } catch (error: GateWayError | any) {
         return Promise.reject(error);
       }
@@ -110,7 +109,7 @@ export default class DashBoardRepository {
           `/realtimeApiStat`,
           param
         );
-        return Promise.resolve(response.data);
+        return Promise.resolve(response.data.value);
       } catch (error: GateWayError | any) {
         return Promise.reject(error);
       }
@@ -124,7 +123,7 @@ export default class DashBoardRepository {
           `/realtimeServiceStat`,
           param
         );
-        return Promise.resolve(response.data);
+        return Promise.resolve(response.data.value);
       } catch (error: GateWayError | any) {
         return Promise.reject(error);
       }
@@ -134,7 +133,7 @@ export default class DashBoardRepository {
           `/realtimeServiceStat`,
           param
         );
-        return Promise.resolve(response.data);
+        return Promise.resolve(response.data.value);
       } catch (error: GateWayError | any) {
         return Promise.reject(error);
       }
@@ -144,7 +143,7 @@ export default class DashBoardRepository {
   async getLastTrafficCount() {
     try {
       const response = await AxiosClient.getInstance().get<GateWayResponse<LastTrafficType[]>>('/getTrafficCount');
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
     }
@@ -153,7 +152,7 @@ export default class DashBoardRepository {
   async getLastResponseList() {
     try {
       const response = await AxiosClient.getInstance().get<GateWayResponse<LastResponseType[]>>('getTrafficResTime');
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
     }

@@ -75,7 +75,7 @@ import {
   getSuccessApiTrafficOption,
   getFailApiTrafficOption,
   getDetailApiTrafficOption,
-} from '@/components/dash-board/chartDummy';
+} from '@/components/dash-board/chart-options';
 import type { TotalTrafficStat } from '@/types/DashBoardType';
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 

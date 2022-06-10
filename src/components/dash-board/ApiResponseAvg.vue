@@ -73,7 +73,7 @@
 import { onMounted, onUnmounted, onUpdated, ref, watch, type Ref } from 'vue';
 
 import * as echarts from 'echarts';
-import { getTpsDetailOption, getAvgDetailOption } from '@/components/dash-board/chartDummy';
+import { getTpsDetailOption, getAvgDetailOption } from '@/components/dash-board/chart-options';
 import type { ApiResponseStatus } from '@/types/DashBoardType';
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 

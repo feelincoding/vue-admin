@@ -5,15 +5,15 @@
       <i><img src="@/assets/pause_ico.svg" v-show="isPlay && !isLoadData" @click="onCountPause()" alt="pause" /></i>
       <i><img src="@/assets/play_arrow.svg" v-show="!isPlay && !isLoadData" @click="onCountStart()" alt="play" /></i>
     </button>
-    <div v-show="!isLoadData" id="timer" class="cicle-timer" />
+    <div v-show="!isLoadData" id="timer" class="cicle-timer"></div>
     <div v-show="isLoadData" ref="progressChartRef" id="progressChart" style="height: 100%; width: 10%"></div>
   </section>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import type { Ref } from 'vue';
+import { onMounted, onUpdated, ref, watch } from 'vue';
 import { getPauseTime } from '@/utils/converter';
 import * as echarts from 'echarts';
+import { timerOption, getTimerOption } from '@/components/dash-board/chart-options';
 
 const INTERVAL_VALUE = 60;
 
@@ -21,7 +21,7 @@ const timer = ref(0);
 const chartCountPercentData = ref(0);
 const chartCountTotalData = ref(100);
 const countChart = ref({} as echarts.EChartsType);
-const loadingChart = {} as echarts.EChartsType;
+const loadingChart = ref({} as echarts.EChartsType);
 
 const intervalId = ref(0);
 const isPlay = ref(true);
@@ -33,50 +33,85 @@ const props = defineProps({
     required: true,
     default: false,
   },
+  callBack: {
+    type: Function,
+    required: true,
+  },
 });
 
 onMounted(() => {
   setCountChart();
 });
 
-const setCountChart = () => {
-  const dom = document.getElementById('timer') as HTMLDivElement;
-  // countChart.value = echarts.init(dom);
-  // countChart.value.setOption(getTimerOption());
+onUpdated(() => {
+  if (!isProgressDomInit.value) {
+    initChartAndDomProgress();
+  }
+  observeSize();
+});
+
+const initChartAndDomProgress = () => {
+  isProgressDomInit.value = true;
+  setProgressChart();
 };
 
-const getTimerOption = () => {
-  const timerOption: echarts.EChartsOption = {
-    title: {
-      show: false,
-    },
+const width1 = ref(0);
+const height1 = ref(0);
+const progressChartRef = ref<HTMLDivElement | null>(null);
+const observeSize = () => {
+  const ro = new ResizeObserver((entries) => {
+    entries.forEach((entry) => {
+      const { width, height } = entry.contentRect;
+      width1.value = width;
+      height1.value = height;
+    });
+  });
+  ro.observe(progressChartRef.value as HTMLDivElement);
+};
 
-    backgroundColor: '#FFFFFF',
-    series: [
-      {
-        center: ['40%', '58%'],
-        name: 'Access From',
-        type: 'pie',
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
+watch(width1, () => {
+  loadingChart.value.resize();
+  countChart.value.resize();
+});
 
-        label: {
-          show: false,
-        },
+watch(
+  () => props.isLoadData,
+  () => {
+    console.log('changed LoadData!!', props.isLoadData);
+    if (props.isLoadData) {
+      clearInterval(intervalId.value);
+    } else {
+      onCountStart();
+    }
+  }
+);
 
-        labelLine: {
-          show: false,
-        },
-        data: [{ value: chartCountPercentData.value }, { value: chartCountTotalData.value }],
-        emphasis: {
-          disabled: true,
-        },
-      },
-    ],
-    color: ['#000000', '#D5D5D5'],
-  };
+const setCountChart = () => {
+  const dom = document.getElementById('timer') as HTMLDivElement;
+  countChart.value = echarts.init(dom);
+  countChart.value.setOption(getTimerOption(chartCountPercentData.value, chartCountTotalData.value));
+};
+const setProgressChart = () => {
+  var chartDom = document.getElementById('progressChart') as HTMLDivElement;
+  loadingChart.value = echarts.init(chartDom);
+  loadingChart.value.setOption(timerOption);
+};
 
-  return timerOption;
+const setTimer = async () => {
+  if (timer.value >= INTERVAL_VALUE) {
+    timer.value = 0;
+    chartCountPercentData.value = 0;
+    chartCountTotalData.value = 100;
+    props.callBack();
+    return;
+  }
+
+  timer.value++;
+  chartCountPercentData.value = (timer.value / INTERVAL_VALUE) * 100;
+  chartCountTotalData.value = ((INTERVAL_VALUE - timer.value) / INTERVAL_VALUE) * 100;
+};
+const countTimer = () => {
+  intervalId.value = setInterval(setTimer, 1000);
 };
 
 const getPause = () => {
@@ -89,12 +124,12 @@ const onCountPause = () => {
 };
 
 const onCountStart = () => {
+  console.log('onCountStart');
   isPlay.value = true;
   countTimer();
 };
-
-const countTimer = () => {};
 </script>
+
 <style>
 .cicle-timer {
   margin-bottom: 4px;

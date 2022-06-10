@@ -58,7 +58,7 @@ import * as echarts from 'echarts';
 
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 import type { ErrorStatsType } from '@/types/DashBoardType';
-import { getFailRateOption, getErrorDetailChartOption } from '@/components/dash-board/chartDummy';
+import { getFailRateOption, getErrorDetailChartOption } from '@/components/dash-board/chart-options';
 
 const props = defineProps({
   isLoadData: {
