@@ -34,7 +34,6 @@
       <div
         :id="'statsPie_' + (isSvcStatItem(item) ? item.svcId : item.sysId + '.' + item.apiId)"
         class="chart-div"
-        autoresize
       ></div>
       <dl>
         <dt>
@@ -57,20 +56,16 @@
       <div
         :id="'errorStateBar_' + (isSvcStatItem(item) ? item.svcId : item.sysId + '.' + item.apiId)"
         class="chart-div"
-        autoresize
       ></div>
     </div>
   </li>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, shallowRef, watch } from 'vue';
 import * as echarts from 'echarts';
 
 import type { EChartsType } from 'echarts';
-import type { ApiStat, ServiceStat, RealTimeStat } from '@/types/MonitoringControlType';
-
-// import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
-// import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
+import type { ApiStat, ServiceStat } from '@/types/MonitoringControlType';
 
 const props = defineProps<{
   item: ServiceStat | ApiStat;
@@ -82,13 +77,9 @@ const emit = defineEmits<{
 }>();
 
 const tipBox = ref(false);
-const showApiDetailModal = ref(false);
 
-//   const statsPieOption: Ref<echarts.EChartsOption> = ref({} as echarts.EChartsOption);
-//   const errorStatsBarOption: Ref<echarts.EChartsOption> = ref({} as echarts.EChartsOption);
-
-const myChart = ref({} as EChartsType);
-const myChart2 = ref({} as EChartsType);
+const myChart = shallowRef({} as EChartsType);
+const myChart2 = shallowRef({} as EChartsType);
 
 watch(
   () => props.isSort,
@@ -107,26 +98,19 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', () => {
-    chartResize();
-  });
+  window.removeEventListener('resize', () => chartResize());
 });
-
-const isSvcStatItem = (target: ServiceStat | ApiStat): target is ServiceStat => {
-  return (target as ServiceStat).svcId !== undefined;
-};
 
 const domInit = () => {
   setPieChart();
   setBarChart();
 
-  window.addEventListener(
-    'resize',
-    () => {
-      chartResize();
-    },
-    { passive: true }
-  );
+  window.addEventListener('resize', () => chartResize(), { passive: true });
+};
+
+const chartResize = () => {
+  myChart.value.resize();
+  myChart2.value.resize();
 };
 
 const domDispose = () => {
@@ -139,21 +123,12 @@ const domDispose = () => {
   }
 };
 
-const chartResize = () => {
-  myChart.value.resize();
-  myChart2.value.resize();
-};
-
 const setPieChart = () => {
   const pieDom = document.getElementById(
     'statsPie_' + (isSvcStatItem(props.item) ? props.item.svcId : props.item.sysId + '.' + props.item.apiId)
   ) as HTMLDivElement;
 
-  console.log('pieDom : ', pieDom);
-
   myChart.value = echarts.init(pieDom);
-  console.log('myChart : ', myChart);
-
   myChart.value.setOption(getPieOption());
 };
 
@@ -223,10 +198,11 @@ const getBarOption = () => {
       top: 10,
       left: '21%',
       bottom: 10,
-      right: '20%',
+      right: '23%',
     },
     series: [
       {
+        type: 'bar',
         data: [
           {
             value: props.item.miCnt,
@@ -247,7 +223,6 @@ const getBarOption = () => {
             },
           },
         ],
-        type: 'bar',
         showBackground: true,
         backgroundStyle: {
           color: 'rgba(180, 180, 180, 0.5)',
@@ -262,6 +237,11 @@ const getBarOption = () => {
   };
 
   return option;
+};
+
+// item 타입 체크(serviceStat이면 true, apiStat이면 false)
+const isSvcStatItem = (target: ServiceStat | ApiStat): target is ServiceStat => {
+  return (target as ServiceStat).svcId !== undefined;
 };
 
 const cardDetail = () => {

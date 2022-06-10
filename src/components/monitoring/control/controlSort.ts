@@ -40,39 +40,39 @@ export default class ControlSort {
     return list;
   }
 
-  sortApiListByCnt(apiList: RealTimeStat) {
-    const list: Ref<RealTimeStat> = ref({
+  sortApiListByCnt(apiList: RealTimeStat): RealTimeStat {
+    const list: RealTimeStat = {
       statBaseTm: apiList.statBaseTm,
       statPerd: apiList.statPerd,
       apiStat: apiList.apiStat?.sort((a, b) => b.totCnt - a.totCnt),
-    });
+    };
     return list;
   }
 
-  sortApiListByFailRate(apiList: RealTimeStat) {
-    const list: Ref<RealTimeStat> = ref({
+  sortApiListByFailRate(apiList: RealTimeStat): RealTimeStat {
+    const list: RealTimeStat = {
       statBaseTm: apiList.statBaseTm,
       statPerd: apiList.statPerd,
       apiStat: apiList.apiStat?.sort((a, b) => b.failRate - a.failRate),
-    });
+    };
     return list;
   }
 
-  sortApiListByTps(apiList: RealTimeStat) {
-    const list: Ref<RealTimeStat> = ref({
+  sortApiListByTps(apiList: RealTimeStat): RealTimeStat {
+    const list: RealTimeStat = {
       statBaseTm: apiList.statBaseTm,
       statPerd: apiList.statPerd,
       apiStat: apiList.apiStat?.sort((a, b) => b.tps - a.tps),
-    });
+    };
     return list;
   }
 
-  sortApiListByResTm(apiList: RealTimeStat) {
-    const list: Ref<RealTimeStat> = ref({
+  sortApiListByResTm(apiList: RealTimeStat): RealTimeStat {
+    const list: RealTimeStat = {
       statBaseTm: apiList.statBaseTm,
       statPerd: apiList.statPerd,
       apiStat: apiList.apiStat?.sort((a, b) => b.avgResTm - a.avgResTm),
-    });
+    };
     return list;
   }
 }
