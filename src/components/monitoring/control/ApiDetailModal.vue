@@ -14,7 +14,7 @@
             </button>
           </div>
           <div class="pop-container">
-            <div class="pop-chart col-2">
+            <div class="col-2 pop-chart" style="width: 100%">
               <!-- <div class="pop-chart col-2" v-show="!isShowProgress"> -->
               <div class="chart-div" id="stacked-area-chart-servicetop5"></div>
               <div class="chart-div" id="stacked-horizontal-bar-servicetop5"></div>
@@ -29,7 +29,7 @@
                 </p>
               </div>
               <div class="stati-list">
-                <ul v-if="msgType == 'svc' && serviceList.svcStat">
+                <ul v-if="msgType == 'svc' && serviceList.svcStat !== undefined">
                   <ApiDetailModalApiList
                     v-for="(item, index) in serviceList.svcStat[0].apiStat"
                     :key="index"
@@ -37,7 +37,7 @@
                     :item="item"
                   />
                 </ul>
-                <ul v-else-if="msgType == 'api' && apiList.apiStat">
+                <ul v-else-if="msgType == 'api' && apiList.apiStat !== undefined">
                   <ApiDetailModalApiList :kind="'api'" :item="apiList.apiStat[0]" />
                 </ul>
               </div>
@@ -52,6 +52,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
+
 import * as echarts from 'echarts';
 import type { EChartsType } from 'echarts';
 import type { StatResponse } from '@/types/MonitoringStatisticType';
@@ -61,17 +63,18 @@ import type {
   TrafficService,
   TrafficApi,
   ControlDetailRequest,
+  TrafcApi,
+  TrafcServices,
 } from '@/types/MonitoringControlType';
 
 import { disableScrolling, enableScrolling } from '@/utils/screen';
 
-// import ApiDetailModalApiList from '@/components/commons/modal/ApiDetailModalApiList.vue';
+import ApiDetailModalApiList from '@/components/monitoring/control/ApiDetailModalApiList.vue';
 
 import MonitoringControlRepository from '@/repository/monitoring-control-repository';
 import MonitoringStatisticReoisitory from '@/repository/monitoring-statistic-repository';
 
 import ErrorCode from '@/error/ErrorCodes';
-import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
 
 const controlRepository = new MonitoringControlRepository();
 const statisticRepository = new MonitoringStatisticReoisitory();
@@ -87,18 +90,23 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
+// 1. 7일 그래프(모달 오른쪽), 실시간 *** 통계 상세 - 일별 트래픽 비교
 const realtimeServiceStatDetailList: Ref<RealtimeServiceStatDetail[]> = ref([]);
-const trafficService: Ref<TrafficService[]> = ref([]);
-const serviceList: Ref<StatResponse> = ref({} as StatResponse);
 const realtimeApiStatDetailList: Ref<RealtimeApiStatDetail[]> = ref([]);
+
+// 2. 기준시간별 추이(모달 왼쪽),*** 트래픽 추이
+const trafficService: Ref<TrafficService[]> = ref([]);
 const trafficApi: Ref<TrafficApi[]> = ref([]);
+
+// 3. 리스트, *** 통계
+const serviceList: Ref<StatResponse> = ref({} as StatResponse);
 const apiList: Ref<StatResponse> = ref({} as StatResponse);
 
 const isShow = ref(false);
 const isShowProgress = ref(false);
 
-const myAreaChart = ref({} as EChartsType);
-const myAreaChartOption = ref({} as echarts.EChartsOption);
+const myAreaChart = shallowRef({} as EChartsType);
+// const myAreaChartOption = ref({} as echarts.EChartsOption);
 const myAreaChartApiTop5AWeekTransitionSeries: Ref<echarts.LineSeriesOption[]> = ref([]);
 
 const getAreaOption = () => {
@@ -168,7 +176,7 @@ const getAreaOption = () => {
         type: 'value',
       },
     ],
-    series: myAreaChartApiTop5AWeekTransitionSeries.value.map((item, index) =>
+    series: myAreaChartApiTop5AWeekTransitionSeries.value.map((item) =>
       Object.assign(item, {
         type: 'line',
         stack: 'Total',
@@ -181,14 +189,16 @@ const getAreaOption = () => {
   };
   return option;
 };
-const myBarChart = ref({} as EChartsType);
-const myBarChartOption = ref({} as echarts.EChartsOption);
+
+const myBarChart = shallowRef({} as EChartsType);
+// const myBarChartOption = ref({} as echarts.EChartsOption);
 const myBarChartApiTop5AWeekTransitionSeries: Ref<echarts.LineSeriesOption[]> = ref([]);
 
 const setBarChart = () => {
   const barDom = document.getElementById('stacked-horizontal-bar-servicetop5') as HTMLDivElement;
 
   myBarChart.value = echarts.init(barDom);
+  // console.log('myBarChart : ', myBarChart);
 
   myBarChart.value.setOption(getBarOption());
 };
@@ -303,17 +313,17 @@ const domInitArea = () => {
   );
 };
 
-const domDisposeBar = () => {
-  if (myBarChart != null && myBarChart != undefined) {
-    myBarChart.value.dispose();
-  }
-};
+// const domDisposeBar = () => {
+//   if (myBarChart != null && myBarChart != undefined) {
+//     myBarChart.value.dispose();
+//   }
+// };
 
-const domDisposeArea = () => {
-  if (myAreaChart != null && myAreaChart != undefined) {
-    myAreaChart.value.dispose();
-  }
-};
+// const domDisposeArea = () => {
+//   if (myAreaChart != null && myAreaChart != undefined) {
+//     myAreaChart.value.dispose();
+//   }
+// };
 
 const chartResizeBar = () => {
   myBarChart.value.resize();
@@ -351,6 +361,21 @@ const getTimeArr = (endTime: string, timeInterval: number): string[] => {
   ];
 };
 
+/**
+ * // 1. 7일 그래프(모달 오른쪽), 실시간 *** 통계 상세 - 일별 트래픽 비교
+const realtimeServiceStatDetailList: Ref<RealtimeServiceStatDetail[]> = ref([]);
+const realtimeApiStatDetailList: Ref<RealtimeApiStatDetail[]> = ref([]);
+
+// 2. 기준시간별 추이(모달 왼쪽),*** 트래픽 추이
+const trafficService: Ref<TrafficService[]> = ref([]);
+const trafficApi: Ref<TrafficApi[]> = ref([]);
+
+// 3. 리스트, *** 통계
+const serviceList: Ref<StatResponse> = ref({} as StatResponse);
+const apiList: Ref<StatResponse> = ref({} as StatResponse);
+ * 
+ */
+
 onMounted(() => {
   isShowProgress.value = true;
   // console.log('ApiDetailModal param: ', msgId, msgType, msgEndTime, msgTimeInterval);
@@ -384,8 +409,14 @@ onMounted(() => {
     const promise2 = controlRepository.getTrafficService(areaGraphParam);
     const promise3 = statisticRepository.getServiceList(listParam);
     Promise.all([promise1, promise2, promise3])
-      .then(() => {
+      .then((res) => {
+        console.log('res:', res);
+        realtimeServiceStatDetailList.value = res[0];
+        trafficService.value = res[1];
+        serviceList.value = res[2];
+
         isShowProgress.value = false;
+        isShow.value = true;
         domInitBar();
         domInitArea();
       })
@@ -431,8 +462,14 @@ onMounted(() => {
     const promise3 = statisticRepository.getApiList(listParam);
 
     Promise.all([promise1, promise2, promise3])
-      .then(() => {
+      .then((res) => {
+        realtimeApiStatDetailList.value = res[0];
+        trafficApi.value = res[1];
+        apiList.value = res[2];
+
         isShowProgress.value = false;
+        isShow.value = true;
+
         domInitBar();
         domInitArea();
       })

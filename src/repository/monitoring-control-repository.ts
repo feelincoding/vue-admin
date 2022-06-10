@@ -7,8 +7,8 @@ import type {
   RealTimeStat,
   RealtimeServiceStatDetail,
   RealtimeApiStatDetail,
-  TrafcApi,
-  TrafcServices,
+  TrafficApi,
+  TrafficService,
 } from '@/types/MonitoringControlType';
 
 export default class MonitoringControlRepository {
@@ -54,7 +54,7 @@ export default class MonitoringControlRepository {
   }
 
   // api
-  async getRealtimeApiStatDetailList(param: ControlDetailRequest) {
+  async getRealtimeApiStatDetailList(param: ControlDetailRequest): Promise<RealtimeApiStatDetail[]> {
     try {
       const response = await AxiosClient.getInstance().get<GateWayResponse<RealtimeApiStatDetail[]>>(
         `/realtimeApiStatDetail`,
@@ -68,9 +68,9 @@ export default class MonitoringControlRepository {
 
   // 2. 기준시간별 추이(모달 왼쪽),*** 트래픽 추이
   // service
-  async getTrafficService(param: ControlDetailRequest) {
+  async getTrafficService(param: ControlDetailRequest): Promise<TrafficService[]> {
     try {
-      const response = await AxiosClient.getInstance().get<GateWayResponse<TrafcServices[]>>(`/trafc/services`, param);
+      const response = await AxiosClient.getInstance().get<GateWayResponse<TrafficService[]>>(`/trafc/services`, param);
       return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
@@ -78,9 +78,9 @@ export default class MonitoringControlRepository {
   }
 
   // api
-  async getTrafficApi(param: ControlDetailRequest) {
+  async getTrafficApi(param: ControlDetailRequest): Promise<TrafficApi[]> {
     try {
-      const response = await AxiosClient.getInstance().get<GateWayResponse<TrafcApi[]>>(`/trafc/apis`, param);
+      const response = await AxiosClient.getInstance().get<GateWayResponse<TrafficApi[]>>(`/trafc/apis`, param);
       return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
