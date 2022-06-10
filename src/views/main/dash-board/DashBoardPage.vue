@@ -84,6 +84,19 @@
             <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
           </section>
         </div>
+
+        <div
+          v-if="item.i == '3'"
+          style="padding: 11px; width: 100%; background-color: #fff"
+          :class="{ 'drag-box': box4 }"
+        >
+          <section class="group col-2 bg-pastel">
+            <!--- Last Traffic --->
+            <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
+            <!--- Last Response --->
+            <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
+          </section>
+        </div>
       </gridItem>
     </gridLayout>
   </article>
@@ -98,6 +111,8 @@ import ApiResponseAvg from '@/components/dash-board/ApiResponseAvg.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
 import ApiTop5 from '@/components/dash-board/ApiTop5.vue';
 import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
+import LastTraffic from '@/components/dash-board/LastTraffic.vue';
+import LastResponse from '@/components/dash-board/LastResponse.vue';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
 import type {
@@ -164,9 +179,9 @@ const REAL_TIME_PARAM: RealTimeRequest = {
 const totalTraffic: Ref<TotalTrafficStat> = ref({} as TotalTrafficStat);
 const apiResponseStatus: Ref<ApiResponseStatus> = ref({} as ApiResponseStatus);
 const errorStats: Ref<ErrorStatsType> = ref({} as ErrorStatsType);
-const lastTrafficList: Ref<LastTrafficType[]> = ref({} as LastTrafficType[]);
 const realTimeApiStat: Ref<RealTimeApiStat> = ref({} as RealTimeApiStat);
 const realTimeServiceStat: Ref<RealTimeServiceStat> = ref({} as RealTimeServiceStat);
+const lastTrafficList: Ref<LastTrafficType[]> = ref({} as LastTrafficType[]);
 const lastResponseList: Ref<LastResponseType[]> = ref({} as LastResponseType[]);
 
 const isLoadData = ref(false);
@@ -276,6 +291,20 @@ onMounted(() => {
     .getRealTimeServiceStat(REAL_TIME_PARAM)
     .then((res) => {
       realTimeServiceStat.value = res.value as RealTimeServiceStat;
+    })
+    .catch(() => {});
+
+  dashBoardRepo
+    .getLastTrafficCount()
+    .then((res) => {
+      lastTrafficList.value = res.value as LastTrafficType[];
+    })
+    .catch(() => {});
+
+  dashBoardRepo
+    .getLastResponseList()
+    .then((res) => {
+      lastResponseList.value = res.value as LastResponseType[];
     })
     .catch(() => {});
 });
