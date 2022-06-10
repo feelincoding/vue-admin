@@ -59,31 +59,31 @@ const text = computed({
   set: (val) => {
     if (val !== null) {
       switch (props.inputNm) {
-        case $t('service.tkcgrNm'):
+        case '담당자 이름':
           if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
-            notiMessage.value = { valid: true, msg: '' };
+            notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: $t('service.valid_check_tkcgrNm') as string };
+            notiMessage.value = { valid: false, msg: 'test' };
           }
           break;
-        case $t('service.tkcgrPos'):
-          if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
+        case '소속':
+          if (checkLength(val, 1, 20) && checkEnglishNumberKorean(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
-            notiMessage.value = { valid: true, msg: '' };
+            notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: $t('service.valid_check_tkcgrPos') as string };
+            notiMessage.value = { valid: false, msg: 'test' };
           }
           break;
-        case $t('service.tkcgrEml'):
-          if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
+        case 'E-mail':
+          if (checkLength(val, 1, 20) && checkEmail(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
-            notiMessage.value = { valid: true, msg: '' };
+            notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: $t('system.valid_check_tkcgrEml') as string };
+            notiMessage.value = { valid: false, msg: 'test' };
           }
           break;
       }
