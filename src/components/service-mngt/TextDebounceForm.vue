@@ -14,9 +14,11 @@
         class="input-box lg"
         @focus="notice()"
       />
-      <p v-if="emptyChk && text == ''" class="red-txt noti">해당 항목은 필수 입력값입니다.</p>
-      <p v-if="check == false" class="red-txt noti">중복된 입력값입니다.</p>
-      <p v-if="notiMessage.valid == false && notiMessage.msg != ''" class="red-txt noti">{{ notiMessage.msg }}</p>
+      <p v-if="emptyChk && text == ''" class="red-txt noti">{{ notiMessage.msg }}</p>
+      <p v-if="check == false" class="red-txt noti">{{ $t('service.duplicate_check_id') }}</p>
+      <p v-if="notiMessage.valid == false && notiMessage.msg != ''" class="red-txt noti">
+        {{ $t('service.empty_check') }}
+      </p>
     </div>
   </li>
 </template>
@@ -24,6 +26,9 @@
 import { checkEnglishNumber, checkLength } from '@/utils/validation';
 import { computed, ref, watch } from 'vue';
 import type { Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const props = defineProps<{
   inputNm: string;
   type: string;
@@ -54,7 +59,7 @@ const text = computed({
     } else if (val == '') {
       notiMessage.value = { valid: false, msg: '' };
     } else {
-      notiMessage.value = { valid: false, msg: $t('service.valid_check_id') as string };
+      notiMessage.value = { valid: false, msg: t('service.valid_check_id') as string };
     }
     emit('update:value', val);
   },
