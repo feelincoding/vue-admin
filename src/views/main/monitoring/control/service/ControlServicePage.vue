@@ -14,7 +14,7 @@
           v-if="!isShowProgress && (serviceList.svcStat === undefined || serviceList.svcStat.length == 0)"
           style="text-align: center"
         >
-          조회 가능한 데이터가 존재하지 않습니다.
+          {{ $t('common.no_data') }}
         </div>
         <ul v-else-if="!isShowProgress && serviceList.svcStat !== undefined && serviceList.svcStat.length > 0">
           <ControlCard

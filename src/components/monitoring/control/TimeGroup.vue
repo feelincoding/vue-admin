@@ -100,7 +100,7 @@ const handleChangeTime = (event: any) => {
   timer.value = 0;
   nowDate.value = getPauseTime('nowDate', selectVal.value);
   selectDate.value = getPauseTime('selectDate', selectVal.value);
-  emit('changeTime', event.target.value);
+  emit('changeTime', Number(event.target.value));
 };
 
 const getPauseTime = (d: string, selectTm: number): string => {
