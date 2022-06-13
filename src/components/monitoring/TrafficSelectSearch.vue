@@ -20,35 +20,36 @@
               v-if="selectedUnit === 'MM'"
               v-model="month"
               range
-              monthPicker
               locale="ko-KR"
+              monthPicker
               :format="monthFormat"
+              :maxRange="5"
             />
             <Datepicker
               v-else-if="selectedUnit === 'DD'"
               range
-              multiCalendars
               locale="ko-KR"
               v-model="date"
-              :format="dayFormat"
+              :format="dateFormat"
               :maxDate="new Date()"
+              :enableTimePicker="false"
             />
             <Datepicker
               v-else-if="selectedUnit === 'HH'"
               range
-              multiCalendars
               locale="ko-KR"
               v-model="date"
-              :format="hourFormat"
+              :format="dateFormat"
               :maxDate="new Date()"
+              :minutesIncrement="60"
+              :noMinutesOverlay="true"
             />
             <Datepicker
               v-else-if="selectedUnit === 'MI'"
               range
-              multiCalendars
               locale="ko-KR"
               v-model="date"
-              :format="minuteFormat"
+              :format="dateFormat"
               :maxDate="new Date()"
             />
           </div>
@@ -167,8 +168,12 @@
 </template>
 <script setup lang="ts">
 import type { ApiSearch } from '@/types/MonitoringStatisticType';
-import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import { ref, reactive, computed, watch, onMounted, type Ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { ko } from 'date-fns/locale';
+import { format } from 'date-fns';
+import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
+const modal = inject(modalInjectionKey)!!;
 const { t } = useI18n({});
 const emit = defineEmits<{
   (e: 'search', value: any): void;
@@ -180,15 +185,12 @@ const props = defineProps<{
   placeholder: string;
   propApiList: ApiSearch[] | null;
 }>();
-
 const selectedUnit = ref('MM');
-const startDate = ref(new Date());
-const endDate = ref(new Date());
 const searchText = ref('');
+
 function selectUnit(unit: string) {
   selectedUnit.value = unit;
-  startDate.value = new Date();
-  endDate.value = new Date();
+  resetTime();
 }
 
 //서비스탭
@@ -261,94 +263,127 @@ function unselectAPI(event: any) {
   selectedAPI.value = selectedAPI.value.filter((item: string) => item !== api);
 }
 
-// disabledAfterTodayAndAfterEndDay(date: Date) {
-//   const today = new Date();
-//   const endDay = new Date(this.endDate + ' ' + (this.endTime ? this.endTime : '23:59:59'));
-//   return date > today || date > endDay || this.checkMinMax(date, endDay);
-// }
-// disabledAfterNowOrAfterEndTime(date: Date) {
-//   const now = new Date();
-//   const endTime = this.endTime ? new Date(this.endDate + 'T' + this.endTime) : new Date();
-//   const compDate = new Date(this.startDate + 'T' + date.toTimeString().substr(0, 8));
-//   return compDate > now || compDate > endTime || (this.endTime ? this.checkMinMax(compDate, endTime) : false);
-// }
-
-// disabledAfterTodayOrBeforeStartDay(date: Date) {
-//   const today = new Date();
-//   const startDay = this.startDate ? new Date(this.startDate + 'T' + '00:00:00') : new Date(0);
-//   return date > today || date < startDay || this.checkMinMax(startDay, date);
-// }
-
-// disabledAfterNowOrBeforeStartTime(date: Date) {
-//   const now = new Date();
-//   const startTime = this.startDate && this.startTime ? new Date(this.startDate + 'T' + this.startTime) : new Date(0);
-//   const compDate = new Date(this.endDate + 'T' + date.toTimeString().substr(0, 8));
-//   return compDate >= now || compDate <= startTime || (this.startTime ? this.checkMinMax(startTime, compDate) : false);
-// }
 const date: Ref<Date[]> = ref([]);
-// const month: Ref<{ month: number; year: number }[]> = ref([]);
 const month = ref();
 
 // 화면에 표시될 날짜 포멧 설정
-const monthFormat = (dates: { month: number; year: number }[]) => {
-  return `${dates[0].year}-${dates[0].month + 1 < 10 ? '0' + (dates[0].month + 1) : dates[0].month + 1} ~ ${
-    dates[1].year
-  }-${dates[1].month + 1}`;
+const monthFormat = () => {
+  if (month.value[1] === null) {
+    month.value[1] = month.value[0];
+  }
+  return `${month.value[0].year}-${
+    month.value[0].month + 1 < 10 ? '0' + (month.value[0].month + 1) : month.value[0].month + 1
+  } ~ ${month.value[1].year}-${
+    month.value[1].month + 1 < 10 ? '0' + (month.value[1].month + 1) : month.value[1].month + 1
+  }`;
 };
-const dayFormat = (dates: Date[]) => {
-  return `${dates[0].toISOString().slice(0, 10)} ~ ${dates[1].toISOString().slice(0, 10)}`;
-};
-const hourFormat = (dates: Date[]) => {
-  return `${dates[0].toISOString().slice(0, 10)} ${dates[0].toTimeString().slice(0, 2)}:00 ~ ${dates[1]
-    .toISOString()
-    .slice(0, 10)} ${dates[1].toTimeString().slice(0, 2)}:00`;
-};
-const minuteFormat = (dates: Date[]) => {
-  return `${dates[0].toISOString().slice(0, 10)} ${dates[0].toTimeString().slice(0, 5)} ~ ${dates[1]
-    .toISOString()
-    .slice(0, 10)} ${dates[1].toTimeString().slice(0, 5)}`;
+const dateFormat = () => {
+  if (date.value[1] === null) {
+    date.value[1] = date.value[0];
+  }
+  return selectedUnit.value === 'DD'
+    ? format(date.value[0], 'yyyy-MM-dd') + ' ~ ' + format(date.value[1], 'yyyy-MM-dd')
+    : format(date.value[0], 'yyyy-MM-dd HH:mm') + ' ~ ' + format(date.value[1], 'yyyy-MM-dd HH:mm');
 };
 //초기 날짜 설정
 onMounted(() => {
-  const endDate = new Date();
-  const startDate = new Date(new Date().setDate(endDate.getDate() - 7));
+  resetTime();
+});
+
+watch(month, () => {
+  if (month.value[0] === null || month.value[1] === null) {
+    return;
+  }
+  if (!checkMaxMonth()) {
+    modal().show('최대 월간 조회 가능 기간은 5년입니다.');
+    resetTime();
+  }
+});
+
+watch(date, () => {
+  if (date.value[0] === null || date.value[1] === null) {
+    return;
+  }
+  if (!checkMaxDate()) {
+    modal().show(
+      selectedUnit.value === 'DD'
+        ? '최대 일간 조회 가능 기간은 150일입니다.'
+        : selectedUnit.value === 'HH'
+        ? '최대 시기준 조회 가능 기간은 120시간 입니다'
+        : '최대 분기준 조회 가능 기간은 480분 입니다'
+    );
+    resetTime();
+  }
+});
+
+function resetTime() {
+  const endDate = new Date(new Date().setHours(0, 0, 0, 0));
+  const startDate = new Date(new Date().setHours(0, 0, 0, 0));
   const startMonth = { month: 0, year: endDate.getFullYear() };
   const endMonth = { month: 11, year: endDate.getFullYear() };
   date.value = [startDate, endDate];
   month.value = [startMonth, endMonth];
-});
+}
+// 년월 선택시 valid check, true시 통과
+function checkMaxMonth() {
+  const start = new Date(month.value[0].year, month.value[0].month);
+  const end = new Date(month.value[1].year, month.value[1].month);
+  return !(end.getTime() - start.getTime() > 5 * 365 * 24 * 60 * 60 * 1000);
+}
 
-function checkMinMax(start: Date, end: Date) {
+// 날짜 선택시 valid check, true시 통과
+function checkMaxDate() {
   // <!-------  일 단위 - 최대 150일 -------->
   if (selectedUnit.value === 'DD') {
-    return end.getTime() - start.getTime() > 150 * 24 * 60 * 60 * 1000;
+    return !(date.value[1].getTime() - date.value[0].getTime() > 150 * 24 * 60 * 60 * 1000);
   }
   // <!-------  시간 단위 - 최대 120 시간 -------->
   else if (selectedUnit.value === 'HH') {
-    return end.getTime() - start.getTime() > 120 * 60 * 60 * 1000;
+    return !(date.value[1].getTime() - date.value[0].getTime() > 120 * 60 * 60 * 1000);
   }
   // <!-------  분 단위 - 최대 480 분 -------->
   else if (selectedUnit.value === 'MI') {
-    return end.getTime() - start.getTime() > 480 * 60 * 1000;
+    return !(date.value[1].getTime() - date.value[0].getTime() > 480 * 60 * 1000);
   }
+  return true;
 }
 
 function handleClickSearch() {
-  if (props.tab === 'service') {
-    emit('search', {
-      svcId: selectedServices.value,
-      statBaseUnit: selectedUnit.value,
-      statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
-      statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
-    });
-  } else {
-    emit('search', {
-      apiId: selectedAPI.value,
-      statBaseUnit: selectedUnit.value,
+  if (selectedUnit.value === 'MM') {
+    const start = new Date(month.value[0].year, month.value[0].month);
+    const end = new Date(month.value[1].year, month.value[1].month);
 
-      statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
-      statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
-    });
+    if (props.tab === 'service') {
+      emit('search', {
+        svcId: selectedServices.value,
+        statBaseUnit: selectedUnit.value,
+        statStTm: format(start, 'yyyy-MM-dd HH:mm'),
+        statEndTm: format(end, 'yyyy-MM-dd HH:mm'),
+      });
+    } else {
+      emit('search', {
+        apiId: selectedAPI.value,
+        statBaseUnit: selectedUnit.value,
+        statStTm: format(start, 'yyyy-MM-dd HH:mm'),
+        statEndTm: format(end, 'yyyy-MM-dd HH:mm'),
+      });
+    }
+  } else {
+    if (props.tab === 'service') {
+      emit('search', {
+        svcId: selectedServices.value,
+        statBaseUnit: selectedUnit.value,
+        statStTm: format(date.value[0], 'yyyy-MM-dd HH:mm'),
+        statEndTm: format(date.value[1], 'yyyy-MM-dd HH:mm'),
+      });
+    } else {
+      emit('search', {
+        apiId: selectedAPI.value,
+        statBaseUnit: selectedUnit.value,
+        statStTm: format(date.value[0], 'yyyy-MM-dd HH:mm'),
+        statEndTm: format(date.value[1], 'yyyy-MM-dd HH:mm'),
+      });
+    }
   }
 }
 </script>
