@@ -27,10 +27,12 @@ const emit = defineEmits<{
 // const emit = defineEmits(['subscribe:user', 'subscribe']);
 
 const inputTxt = (event: any) => {
+  console.log('inputTxt', event.target.value);
   emit('input', event.target.value);
 };
 
 const handleKeyup = (event: any) => {
+  console.log('handleKeyup');
   if (event.keyCode === 13) {
     emit('submit');
   }

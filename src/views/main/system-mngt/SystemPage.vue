@@ -10,6 +10,11 @@
             :label="$t('system.id')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"
+            @input="
+              (val) => {
+                searchData['id'] = val;
+              }
+            "
           ></InputBox>
         </div>
         <div class="search-cont">
@@ -18,6 +23,11 @@
             :label="$t('system.tkcgrNm')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"
+            @input="
+              (val) => {
+                searchData['tkcgrNm'] = val;
+              }
+            "
           />
         </div>
         <button class="mid-btn" @click="searchOnClieckEvent">
@@ -93,24 +103,24 @@
           <Paging :pagingOption="systemPagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
         </template>
       </ListForm>
+      <ModalLayout size="s" v-if="isShowModal">
+        <template v-slot:modalHeader
+          ><h1 class="h1-tit">{{ $t('system.modal_system_delete') }}</h1>
+        </template>
+        <template v-slot:modalContainer>
+          <p class="text">{{ currId }} &nbsp; {{ $t('system.modal_delete_message') }}</p>
+        </template>
+        <template v-slot:modalFooter>
+          <button class="purple-btn lg-btn" @click="deleteSystem" :disabled="isDisabled">
+            {{ $t('common.ok') }}<b-spinner variant="light" v-if="isDisabled" small></b-spinner>
+          </button>
+          <button class="lg-btn white-btn" @click="closeModal" :disabled="isDisabled">
+            {{ $t('common.cancel') }}
+          </button>
+        </template>
+      </ModalLayout>
     </template>
   </ListLayout>
-  <ModalLayout size="s" v-if="isShowModal">
-    <template v-slot:modalHeader
-      ><h1 class="h1-tit">{{ $t('system.modal_system_delete') }}</h1>
-    </template>
-    <template v-slot:modalContainer>
-      <p class="text">{{ currId }} &nbsp; {{ $t('system.modal_delete_message') }}</p>
-    </template>
-    <template v-slot:modalFooter>
-      <button class="purple-btn lg-btn" @click="deleteSystem" :disabled="isDisabled">
-        {{ $t('common.ok') }}<b-spinner variant="light" v-if="isDisabled" small></b-spinner>
-      </button>
-      <button class="lg-btn white-btn" @click="closeModal" :disabled="isDisabled">
-        {{ $t('common.cancel') }}
-      </button>
-    </template>
-  </ModalLayout>
 </template>
 
 <script setup lang="ts">
@@ -211,12 +221,14 @@ onMounted(() => {
 });
 
 const _getSystemList = (param: SearchCondition) => {
-  console.log('_getSystemList');
+  console.log('_getSystemList param: ', param);
   isShowProgress.value = true;
   // console.log('param : ', param);
   systemModule
     .getSystemList(param)
     .then((res) => {
+      console.log('getSystemList res: ', res);
+
       isShowProgress.value = false;
 
       listOption.value = res.value;
@@ -235,12 +247,14 @@ const _getSystemList = (param: SearchCondition) => {
 };
 
 const searchOnClieckEvent = () => {
-  console.log('searchOnClieckEvent', searchData.value.id);
+  // console.log('searchOnClieckEvent', JSON.stringify(searchData.value));
   delete searchData.value.page;
   Object.keys(searchData.value).forEach((key) => {
     const value = searchData.value[key as keyof SearchCondition];
     if (value === '') delete searchData.value[key as keyof SearchCondition];
   });
+  console.log('searchOnClieckEvent', searchData.value);
+  // console.log('searchOnClieckEvent', searchData.value.id, searchData.value.tkcgrNm);
 
   // for (const [key, value] of Object.entries(this.searchData)) {
   //   if (value === '') delete searchData.value[key as keyof SearchCondition];
@@ -272,7 +286,7 @@ const getList = (option: string) => {
     if (searchData.value.id !== undefined) param.id = searchData.value.id;
     if (searchData.value.tkcgrNm !== undefined) param.tkcgrNm = searchData.value.tkcgrNm;
   }
-
+  // console.log('getList param : ', param);
   if (Object.is(JSON.stringify(router.currentRoute.value.query), JSON.stringify(param))) {
     _getSystemList(param);
   } else {

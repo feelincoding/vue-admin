@@ -14,6 +14,7 @@ export default class SystemModule {
         '/getSystemList',
         searchOption
       );
+      console.log('moddule getSystemList', response.data);
       return Promise.resolve(response.data);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
