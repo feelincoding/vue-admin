@@ -3,58 +3,67 @@
     <!--- refresh play/pause area --->
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
 
-    <section class="group col-3" style="height: 219px">
-      <!--- Total API Traffic (24Hour) area --->
-      <TotalApiTraffic
-        v-model:totalApiTraffic="totalTraffic"
-        v-model:isLoadData="isLoadData"
-        v-model:modal="trafficModal"
-        @modalChange="changeTrafficModal"
-        v-model:isDraged="isDraged"
-        v-model:isCommError="isTotalAPITrafficCommError"
-      />
-      <!--- Error stats (24Hour) area --->
-      <ErrorStats
-        v-model:errorStats="errorStats"
-        v-model:isLoadData="isLoadData"
-        v-model:modal="errorModal"
-        @modalChange="changeErrorModal"
-        :isDraged.sync="isDraged"
-        :isCommError.sync="isErrorStatCommError"
-      />
-      <!--- API 평균 응답시간 / TPS area !! --->
-      <ApiResponseAvg
-        v-model:apiResponseStatus="apiResponseStatus"
-        :modal.sync="avgModal"
-        :isDraged.sync="isDraged"
-        :isLoadData="isLoadData"
-        :isCommError.sync="isApiResponseStusCommError"
-      />
-    </section>
-    <section class="group">
-      <!--- 실시간 Traffic area --->
-      <RealTimeTraffic :isDraged.sync="isDraged" :setParamData.sync="clickedParamData" :modal.sync="realTimeModal" />
-    </section>
-    <section class="group col-2">
-      <!--- API Top 5 area --->
-      <ApiTop5
-        v-model:realTimeStat="realTimeApiStat"
-        :isCommError.sync="isServiceTop5CommError"
-        @clickModalBtn="
-          (msg) => {
-            showModal(msg);
-          }
-        "
-      />
-      <!--- Service Top 5 area --->
-      <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
-    </section>
-    <section class="group col-2 bg-pastel">
-      <!--- Last Traffic --->
-      <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
-      <!--- Last Response --->
-      <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
-    </section>
+    <draggable @change="log" v-bind="dragOptions" @start="isDragging = true" @end="isDragging = false">
+      <TransitionGroup name="flip-list">
+        <section class="group col-3" style="height: 219px" :key="0" id="section-draggable">
+          <!--- Total API Traffic (24Hour) area --->
+          <TotalApiTraffic
+            v-model:totalApiTraffic="totalTraffic"
+            v-model:isLoadData="isLoadData"
+            v-model:modal="trafficModal"
+            @modalChange="changeTrafficModal"
+            v-model:isDraged="isDraged"
+            v-model:isCommError="isTotalAPITrafficCommError"
+          />
+          <!--- Error stats (24Hour) area --->
+          <ErrorStats
+            v-model:errorStats="errorStats"
+            v-model:isLoadData="isLoadData"
+            v-model:modal="errorModal"
+            @modalChange="changeErrorModal"
+            :isDraged.sync="isDraged"
+            :isCommError.sync="isErrorStatCommError"
+          />
+          <!--- API 평균 응답시간 / TPS area !! --->
+          <ApiResponseAvg
+            v-model:apiResponseStatus="apiResponseStatus"
+            :modal.sync="avgModal"
+            :isDraged.sync="isDraged"
+            :isLoadData="isLoadData"
+            :isCommError.sync="isApiResponseStusCommError"
+          />
+        </section>
+        <section class="group" :key="1" id="section-draggable">
+          <!--- 실시간 Traffic area --->
+          <RealTimeTraffic
+            :isDraged.sync="isDraged"
+            :setParamData.sync="clickedParamData"
+            :modal.sync="realTimeModal"
+          />
+        </section>
+        <section class="group col-2" :key="2" id="section-draggable">
+          <!--- API Top 5 area --->
+          <ApiTop5
+            v-model:realTimeStat="realTimeApiStat"
+            :isCommError.sync="isServiceTop5CommError"
+            @clickModalBtn="
+              (msg) => {
+                showModal(msg);
+              }
+            "
+          />
+          <!--- Service Top 5 area --->
+          <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
+        </section>
+        <section class="group col-2 bg-pastel" :key="3" id="section-draggable">
+          <!--- Last Traffic --->
+          <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
+          <!--- Last Response --->
+          <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
+        </section>
+      </TransitionGroup>
+    </draggable>
+
     <ApiDetailModal
       v-if="isShowModal"
       @close="isShowModal = false"
@@ -66,7 +75,7 @@
   </article>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import TotalApiTraffic from '@/components/dash-board/TotalApiTraffic.vue';
@@ -78,6 +87,7 @@ import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
 import LastTraffic from '@/components/dash-board/LastTraffic.vue';
 import LastResponse from '@/components/dash-board/LastResponse.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
+import { VueDraggableNext as draggable } from 'vue-draggable-next';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
 import { convertBaseTime } from '@/utils/converter';
@@ -99,6 +109,15 @@ import type {
   TotalApiDetailRequest,
 } from '@/types/DashBoardType';
 
+const log = (event: any) => {
+  console.log(event);
+};
+const isDragging = ref(false);
+const dragOptions = ref({
+  animation: 0,
+  disabled: false,
+  ghostClass: 'ghost',
+});
 const DEFAULT_STAT_PERD = 1440;
 const DEFAULT_STAT_BASE_TM = '2022-05-27 20:30';
 const DEFAULT_STAT_BASE_UNIT = 'MI';
@@ -333,5 +352,19 @@ const showModal = (msg: any) => {
 
 .drag-box {
   box-shadow: 0 0 12px rgba(33, 33, 33, 0.4);
+}
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+#section-draggable {
+  cursor: move;
 }
 </style>
