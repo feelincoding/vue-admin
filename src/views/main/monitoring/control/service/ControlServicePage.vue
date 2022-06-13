@@ -70,7 +70,10 @@ const modal = inject(modalInjectionKey)!!;
 const controlSort = new ControlSort();
 const controlRepository = new MonitoringControlRepository();
 
-const searchData: Ref<ControlRequest> = ref({} as ControlRequest);
+const searchData: Ref<ControlRequest> = ref({
+  sortBase: '',
+  statPerd: 0,
+});
 const apiDetailProps: Ref<apiStatDetailProps> = ref({
   msgId: '',
   msgType: '',
@@ -106,7 +109,7 @@ watch(
   () => searchData.value.sortBase,
   (val: string) => {
     isSort.value = !isSort.value;
-    if (val !== undefined) serviceList.value = getServiceList(val, serviceList.value);
+    if (val !== '') serviceList.value = getServiceList(val, serviceList.value);
   },
   { immediate: true, deep: true }
 );
@@ -121,10 +124,10 @@ const getServiceList = (orderBy: string, list: RealTimeStat) => {
     : controlSort.sortServiceListByResTm(list);
 };
 
-const handleTime = (event: any) => {
+const handleTime = (event: number) => {
   isShowProgress.value = true;
   searchData.value.statPerd = event;
-  if (searchData.value.sortBase === undefined) searchData.value.sortBase = 'totCnt';
+  if (searchData.value.sortBase === '') searchData.value.sortBase = 'totCnt';
   controlRepository
     .getServiceList(searchData.value)
     .then((res) => {
@@ -141,7 +144,7 @@ const handleTime = (event: any) => {
     });
 };
 
-const handleSort = (event: any) => {
+const handleSort = (event: string) => {
   searchData.value.sortBase = event;
 };
 

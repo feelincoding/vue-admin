@@ -5,50 +5,27 @@
     </div>
     <div class="tab-wrap">
       <ul>
-        <li :class="{ on: navState.controlServiceState }">
-          <router-link :to="{ name: 'control-service' }">{{ $t('control.service') }}</router-link>
+        <li :class="{ on: selectedTab === 'service' }" @click="selectedTab = 'service'">
+          <a>{{ $t('control.service') }}</a>
         </li>
-        <li :class="{ on: navState.controlApiState }">
-          <router-link :to="{ name: 'control-api' }">{{ $t('control.api') }}</router-link>
+        <li :class="{ on: selectedTab === 'api' }" @click="selectedTab = 'api'">
+          <a>{{ $t('control.api') }}</a>
         </li>
       </ul>
     </div>
-    <router-view />
+
+    <ControlServicePage v-if="selectedTab === 'service'" />
+    <ControlApiPage v-if="selectedTab === 'api'" />
   </article>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import type { Ref } from 'vue';
+import { ref } from 'vue';
 
-import { useRoute, type RouteLocationNormalizedLoaded } from 'vue-router';
+import ControlServicePage from '@/views/main/monitoring/control/service/ControlServicePage.vue';
+import ControlApiPage from '@/views/main/monitoring/control/api/ControlApiPage.vue';
 
-interface NavState {
-  [key: string]: boolean;
-  controlServiceState: boolean;
-  controlApiState: boolean;
-}
-
-const navState: Ref<NavState> = ref({
-  controlServiceState: false,
-  controlApiState: false,
-});
-
-const route = useRoute();
-
-watch(
-  route,
-  (newVal: RouteLocationNormalizedLoaded) => {
-    if (newVal.name === 'control-service') {
-      navState.value.controlServiceState = true;
-      navState.value.controlApiState = false;
-    } else if (newVal.name === 'control-api') {
-      navState.value.controlServiceState = false;
-      navState.value.controlApiState = true;
-    }
-  },
-  { immediate: true, deep: true }
-);
+let selectedTab = ref('service');
 </script>
 
 <style scoped></style>

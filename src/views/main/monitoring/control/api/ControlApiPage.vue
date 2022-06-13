@@ -64,7 +64,10 @@ const modal = inject(modalInjectionKey)!!;
 const controlSort = new ControlSort();
 const controlRepository = new MonitoringControlRepository();
 
-const searchData: Ref<ControlRequest> = ref({} as ControlRequest);
+const searchData: Ref<ControlRequest> = ref({
+  sortBase: '',
+  statPerd: 0,
+});
 
 const apiDetailProps: Ref<apiStatDetailProps> = ref({
   msgId: '',
@@ -101,7 +104,7 @@ watch(
   () => searchData.value.sortBase,
   (val: string) => {
     isSort.value = !isSort.value;
-    if (val !== undefined) apiList.value = getApiList(val, apiList.value);
+    if (val !== '') apiList.value = getApiList(val, apiList.value);
   },
   { immediate: true, deep: true }
 );
@@ -119,8 +122,7 @@ const getApiList = (orderBy: string, list: RealTimeStat) => {
 const handleTime = (event: number) => {
   isShowProgress.value = true;
   searchData.value.statPerd = event;
-  console.log('searchData', typeof searchData.value.statPerd, searchData.value.statPerd);
-  if (searchData.value.sortBase === undefined) searchData.value.sortBase = 'totCnt';
+  if (searchData.value.sortBase === '') searchData.value.sortBase = 'totCnt';
   controlRepository
     .getApiList(searchData.value)
     .then((res) => {
