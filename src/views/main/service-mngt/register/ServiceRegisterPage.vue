@@ -148,13 +148,15 @@ import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlug
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
+import { useToast } from 'vue-toastification';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+const toast = useToast();
 const modal = inject(modalInjectionKey) as ModalFunction;
 const serviceRepository = new ServiceRepository();
 const jwtAlgList: Ref<string[]> = ref([]);
-const apiAuthList: Ref<ApiAuthResponse[]> = ref({} as ApiAuthResponse[]);
+const apiAuthList: Ref<ApiAuthResponse[]> = ref([] as ApiAuthResponse[]);
 const apiList: Ref<ApiAuthResponse[]> = ref([]);
 const checkedApiList: Ref<ApiAuthResponse[]> = ref([]);
 const countApiList = ref(0);
@@ -274,6 +276,9 @@ const submit = () => {
     .createService(formData.value)
     .then(() => {
       router.push({ path: '/service' });
+      toast.success(t('common.register_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
     })
     .catch(() => {
       isRegisterProgress.value = false;

@@ -2,8 +2,6 @@
   <ListLayout :title="$t('service.title')">
     <template v-slot:search-form>
       <div class="search-wrap">
-        <!-- <h2 class="h2-tit">{{ $t('common.search') }}</h2> -->
-
         <!-- Input Box 옵션 -->
         <div class="search-cont">
           <InputBox
@@ -11,7 +9,12 @@
             :label="$t('service.id')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"
-          />
+            @input="
+              (val) => {
+                searchData['id'] = val;
+              }
+            "
+          ></InputBox>
         </div>
         <div class="search-cont">
           <InputBox
@@ -19,6 +22,11 @@
             :label="$t('service.authentication_method')"
             :placeholder="$t('common.placeholder')"
             @submit="searchOnClieckEvent"
+            @input="
+              (val) => {
+                searchData['athnType'] = val;
+              }
+            "
           />
         </div>
         <button class="mid-btn" @click="searchOnClieckEvent">
@@ -34,7 +42,7 @@
       >
         <template v-slot:list-btn-area>
           <button class="mid-btn" @click="$router.push({ name: 'service-register' })">
-            <i><img src="@/assets/check_ico.svg" alt="등록" /></i>{{ $t('common.register') }}
+            <i><img src="@/assets/check_ico.svg" :alt="$t('common.register')" /></i>{{ $t('common.register') }}
           </button>
         </template>
 
@@ -107,24 +115,24 @@
         </template>
         <template v-slot:pagination v-if="!isShowProgress">
           <Paging :pagingOption="servicePagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
-          <ModalLayout size="s" v-if="modal">
-            <template v-slot:modalHeader
-              ><h1 class="h1-tit">{{ $t('service.delete') }}</h1>
-            </template>
-            <template v-slot:modalContainer>
-              <p class="text">{{ $t('service.delete_message') }}</p>
-            </template>
-            <template v-slot:modalFooter
-              ><button class="lg-btn purple-btn" @click="deleteService(deleteId)" :disabled="isRegisterProgress">
-                {{ $t('common.ok') }}
-                <b-spinner variant="light" v-show="isRegisterProgress" small></b-spinner></button
-              ><button class="lg-btn white-btn" @click="modalHide()" :disabled="isRegisterProgress">
-                {{ $t('common.cancel') }}
-              </button>
-            </template>
-          </ModalLayout>
         </template>
       </ListForm>
+      <ModalLayout size="s" v-if="modal">
+        <template v-slot:modalHeader
+          ><h1 class="h1-tit">{{ $t('service.delete') }}</h1>
+        </template>
+        <template v-slot:modalContainer>
+          <p class="text">{{ $t('service.delete_message') }}</p>
+        </template>
+        <template v-slot:modalFooter
+          ><button class="lg-btn purple-btn" @click="deleteService(deleteId)" :disabled="isRegisterProgress">
+            {{ $t('common.ok') }}
+            <b-spinner variant="light" v-show="isRegisterProgress" small></b-spinner></button
+          ><button class="lg-btn white-btn" @click="modalHide()" :disabled="isRegisterProgress">
+            {{ $t('common.cancel') }}
+          </button>
+        </template>
+      </ModalLayout>
     </template>
   </ListLayout>
 </template>
@@ -147,7 +155,13 @@ import { useRoute } from 'vue-router';
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
+import type { GateWayError } from '@/error/GateWayError';
+import ErrorCode from '@/error/ErrorCodes';
+import { useToast } from 'vue-toastification';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
+const toast = useToast();
 const serviceRepository = new ServiceRepository();
 const searchData: Ref<SearchCondition> = ref({});
 const isShowProgress = ref(true);
@@ -175,72 +189,79 @@ watch(serviceList, () => {
 });
 
 onMounted(() => {
-  _getServiceList();
+  let param = {} as SearchCondition;
+  if (Object.keys(route.query).filter((key) => key === 'id' && route.query[key] !== '').length > 0) {
+    param.id = route.query.id as string;
+    searchData.value.id = param.id;
+  }
+  if (Object.keys(route.query).filter((key) => key === 'athnType' && route.query[key] !== '').length > 0) {
+    param.athnType = route.query.athnType as string;
+    searchData.value.athnType = param.athnType;
+  }
+  if (Object.keys(route.query).includes('page')) param.page = route.query.page as string;
+  _getServiceList(param);
 });
 
-const _getServiceList = () => {
+const _getServiceList = (param: SearchCondition) => {
   isShowProgress.value = true;
   serviceList.value = [];
   servicePagination.value = {} as Pagination;
 
-  if (Object.keys(route.query).length > 0) {
-    if (Object.keys(route.query).includes('id')) searchData.value.id = route.query.id as string;
-    if (Object.keys(route.query).includes('athnType')) searchData.value.athnType = route.query.athnType as string;
-    if (Object.keys(route.query).includes('page')) searchData.value.page = route.query.page as string;
-    serviceRepository
-      .getServiceList(searchData.value)
-      .then((result) => {
-        serviceList.value = result.value;
-        servicePagination.value = result.pagination!;
+  serviceRepository
+    .getServiceList(param)
+    .then((res) => {
+      isShowProgress.value = false;
+      serviceList.value = res.value;
+      servicePagination.value = res.pagination as Pagination;
+    })
+    .catch((error: GateWayError) => {
+      if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
+      } else {
         isShowProgress.value = false;
-      })
-      .catch((error) => {
-        isShowProgress.value = false;
-        // this.$modal.show(`${this.$t('error.server_error')}`);
-      });
-  } else {
-    serviceRepository
-      .getServiceList()
-      .then((result) => {
-        serviceList.value = result.value;
-        servicePagination.value = result.pagination!;
-        isShowProgress.value = false;
-      })
-      .catch((error) => {
-        isShowProgress.value = false;
-        // this.$modal.show(`${this.$t('error.server_error')}`);
-      });
-  }
+      }
+    });
 };
 
-const getList = () => {
-  const query = {} as SearchCondition;
-  if (Object.keys(searchData.value).includes('id')) query.id = searchData.value.id as string;
-  if (Object.keys(searchData.value).includes('athnType')) query.athnType = searchData.value.athnType as string;
-  if (Object.keys(searchData.value).includes('page')) query.page = searchData.value.page;
-  if (Object.keys(searchData.value).includes('size')) query.size = searchData.value.size;
-  if (Object.keys(searchData.value).includes('sort_by')) query.sort_by = searchData.value.sort_by as string;
-  if (Object.keys(searchData.value).includes('ordeer_by')) query.order_by = searchData.value.order_by as string;
+const getList = (option: string) => {
+  let param = {} as SearchCondition;
 
-  if (Object.is(JSON.stringify(router.currentRoute.value.query), JSON.stringify(query))) {
-    _getServiceList();
+  if (option === 'page') {
+    // 1. 페이지 이동
+    param.page = searchData.value.page;
+
+    if (Object.keys(route.query).filter((key) => key === 'id' && route.query[key] !== '').length > 0) {
+      param.id = route.query.id as string;
+    }
+    if (Object.keys(route.query).filter((key) => key === 'athnType' && route.query[key] !== '').length > 0) {
+      param.athnType = route.query.athnType as string;
+    }
+  } else if (option === 'search') {
+    // 2. 검색 조건 변경
+    if (searchData.value.id !== undefined) param.id = searchData.value.id;
+    if (searchData.value.athnType !== undefined) param.athnType = searchData.value.athnType;
+  }
+  if (Object.is(JSON.stringify(router.currentRoute.value.query), JSON.stringify(param))) {
+    _getServiceList(param);
   } else {
     router.push({
       name: 'service',
-      query: {
-        ...query,
-      },
+      query: { ...param },
     });
   }
 };
 
 const searchOnClieckEvent = () => {
-  getList();
+  delete searchData.value.page;
+  Object.keys(searchData.value).forEach((key) => {
+    const value = searchData.value[key as keyof SearchCondition];
+    if (value === '') delete searchData.value[key as keyof SearchCondition];
+  });
+  getList('search');
 };
 
 const onChangedPage = (page: number) => {
   searchData.value.page = String(page);
-  getList();
+  getList('page');
 };
 
 const getIdx = (index: number): number => {
@@ -260,16 +281,18 @@ const deleteService = (serviceId: string) => {
   serviceRepository
     .deleteService(serviceId)
     .then(() => {
-      _getServiceList();
+      _getServiceList(searchData.value);
       modal.value = false;
       isRegisterProgress.value = false;
-      // $toast.success($t('common.delete_success'), {
-      //   toastClassName: ['toast-success-custom-class'],
-      // });
+      toast.success(t('common.delete_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
     })
-    .catch(() => {
+    .catch((error: GateWayError | any) => {
+      if (error.getErrorCode() == ErrorCode.SYSTEM_DELETE_FAILED) {
+        toast.error(t('service.service_delete_fail', { serviceId: serviceId }));
+      }
       isRegisterProgress.value = false;
-      // this.$modal.show(`${this.$t('error.server_error')}`);
     });
 };
 </script>
