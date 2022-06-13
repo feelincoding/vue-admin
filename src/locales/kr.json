@@ -128,7 +128,9 @@
     "empty_check_message": "입력 데이터를 모두 입력해주세요.",
     "api_register_fail": "API 등록 실패",
     "api_edit_fail": "API 수정 실패",
-    "choice_please": "선택해주세요"
+    "choice_please": "선택해주세요",
+    "delete_modal_title": "API 삭제",
+    "delete_api": "{ apiName }를 삭제하시겠습니까?"
   },
   "service": {
     "title": "서비스 관리",

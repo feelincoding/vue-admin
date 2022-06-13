@@ -29,7 +29,6 @@ export default class ApiMngtRepository {
       const response: GateWayResponse<ApiDetailResponse[]> = await AxiosClient.getInstance().get<
         GateWayResponse<ApiDetailResponse[]>
       >('/getApiList', searchQuery);
-      console.log(response.data.value);
       return {
         apiList: response.data.value,
         pagination: response.data.pagination,

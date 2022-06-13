@@ -25,11 +25,13 @@
           :value="apiDetail.resHndlrGrpId"
         />
         <InfoGroup :inputNm="$t('api.timeOutMS')" :value="'' + apiDetail.timeOut" />
-        <InfoGroup :inputNm="t('api.api') + ' ' + $t('api.description')" :value="apiDetail.desc" />
+        <InfoGroup :inputNm="$t('api.api') + ' ' + $t('api.description')" :value="apiDetail.desc" />
         <ModalLayout size="s" v-if="showModal">
-          <template v-slot:modalHeader><h1 class="h1-tit">API 삭제</h1> </template>
+          <template v-slot:modalHeader
+            ><h1 class="h1-tit">{{ $t('api.delete_modal_title') }}</h1>
+          </template>
           <template v-slot:modalContainer>
-            <p class="text">{{ deleteMsg }}를 삭제하시겠습니까?</p>
+            <p class="text">{{ $t('api.delete_api', { apiName: deleteMsg }) }}</p>
           </template>
           <template v-slot:modalFooter
             ><button class="lg-btn purple-btn" @click="deleteApi">{{ $t('common.ok') }}</button
