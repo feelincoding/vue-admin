@@ -5,7 +5,6 @@
       <input
         :type="type"
         :placeholder="placeholder"
-        :disabled="disabled"
         v-model="text"
         :class="{
           'check-ok': notiMessage.valid === true,
@@ -59,31 +58,31 @@ const text = computed({
   set: (val) => {
     if (val !== null) {
       switch (props.inputNm) {
-        case '담당자 이름':
+        case t('service.tkcgrNm'):
           if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: 'test' };
+            notiMessage.value = { valid: false, msg: t('valid_check_tkcgrNm') };
           }
           break;
-        case '소속':
+        case t('service.tkcgrPos'):
           if (checkLength(val, 1, 20) && checkEnglishNumberKorean(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: 'test' };
+            notiMessage.value = { valid: false, msg: t('valid_check_tkcgrPos') };
           }
           break;
-        case 'E-mail':
+        case t('service.tkcgrEml'):
           if (checkLength(val, 1, 20) && checkEmail(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: 'test' };
+            notiMessage.value = { valid: false, msg: t('valid_check_tkcgrEml') };
           }
           break;
       }
