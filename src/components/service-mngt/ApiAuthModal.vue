@@ -4,7 +4,7 @@
       <!------- handler pop -------->
       <div class="pop-wrap lg-pop">
         <div class="pop-header">
-          <h1 class="h1-tit">API 권한관리</h1>
+          <h1 class="h1-tit">{{ $t('service.api_mngt') }}</h1>
           <button @click="hideApiAuth">
             <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
           </button>
@@ -38,7 +38,7 @@
                             @click="checkApiAll(system)"
                           /><span class="checkmark"></span>
                         </div>
-                        <label :for="system.sysId + '-all'">전체 선택</label>
+                        <label :for="system.sysId + '-all'">{{ $t('service.total_select') }}</label>
                       </div>
                     </div>
                     <div class="check-group">
@@ -63,7 +63,7 @@
             </div>
             <div class="comp gray">
               <div class="box-tit">
-                <h3 class="h3-tit">권한 부여 된 API</h3>
+                <h3 class="h3-tit">{{ $t('service.selected_api') }}</h3>
                 <p class="total">
                   total : <span>{{ countApiList }}</span>
                 </p>
@@ -86,8 +86,12 @@
         <!--  // pop-container   -->
 
         <div class="pop-footer">
-          <button class="lg-btn purple-btn" @click="registerApi" :disabled="isApiAuthProgress">저장</button>
-          <button class="lg-btn white-btn" @click="hideApiAuth" :disabled="isApiAuthProgress">취소</button>
+          <button class="lg-btn purple-btn" @click="registerApi" :disabled="isApiAuthProgress">
+            {{ $t('common.save') }}
+          </button>
+          <button class="lg-btn white-btn" @click="hideApiAuth" :disabled="isApiAuthProgress">
+            {{ $t('common.cancel') }}
+          </button>
         </div>
       </div>
       <!------- handler pop -------->

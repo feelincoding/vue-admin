@@ -2,9 +2,9 @@
   <div>
     <ContentLayout
       :isShowProgress="isShowProgress"
-      title="서비스 정보 확인"
-      subTitle="기본정보 확인"
-      depth="서비스 관리"
+      :title="$t('service.detail_title')"
+      :subTitle="$t('service.detail_sub_title')"
+      :depth="$t('service.title')"
       :isEmShow="false"
     >
       <template v-if="!isShowProgress" v-slot:contents>

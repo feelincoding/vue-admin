@@ -1,8 +1,8 @@
 <template>
   <div>
     <ContentLayout
-      :title="$t('service.register')"
-      :subTitle="$t('service.register_sub_title')"
+      :title="$t('service.modify_title')"
+      :subTitle="$t('service.modify_sub_title')"
       :depth="$t('service.title')"
       :isShowProgress="isShowProgress"
     >
@@ -39,7 +39,11 @@
             v-model:isValid="authValid"
             :progress="isBasicAuthProgress"
           />
-          <ApiAuthReqGroup inputNm="권한설정" @showApiAuth="showApiAuth" :setCheck="apiAuthValid" />
+          <ApiAuthReqGroup
+            :inputNm="$t('service.authority_setting')"
+            @showApiAuth="showApiAuth"
+            :setCheck="apiAuthValid"
+          />
           <SlaReqGroup
             :inputNm="$t('service.SLA_mngt')"
             v-model:secVal="formData.sla.sec"
