@@ -23,6 +23,7 @@
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
+    "@intlify/vite-plugin-vue-i18n": "^3.4.0",
     "@rushstack/eslint-patch": "^1.1.0",
     "@types/node": "^16.11.36",
     "@vitejs/plugin-vue": "^2.3.3",
