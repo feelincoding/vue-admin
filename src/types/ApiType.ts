@@ -15,7 +15,7 @@ export interface ApiDetailResponse {
   id: string;
   sysId: string;
   ifNo: string;
-  meth: string[] | string;
+  meth: string[];
   uriIn: string;
   uriOut: string;
   ifGrp: string;

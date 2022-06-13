@@ -119,7 +119,6 @@ import ListRow from '@/components/api-mngt/list/ListRow.vue';
 import type { ApiDetailResponse } from '@/types/ApiType';
 import ApiModule from '@/repository/ApiMngtRepository';
 import SelectBox from '@/components/commons/search-option/SelectBox.vue';
-import InputBox from '@/components/commons/search-option/InputBox.vue';
 import type { SearchCondition, SelectOptionType } from '@/types/SearchType';
 import Paging from '@/components/commons/Paging.vue';
 import { BSpinner } from 'bootstrap-vue-3';
@@ -211,7 +210,7 @@ const fetchApiList = () => {
         console.log('API API Cancel');
       } else {
         isShowProgress.value = false;
-        modal!().show(t('error.server_error'));
+        modal().show(t('error.server_error'));
       }
     });
 };

@@ -8,7 +8,7 @@ import type { SearchCondition } from '@/types/SearchType';
 
 export default class SystemModule {
   // 시스템 관리 리스트 조회
-  async getSystemList(searchOption?: SearchCondition): Promise<GateWayResponse<SystemResponse[]>> {
+  async getSystemList(searchOption?: SearchCondition) {
     try {
       const response = await AxiosClient.getInstance().get<GateWayResponse<SystemResponse[]>>(
         '/getSystemList',
