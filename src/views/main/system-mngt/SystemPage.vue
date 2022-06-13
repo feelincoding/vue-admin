@@ -93,24 +93,24 @@
           <Paging :pagingOption="systemPagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
         </template>
       </ListForm>
+      <ModalLayout size="s" v-if="isShowModal">
+        <template v-slot:modalHeader
+          ><h1 class="h1-tit">{{ $t('system.modal_system_delete') }}</h1>
+        </template>
+        <template v-slot:modalContainer>
+          <p class="text">{{ currId }} &nbsp; {{ $t('system.modal_delete_message') }}</p>
+        </template>
+        <template v-slot:modalFooter>
+          <button class="purple-btn lg-btn" @click="deleteSystem" :disabled="isDisabled">
+            {{ $t('common.ok') }}<b-spinner variant="light" v-if="isDisabled" small></b-spinner>
+          </button>
+          <button class="lg-btn white-btn" @click="closeModal" :disabled="isDisabled">
+            {{ $t('common.cancel') }}
+          </button>
+        </template>
+      </ModalLayout>
     </template>
   </ListLayout>
-  <ModalLayout size="s" v-if="isShowModal">
-    <template v-slot:modalHeader
-      ><h1 class="h1-tit">{{ $t('system.modal_system_delete') }}</h1>
-    </template>
-    <template v-slot:modalContainer>
-      <p class="text">{{ currId }} &nbsp; {{ $t('system.modal_delete_message') }}</p>
-    </template>
-    <template v-slot:modalFooter>
-      <button class="purple-btn lg-btn" @click="deleteSystem" :disabled="isDisabled">
-        {{ $t('common.ok') }}<b-spinner variant="light" v-if="isDisabled" small></b-spinner>
-      </button>
-      <button class="lg-btn white-btn" @click="closeModal" :disabled="isDisabled">
-        {{ $t('common.cancel') }}
-      </button>
-    </template>
-  </ModalLayout>
 </template>
 
 <script setup lang="ts">

@@ -44,9 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import { disableScrolling, enableScrolling } from '@/utils/screen';
 
-defineProps<{
+const props = defineProps<{
   alert?: boolean;
   errorTitle?: string;
   errorDesc?: string;
@@ -57,6 +58,33 @@ const l = ref(false);
 const m = ref(false);
 const s = ref(false);
 const lg = ref(false);
+onMounted(() => {
+  disableScrolling();
+  if (props.size == 'l') {
+    l.value = true;
+    m.value = false;
+    s.value = false;
+    lg.value = false;
+  } else if (props.size == 'm') {
+    l.value = false;
+    m.value = true;
+    s.value = false;
+    lg.value = false;
+  } else if (props.size == 's') {
+    l.value = false;
+    m.value = false;
+    s.value = true;
+    lg.value = false;
+  } else if (props.size == 'lg') {
+    l.value = false;
+    m.value = false;
+    s.value = false;
+    lg.value = true;
+  }
+});
+const destroyed = () => {
+  enableScrolling();
+};
 </script>
 
 <style scoped>
