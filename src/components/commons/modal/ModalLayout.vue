@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { disableScrolling, enableScrolling } from '@/utils/screen';
 
 const props = defineProps<{
@@ -82,9 +82,10 @@ onMounted(() => {
     lg.value = true;
   }
 });
-const destroyed = () => {
+
+onUnmounted(() => {
   enableScrolling();
-};
+});
 </script>
 
 <style scoped>
