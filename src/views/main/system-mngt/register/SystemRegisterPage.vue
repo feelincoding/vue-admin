@@ -10,39 +10,39 @@
           type="text"
           :check="isDuplicatedId"
           v-model="systemItem.id"
-          :isValid.sync="idValid"
+          v-model:isValid.sync="idValid"
           :inputNm="$t('system.id')"
           :placeholder="$t('system.id_placeholder')"
           :required="true"
           @input="duplicateCheckId"
         />
 
-        <!-- <EdptForm :inputNm="$t('system.edpt')" :strArr.sync="systemItem.edpt" :isValid.sync="edptValid" />
+        <EdptForm :inputNm="$t('system.edpt')" :strArr.sync="systemItem.edpt" :isValid.sync="edptValid" />
 
         <InputGroup
           type="text"
-          :value.sync="systemItem.tkcgrNm"
-          :isValid.sync="tkcgrNmValid"
+          v-model:value.sync="systemItem.tkcgrNm"
+          v-model:isValid.sync="tkcgrNmValid"
           :inputNm="$t('system.tkcgrNm')"
           :place="$t('system.tkcgrNm_placeholder')"
         />
         <InputGroup
           type="text"
-          :value.sync="systemItem.tkcgrPos"
+          v-model:value.sync="systemItem.tkcgrPos"
           :inputNm="$t('system.tkcgrPos')"
           :place="$t('system.tkcgrPos_placeholder')"
-          :isValid.sync="tkcgrPosValid"
+          v-model:isValid.sync="tkcgrPosValid"
         />
         <InputGroup
           type="email"
-          :value.sync="systemItem.tkcgrEml"
+          v-model:value.sync="systemItem.tkcgrEml"
           :inputNm="$t('system.tkcgrEml')"
           :place="$t('system.tkcgrEml_placeholder')"
-          :isValid.sync="tkcgrEmlValid"
+          v-model:isValid.sync="tkcgrEmlValid"
         />
-        <TextAreaGroup :inputNm="$t('system.desc')" :value.sync="systemItem.desc" :isValid.sync="descValid" /> -->
+        <TextAreaGroup :inputNm="$t('system.desc')" v-model:value.sync="systemItem.desc" v-model:isValid.sync="descValid" />
       </ul>
-      <!-- <ModalLayout size="s" v-if="isShowModal">
+      <ModalLayout size="s" v-if="isShowModal">
         <template v-slot:modalHeader
           ><h1 class="h1-tit">{{ $t('system.modal_system_register') }}</h1>
         </template>
@@ -53,7 +53,7 @@
           ><button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button
           ><button class="lg-btn white-btn" @click="closeModal">{{ $t('common.cancel') }}</button>
         </template>
-      </ModalLayout> -->
+      </ModalLayout>
     </template>
     <template v-slot:buttons v-if="!isShowProgress">
       <div class="btn-wrap">
@@ -72,11 +72,11 @@
 <script setup lang="ts">
 import SystemModule from '@/stores/modules/SystemModule';
 import ContentLayout from '@/components/system-mngt/ContentLayout.vue';
-// import InputGroup from '@/components/system-mngt/InputGroup.vue';
-// import TextAreaGroup from '@/components/system-mngt/TextAreaGroup.vue';
+import InputGroup from '@/components/system-mngt/InputGroup.vue';
+import TextAreaGroup from '@/components/system-mngt/TextAreaGroup.vue';
 import TextDebounceForm from '@/components/system-mngt/TextDebounceForm.vue';
-// import EdptForm from '@/components/system-mngt/EdptForm.vue';
-// import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
+import EdptForm from '@/components/system-mngt/EdptForm.vue';
+import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import type { SystemRegisterResponse } from '@/types/SystemType';
 
 import { ref, reactive, computed, watch, onMounted } from 'vue';

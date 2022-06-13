@@ -1,4 +1,4 @@
-<template lang="">
+<template>
   <li>
     <label class="label">{{ inputNm }}</label>
     <div class="form-cont">
@@ -6,12 +6,9 @@
     </div>
   </li>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-
-@Component
-export default class InfoGroup extends Vue {
-  @Prop() public inputNm!: string | null;
-  @Prop() public value!: string | number | null;
-}
+<script setup lang="ts">
+const props = defineProps<{
+  inputNm: string | null;
+  value: string | number | null;
+}>();
 </script>
