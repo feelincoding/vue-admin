@@ -4,25 +4,11 @@
     <div class="form-cont">
       <div class="date-wrap">
         <div class="date-cont">
-          <Datepicker
-            multiCalendars
-            locale="ko-KR"
-            v-model="startDate"
-            :format="format"
-            :minDate="new Date()"
-            @focus="notice()"
-          />
+          <Datepicker multiCalendars locale="ko-KR" v-model="startDate" :minDate="new Date()" @focus="notice()" />
         </div>
         <span class="text">~</span>
         <div class="date-cont">
-          <Datepicker
-            multiCalendars
-            locale="ko-KR"
-            v-model="endDate"
-            :format="format"
-            :minDate="startDt"
-            @focus="notice()"
-          />
+          <Datepicker multiCalendars locale="ko-KR" v-model="endDate" :minDate="startDt" @focus="notice()" />
         </div>
       </div>
       <p v-if="(validation && startDt == null) || (validation && endDt == null)" class="red-txt noti">
@@ -57,37 +43,29 @@ const validation = ref(false);
 const startDate: Ref<Date | null> = computed({
   get: () => {
     if (props.startDt) {
-      return new Date(
-        parseInt(props.startDt.slice(0, 4)),
-        parseInt(props.startDt.slice(5, 7)),
-        parseInt(props.startDt.slice(8, 10))
-      );
+      return new Date(props.startDt);
     } else {
       return null;
     }
   },
   set: (val) => {
     if (val !== null) {
-      emit('update:startDt', val.toISOString().slice(0, 10));
+      emit('update:startDt', val.toISOString().slice(0, 10) + ' 00:00:00');
     }
-    console.log(startDate.value);
+    console.log(val);
   },
 });
 const endDate: Ref<Date | null> = computed({
   get: () => {
     if (props.endDt) {
-      return new Date(
-        parseInt(props.endDt.slice(0, 4)),
-        parseInt(props.endDt.slice(5, 7)) - 1,
-        parseInt(props.endDt.slice(8, 10))
-      );
+      return new Date(props.endDt);
     } else {
       return null;
     }
   },
   set: (val) => {
     if (val !== null) {
-      emit('update:endDt', val.toISOString().slice(0, 10));
+      emit('update:endDt', val.toISOString().slice(0, 10) + ' 23:59:59');
     }
     console.log(val);
   },
