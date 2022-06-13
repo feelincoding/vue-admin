@@ -169,6 +169,7 @@
     "empty_check": "해당 항목은 필수 입력값입니다.",
     "empty_check_message": "정보를 올바르게 입력하세요.",
     "valid_check_id": "형식에 맞게 입력 바랍니다.(최대 20자, 영어 대/소문자, 숫자만 입력 가능)",
+    "duplicate_check_id": "중복된 서비스 ID입니다.",
     "valid_check_tkcgrNm": "형식에 맞게 입력 바랍니다.(최대 20자, 한글, 영어 대/소문자만 입력 가능)",
     "valid_check_tkcgrPos": "형식에 맞게 입력 바랍니다.(최대 20자, 영어 대/소문자, 숫자만 입력 가능)",
     "valid_check_tkcgrEml": "형식에 맞게 입력 바랍니다.(최대 20자, 이메일 형식에 맞게 입력)",

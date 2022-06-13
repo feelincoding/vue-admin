@@ -19,7 +19,7 @@
         </div>
       </div>
       <p v-if="(validation && startDt == null) || (validation && endDt == null)" class="red-txt noti">
-        해당 헝목은 필수 입력값입니다.
+        {{ $t('service.empty_check') }}
       </p>
     </div>
   </li>
