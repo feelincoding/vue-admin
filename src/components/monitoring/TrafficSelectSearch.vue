@@ -1,17 +1,64 @@
 <template>
   <div class="search-wrap monitor-search key-search">
     <div class="border-cont search-cont">
-      <h4 class="label-tit">기간 선택</h4>
-      <div class="date-wrap">
-        <div class="date-cont bg-white-date">
-          <Datepicker range multiCalendars locale="ko-KR" v-model="date" :format="format" :maxDate="new Date()" />
+      <h4 class="label-tit">{{ t('traffic.time_unit') }}</h4>
+      <!-- <div class="time-group"> -->
+      <div>
+        <div class="sla-toggle">
+          <button class="btn-toggle" :class="{ on: selectedUnit === 'MM' }" @click="selectUnit('MM')">Month</button>
+          <button class="btn-toggle" :class="{ on: selectedUnit === 'DD' }" @click="selectUnit('DD')">Day</button>
+          <button class="btn-toggle" :class="{ on: selectedUnit === 'HH' }" @click="selectUnit('HH')">Hour</button>
+          <button class="btn-toggle" :class="{ on: selectedUnit === 'MI' }" @click="selectUnit('MI')">Min</button>
+        </div>
+        <!------- 월 단위 - 최대 60개월 -------->
+        <!-------  일 단위 - 최대 150일 -------->
+        <!-------  시간 단위 - 최대 120 시간 -------->
+        <!-------  분 단위 - 최대 480 분 -------->
+        <div class="date-wrap">
+          <div class="date-cont bg-white-date">
+            <Datepicker
+              v-if="selectedUnit === 'MM'"
+              v-model="month"
+              range
+              monthPicker
+              locale="ko-KR"
+              :format="monthFormat"
+            />
+            <Datepicker
+              v-else-if="selectedUnit === 'DD'"
+              range
+              multiCalendars
+              locale="ko-KR"
+              v-model="date"
+              :format="dayFormat"
+              :maxDate="new Date()"
+            />
+            <Datepicker
+              v-else-if="selectedUnit === 'HH'"
+              range
+              multiCalendars
+              locale="ko-KR"
+              v-model="date"
+              :format="hourFormat"
+              :maxDate="new Date()"
+            />
+            <Datepicker
+              v-else-if="selectedUnit === 'MI'"
+              range
+              multiCalendars
+              locale="ko-KR"
+              v-model="date"
+              :format="minuteFormat"
+              :maxDate="new Date()"
+            />
+          </div>
         </div>
       </div>
     </div>
 
     <!------- 서비스 ID 검색 -------->
     <div class="search-cont" v-if="tab === 'service'">
-      <h4 class="label-tit">ID 검색</h4>
+      <h4 class="label-tit">{{ t('traffic.id_search') }}</h4>
 
       <div class="service-search">
         <div class="word-wrap">
@@ -54,7 +101,7 @@
 
     <!------- API 검색 -------->
     <div class="search-cont" v-if="tab === 'api'">
-      <h4 class="label-tit">ID 검색</h4>
+      <h4 class="label-tit">{{ t('traffic.id_search') }}</h4>
 
       <div class="service-search">
         <div class="word-wrap">
@@ -94,7 +141,7 @@
                           class="checkmark"
                         ></span>
                       </div>
-                      <label for="checkAll">전체 선택</label>
+                      <label for="checkAll">{{ $t('traffic.select_all') }}</label>
                     </div>
                   </div>
                   <div class="check-group">
@@ -121,24 +168,37 @@
 <script setup lang="ts">
 import type { ApiSearch } from '@/types/MonitoringStatisticType';
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
-const props = defineProps<{
-  isFocus: boolean;
-  propServiceList: string[] | null;
-  tab: string;
-  propApiList: ApiSearch[] | null;
-}>();
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({});
 const emit = defineEmits<{
   (e: 'search', value: any): void;
 }>();
+const props = defineProps<{
+  tab: string;
+  isFocus: boolean;
+  propServiceList: string[] | null;
+  placeholder: string;
+  propApiList: ApiSearch[] | null;
+}>();
 
-let searchText = ref('');
+const selectedUnit = ref('MM');
+const startDate = ref(new Date());
+const endDate = ref(new Date());
+const searchText = ref('');
+function selectUnit(unit: string) {
+  selectedUnit.value = unit;
+  startDate.value = new Date();
+  endDate.value = new Date();
+}
+
+//서비스탭
 const serviceList = computed(() => {
-  return props.propServiceList
-    ? props.propServiceList.filter((item: string) => item.toUpperCase().includes(searchText.value.toUpperCase()))
-    : [];
-}); // 서비스탭용
-let selectedServices: Ref<string[]> = ref([]);
+  if (props.propServiceList === null) {
+    return [];
+  }
+  return props.propServiceList.filter((item: string) => item.toUpperCase().includes(searchText.value.toUpperCase()));
+});
+const selectedServices: Ref<string[]> = ref([]);
 function selectService(event: any) {
   const service = event.target.innerText as string;
   if (selectedServices.value.includes(service)) {
@@ -147,16 +207,15 @@ function selectService(event: any) {
   selectedServices.value.push(service);
   selectedServices.value = selectedServices.value.sort();
 }
-
 function unselectService(event: any) {
   const service = event.target.title as string;
   selectedServices.value = selectedServices.value.filter((item: string) => item !== service);
 }
-
-// API탭용
+// API탭
+const selectedAPI: Ref<string[]> = ref([]);
 const apiList = computed(() => {
-  const res: { sysId: string; apis: string[] }[] = [];
-  if (!props.propApiList) {
+  const res: ApiSearch[] = [];
+  if (props.propApiList === null) {
     return res;
   }
   props.propApiList.forEach((item: { sysId: string; apis: string[] }) => {
@@ -171,11 +230,10 @@ const apiList = computed(() => {
   });
   return res;
 });
-const selectedAPI: Ref<string[]> = ref([]);
-
 function checkAllAPI(apis: string[]) {
   return apis.every((api: string) => selectedAPI.value.includes(api));
 }
+
 function selectAPI(event: any) {
   const api = event.target.innerText ? event.target.innerText : event.target.value;
 
@@ -186,7 +244,6 @@ function selectAPI(event: any) {
   }
   selectedAPI.value = selectedAPI.value.sort();
 }
-
 function selectAllAPI(apis: string[]) {
   if (checkAllAPI(apis)) {
     selectedAPI.value = selectedAPI.value.filter((item: string) => !apis.includes(item));
@@ -204,10 +261,49 @@ function unselectAPI(event: any) {
   selectedAPI.value = selectedAPI.value.filter((item: string) => item !== api);
 }
 
-// 시작,종료 날짜값 선언
+// disabledAfterTodayAndAfterEndDay(date: Date) {
+//   const today = new Date();
+//   const endDay = new Date(this.endDate + ' ' + (this.endTime ? this.endTime : '23:59:59'));
+//   return date > today || date > endDay || this.checkMinMax(date, endDay);
+// }
+// disabledAfterNowOrAfterEndTime(date: Date) {
+//   const now = new Date();
+//   const endTime = this.endTime ? new Date(this.endDate + 'T' + this.endTime) : new Date();
+//   const compDate = new Date(this.startDate + 'T' + date.toTimeString().substr(0, 8));
+//   return compDate > now || compDate > endTime || (this.endTime ? this.checkMinMax(compDate, endTime) : false);
+// }
+
+// disabledAfterTodayOrBeforeStartDay(date: Date) {
+//   const today = new Date();
+//   const startDay = this.startDate ? new Date(this.startDate + 'T' + '00:00:00') : new Date(0);
+//   return date > today || date < startDay || this.checkMinMax(startDay, date);
+// }
+
+// disabledAfterNowOrBeforeStartTime(date: Date) {
+//   const now = new Date();
+//   const startTime = this.startDate && this.startTime ? new Date(this.startDate + 'T' + this.startTime) : new Date(0);
+//   const compDate = new Date(this.endDate + 'T' + date.toTimeString().substr(0, 8));
+//   return compDate >= now || compDate <= startTime || (this.startTime ? this.checkMinMax(startTime, compDate) : false);
+// }
 const date: Ref<Date[]> = ref([]);
+// const month: Ref<{ month: number; year: number }[]> = ref([]);
+const month = ref();
+
 // 화면에 표시될 날짜 포멧 설정
-const format = (dates: Date[]) => {
+const monthFormat = (dates: { month: number; year: number }[]) => {
+  return `${dates[0].year}-${dates[0].month + 1 < 10 ? '0' + (dates[0].month + 1) : dates[0].month + 1} ~ ${
+    dates[1].year
+  }-${dates[1].month + 1}`;
+};
+const dayFormat = (dates: Date[]) => {
+  return `${dates[0].toISOString().slice(0, 10)} ~ ${dates[1].toISOString().slice(0, 10)}`;
+};
+const hourFormat = (dates: Date[]) => {
+  return `${dates[0].toISOString().slice(0, 10)} ${dates[0].toTimeString().slice(0, 2)}:00 ~ ${dates[1]
+    .toISOString()
+    .slice(0, 10)} ${dates[1].toTimeString().slice(0, 2)}:00`;
+};
+const minuteFormat = (dates: Date[]) => {
   return `${dates[0].toISOString().slice(0, 10)} ${dates[0].toTimeString().slice(0, 5)} ~ ${dates[1]
     .toISOString()
     .slice(0, 10)} ${dates[1].toTimeString().slice(0, 5)}`;
@@ -216,21 +312,40 @@ const format = (dates: Date[]) => {
 onMounted(() => {
   const endDate = new Date();
   const startDate = new Date(new Date().setDate(endDate.getDate() - 7));
+  const startMonth = { month: 0, year: endDate.getFullYear() };
+  const endMonth = { month: 11, year: endDate.getFullYear() };
   date.value = [startDate, endDate];
+  month.value = [startMonth, endMonth];
 });
-// 날짜 선택시 이벤트
-function handleClickSearch() {
-  console.log(date.value[0].toISOString().slice(0, 19));
 
+function checkMinMax(start: Date, end: Date) {
+  // <!-------  일 단위 - 최대 150일 -------->
+  if (selectedUnit.value === 'DD') {
+    return end.getTime() - start.getTime() > 150 * 24 * 60 * 60 * 1000;
+  }
+  // <!-------  시간 단위 - 최대 120 시간 -------->
+  else if (selectedUnit.value === 'HH') {
+    return end.getTime() - start.getTime() > 120 * 60 * 60 * 1000;
+  }
+  // <!-------  분 단위 - 최대 480 분 -------->
+  else if (selectedUnit.value === 'MI') {
+    return end.getTime() - start.getTime() > 480 * 60 * 1000;
+  }
+}
+
+function handleClickSearch() {
   if (props.tab === 'service') {
     emit('search', {
       svcId: selectedServices.value,
+      statBaseUnit: selectedUnit.value,
       statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
       statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
     });
   } else {
     emit('search', {
       apiId: selectedAPI.value,
+      statBaseUnit: selectedUnit.value,
+
       statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
       statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
     });

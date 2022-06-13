@@ -11,7 +11,7 @@ export default class MonitoringTrafficRepository {
       .get<GateWayResponse<TrafficService[]>>(`/trafc/services`, param)
       .then((res) => {
         // console.log('response', res.data.value);
-        return res;
+        return res.data.value;
       })
       .catch(() => {
         return Promise.reject();
@@ -23,7 +23,7 @@ export default class MonitoringTrafficRepository {
     const response = await AxiosClient.getInstance()
       .get<GateWayResponse<TrafficApi[]>>(`/trafc/apis`, param)
       .then((res) => {
-        return res;
+        return res.data.value;
       })
       .catch(() => {
         return Promise.reject();
