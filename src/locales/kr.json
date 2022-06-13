@@ -17,7 +17,7 @@
     "add": "추가",
     "placeholder": "입력해주세요.",
     "necessary_input": "필수 입력사항입니다.",
-    "no_data": "표시할 데이터가 없습니다.",
+    "no_data": "조회 가능한 데이터가 존재하지 않습니다.",
     "total": "Total",
     "more": "더보기",
     "delete_success": "삭제되었습니다.",

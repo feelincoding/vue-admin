@@ -14,7 +14,7 @@
           v-if="!isShowProgress && (apiList.apiStat === undefined || apiList.apiStat.length == 0)"
           style="text-align: center"
         >
-          조회 가능한 데이터가 존재하지 않습니다.
+          {{ $t('common.no_data') }}
         </div>
         <ul v-else-if="!isShowProgress && apiList.apiStat !== undefined && apiList.apiStat.length > 0">
           <ControlCard
@@ -65,6 +65,7 @@ const controlSort = new ControlSort();
 const controlRepository = new MonitoringControlRepository();
 
 const searchData: Ref<ControlRequest> = ref({} as ControlRequest);
+
 const apiDetailProps: Ref<apiStatDetailProps> = ref({
   msgId: '',
   msgType: '',
@@ -115,9 +116,10 @@ const getApiList = (orderBy: string, list: RealTimeStat) => {
     : controlSort.sortApiListByResTm(list);
 };
 
-const handleTime = (event: any) => {
+const handleTime = (event: number) => {
   isShowProgress.value = true;
   searchData.value.statPerd = event;
+  console.log('searchData', typeof searchData.value.statPerd, searchData.value.statPerd);
   if (searchData.value.sortBase === undefined) searchData.value.sortBase = 'totCnt';
   controlRepository
     .getApiList(searchData.value)
@@ -135,7 +137,7 @@ const handleTime = (event: any) => {
     });
 };
 
-const handleSort = (event: any) => {
+const handleSort = (event: string) => {
   searchData.value.sortBase = event;
 };
 
