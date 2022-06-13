@@ -64,7 +64,7 @@ const text = computed({
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: t('valid_check_tkcgrNm') };
+            notiMessage.value = { valid: false, msg: t('service.valid_check_tkcgrNm') };
           }
           break;
         case t('service.tkcgrPos'):
@@ -73,7 +73,7 @@ const text = computed({
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: t('valid_check_tkcgrPos') };
+            notiMessage.value = { valid: false, msg: t('service.valid_check_tkcgrPos') };
           }
           break;
         case t('service.tkcgrEml'):
@@ -82,7 +82,7 @@ const text = computed({
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: t('valid_check_tkcgrEml') };
+            notiMessage.value = { valid: false, msg: t('service.valid_check_tkcgrEml') };
           }
           break;
       }
