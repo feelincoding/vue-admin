@@ -1,8 +1,8 @@
 <template>
   <div>
     <ContentLayout
-      :title="$t('service.register')"
-      :subTitle="$t('service.register_sub_title')"
+      :title="$t('service.modify_title')"
+      :subTitle="$t('service.modify_sub_title')"
       :depth="$t('service.title')"
       :isShowProgress="isShowProgress"
     >
@@ -39,7 +39,11 @@
             v-model:isValid="authValid"
             :progress="isBasicAuthProgress"
           />
-          <ApiAuthReqGroup inputNm="권한설정" @showApiAuth="showApiAuth" :setCheck="apiAuthValid" />
+          <ApiAuthReqGroup
+            :inputNm="$t('service.authority_setting')"
+            @showApiAuth="showApiAuth"
+            :setCheck="apiAuthValid"
+          />
           <SlaReqGroup
             :inputNm="$t('service.SLA_mngt')"
             v-model:secVal="formData.sla.sec"
@@ -144,14 +148,16 @@ import { useRoute } from 'vue-router';
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
+import { useToast } from 'vue-toastification';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+const toast = useToast();
 const modal = inject(modalInjectionKey) as ModalFunction;
 const route = useRoute();
 const serviceRepository = new ServiceRepository();
 const jwtAlgList: Ref<string[]> = ref([]);
-const apiAuthList: Ref<ApiAuthResponse[]> = ref({} as ApiAuthResponse[]);
+const apiAuthList: Ref<ApiAuthResponse[]> = ref([] as ApiAuthResponse[]);
 const apiList: Ref<ApiAuthResponse[]> = ref([]);
 const checkedApiList: Ref<ApiAuthResponse[]> = ref([]);
 const countApiList = ref(0);
@@ -267,10 +273,13 @@ const editService = () => {
     .editService(formData.value)
     .then(() => {
       router.back();
+      toast.success(t('common.modify_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
     })
     .catch(() => {
       isRegisterProgress.value = false;
-      //   $modal.show(`${$t('error.server_error')}`);
+      modal().show(t('error.server_error'));
     });
 };
 

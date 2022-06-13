@@ -114,19 +114,6 @@ const router = createRouter({
           path: MONITORING + '/control',
           name: 'control',
           component: () => import('@/views/main/monitoring/control/ControlPage.vue'),
-          redirect: MONITORING + '/control/service',
-          children: [
-            {
-              path: 'service',
-              name: 'control-service',
-              component: () => import('@/views/main/monitoring/control/service/ControlServicePage.vue'),
-            },
-            {
-              path: 'api',
-              name: 'control-api',
-              component: () => import('@/views/main/monitoring/control/api/ControlApiPage.vue'),
-            },
-          ],
         },
         {
           path: MONITORING + '/statistic',
