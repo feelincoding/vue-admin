@@ -34,8 +34,8 @@ const props = defineProps<{
   placeholderStart: string;
   startDt: string;
   endDt: string;
-  isValid: Boolean | null;
-  disabled?: Boolean;
+  isValid: boolean | null;
+  disabled?: boolean;
 }>();
 const emit = defineEmits<{
   (e: 'update:isValid', value: boolean): void;
