@@ -78,7 +78,6 @@ import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
 import LastTraffic from '@/components/dash-board/LastTraffic.vue';
 import LastResponse from '@/components/dash-board/LastResponse.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
-import draggable from 'vuedraggable';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
 import { convertBaseTime } from '@/utils/converter';
