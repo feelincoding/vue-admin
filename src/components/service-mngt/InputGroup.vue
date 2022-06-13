@@ -21,8 +21,8 @@
 <script setup lang="ts">
 import { checkEmail, checkLength, checkEnglishNumberKorean, checkEnglishKorean } from '@/utils/validation';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
 import type { Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const props = defineProps<{
   inputNm: string;
@@ -32,21 +32,13 @@ const props = defineProps<{
   disabled?: Boolean;
   isValid: Boolean | null;
 }>();
-// const props = defineProps({
-//   inputNm: { type: String, require: false, default: '' },
-//   type: { type: String, require: false, default: '' },
-//   placeholder: { type: String, require: false, default: '' },
-//   disabled: { type: Boolean, require: false, default: false },
-//   value: { type: String, require: false, default: '' },
-//   isValid: { type: Boolean, require: false, default: false },
-// });
+
 const emit = defineEmits<{
   (e: 'update:isValid', value: boolean | null): void;
   (e: 'update:value', value: string | null): void;
 }>();
 
 const emptyChk = ref(false);
-
 const notiMessage: Ref<{ valid: boolean | null; msg: string }> = ref({ valid: null, msg: '' });
 
 watch(notiMessage, (res) => {

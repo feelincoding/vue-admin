@@ -144,7 +144,9 @@ import { useRoute } from 'vue-router';
 import router from '@/router';
 import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const modal = inject(modalInjectionKey) as ModalFunction;
 const route = useRoute();
 const serviceRepository = new ServiceRepository();
@@ -231,7 +233,7 @@ const modalShow = () => {
       : true;
 
   if (!val) {
-    // $modal.show(`${$t('service.empty_check_message')}`);
+    modal().show(t('service.empty_check_message'));
     return;
   } else {
     if (
@@ -247,7 +249,7 @@ const modalShow = () => {
       (slaMon.value == true && formData.value.sla.mon == 0) ||
       formData.value.apiAut == []
     ) {
-      // $modal.show(`${$t('service.empty_check_message')}`);
+      modal().show(t('service.empty_check_message'));
     } else {
       modifyModal.value = true;
     }
@@ -284,7 +286,7 @@ const basicAuthClicked = () => {
     })
     .catch(() => {
       isBasicAuthProgress.value = false;
-      // $modal.show(`${$t('error.server_error')}`);
+      modal().show(t('error.server_error'));
     });
 };
 
@@ -420,7 +422,7 @@ onMounted(() => {
     })
     .catch(() => {
       isShowProgress.value = false;
-      // $modal.show(`${$t('api.server_error')}`);
+      modal().show(t('api.server_error'));
     });
 });
 </script>
