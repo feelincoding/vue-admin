@@ -4,7 +4,14 @@
     <div class="form-cont">
       <div class="date-wrap">
         <div class="date-cont">
-          <Datepicker multiCalendars locale="ko-KR" v-model="startDate" :minDate="new Date()" @focus="notice()" />
+          <Datepicker
+            multiCalendars
+            locale="ko-KR"
+            :disabled="disabled"
+            v-model="startDate"
+            :minDate="new Date()"
+            @focus="notice()"
+          />
         </div>
         <span class="text">~</span>
         <div class="date-cont">
@@ -28,6 +35,7 @@ const props = defineProps<{
   startDt: string;
   endDt: string;
   isValid: Boolean | null;
+  disabled?: Boolean;
 }>();
 const emit = defineEmits<{
   (e: 'update:isValid', value: boolean): void;

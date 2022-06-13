@@ -23,6 +23,7 @@
             v-model:startDt="formData.svcStDt"
             v-model:endDt="formData.svcEndDt"
             v-model:isValid="dateValid"
+            :disabled="true"
           />
           <AuthReqGroup
             @basicAuthClicked="basicAuthClicked"
