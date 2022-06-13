@@ -129,29 +129,6 @@ watch(
   }
 );
 
-const algPick = computed({
-  get: () => props.pickedAlg,
-  set: (val) => {
-    emit('update:pickedAlg', val);
-    if (auth.value == 'jwt') {
-      if (
-        algPick.value != 'null' &&
-        JWTissuer.value != '' &&
-        JWTsubject.value != '' &&
-        JWTpublicKey.value != '' &&
-        algPick.value != null &&
-        JWTissuer.value != null &&
-        JWTsubject.value != null &&
-        JWTpublicKey.value != null
-      ) {
-        emit('update:isValid', true);
-      } else {
-        emit('update:isValid', false);
-      }
-    }
-  },
-});
-
 const auth = computed({
   get: () => props.athn,
   set: (val) => {
@@ -168,10 +145,51 @@ const JWTalg = computed({
   },
 });
 
+const algPick = computed({
+  get: () => props.pickedAlg,
+  set: (val) => {
+    emit('update:pickedAlg', val);
+    if (auth.value == 'jwt') {
+      if (
+        algPick.value != 'null' &&
+        JWTissuer.value != '' &&
+        JWTsubject.value != '' &&
+        JWTpublicKey.value != '' &&
+        algPick.value != null &&
+        JWTissuer.value != null &&
+        JWTsubject.value != null &&
+        JWTpublicKey.value != null
+      ) {
+        console.log('update:isValid', true);
+        emit('update:isValid', true);
+      } else {
+        emit('update:isValid', false);
+      }
+    }
+  },
+});
+
 const JWTissuer = computed({
   get: () => props.issuer,
   set: (val) => {
     emit('update:issuer', val);
+    if (auth.value == 'jwt') {
+      if (
+        algPick.value != 'null' &&
+        JWTissuer.value != '' &&
+        JWTsubject.value != '' &&
+        JWTpublicKey.value != '' &&
+        algPick.value != null &&
+        JWTissuer.value != null &&
+        JWTsubject.value != null &&
+        JWTpublicKey.value != null
+      ) {
+        console.log('update:isValid', true);
+        emit('update:isValid', true);
+      } else {
+        emit('update:isValid', false);
+      }
+    }
   },
 });
 
@@ -179,6 +197,23 @@ const JWTsubject = computed({
   get: () => props.subject,
   set: (val) => {
     emit('update:subject', val);
+    if (auth.value == 'jwt') {
+      if (
+        algPick.value != 'null' &&
+        JWTissuer.value != '' &&
+        JWTsubject.value != '' &&
+        JWTpublicKey.value != '' &&
+        algPick.value != null &&
+        JWTissuer.value != null &&
+        JWTsubject.value != null &&
+        JWTpublicKey.value != null
+      ) {
+        console.log('update:isValid', true);
+        emit('update:isValid', true);
+      } else {
+        emit('update:isValid', false);
+      }
+    }
   },
 });
 
@@ -186,6 +221,23 @@ const JWTpublicKey = computed({
   get: () => props.publicKey,
   set: (val) => {
     emit('update:publicKey', val);
+    if (auth.value == 'jwt') {
+      if (
+        algPick.value != 'null' &&
+        JWTissuer.value != '' &&
+        JWTsubject.value != '' &&
+        JWTpublicKey.value != '' &&
+        algPick.value != null &&
+        JWTissuer.value != null &&
+        JWTsubject.value != null &&
+        JWTpublicKey.value != null
+      ) {
+        console.log('update:isValid', true);
+        emit('update:isValid', true);
+      } else {
+        emit('update:isValid', false);
+      }
+    }
   },
 });
 
