@@ -147,19 +147,7 @@ const props = defineProps<{
   onDay: Boolean;
   onMon: Boolean;
 }>();
-// defineProps({
-//   inputNm: { type: String, require: false, default: '' },
-//   secVal: { type: Number || null, require: false, default: null },
-//   minVal: { type: Number || null, require: false, default: null },
-//   hourVal: { type: Number || null, require: false, default: null },
-//   dayVal: { type: Number || null, require: false, default: null },
-//   monthVal: { type: Number || null, require: false, default: null },
-//   onSec: { type: Boolean, require: false, default: false },
-//   onMin: { type: Boolean, require: false, default: false },
-//   onHr: { type: Boolean, require: false, default: false },
-//   onDay: { type: Boolean, require: false, default: false },
-//   onMon: { type: Boolean, require: false, default: false },
-// });
+
 const emit = defineEmits<{
   (e: 'update:onSec', value: boolean): void;
   (e: 'update:onMin', value: boolean): void;

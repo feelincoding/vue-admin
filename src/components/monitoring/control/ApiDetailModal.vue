@@ -46,7 +46,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
+import { inject, onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
 
 import * as echarts from 'echarts';
 import type { EChartsType } from 'echarts';
@@ -57,8 +57,6 @@ import type {
   TrafficService,
   TrafficApi,
   ControlDetailRequest,
-  TrafcApi,
-  TrafcServices,
 } from '@/types/MonitoringControlType';
 
 import { disableScrolling, enableScrolling } from '@/utils/screen';
@@ -68,7 +66,12 @@ import ApiDetailModalApiList from '@/components/monitoring/control/ApiDetailModa
 import MonitoringControlRepository from '@/repository/monitoring-control-repository';
 import MonitoringStatisticReoisitory from '@/repository/monitoring-statistic-repository';
 
+import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
+import { useI18n } from 'vue-i18n';
 import ErrorCode from '@/error/ErrorCodes';
+
+const { t } = useI18n({});
+const modal = inject(modalInjectionKey)!!;
 
 const controlRepository = new MonitoringControlRepository();
 const statisticRepository = new MonitoringStatisticReoisitory();
@@ -379,11 +382,11 @@ onMounted(() => {
       })
       .catch((error) => {
         if (error == ErrorCode.CANCEL_ERROR) {
-          // console.log('API,Service Modal API Cancel');
+          console.log('API,Service Modal API Cancel');
           isShowProgress.value = false;
         } else {
           isShowProgress.value = false;
-          // modal.show(`${t('error.server_error')}`);
+          modal().show(t('error.server_error'));
         }
       });
 
@@ -430,11 +433,11 @@ onMounted(() => {
       })
       .catch((error) => {
         if (error == ErrorCode.CANCEL_ERROR) {
-          // console.log('API, API Modal API Cancel');
+          console.log('API, API Modal API Cancel');
           isShowProgress.value = false;
         } else {
+          modal().show(t('error.server_error'));
           isShowProgress.value = false;
-          // $modal.show(`${$t('error.server_error')}`);
         }
       });
   }

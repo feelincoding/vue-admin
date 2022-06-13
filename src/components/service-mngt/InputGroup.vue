@@ -5,7 +5,6 @@
       <input
         :type="type"
         :placeholder="placeholder"
-        :disabled="disabled"
         v-model="text"
         :class="{
           'check-ok': notiMessage.valid === true,
@@ -22,8 +21,8 @@
 <script setup lang="ts">
 import { checkEmail, checkLength, checkEnglishNumberKorean, checkEnglishKorean } from '@/utils/validation';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
 import type { Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const props = defineProps<{
   inputNm: string;
@@ -33,21 +32,13 @@ const props = defineProps<{
   disabled?: Boolean;
   isValid: Boolean | null;
 }>();
-// const props = defineProps({
-//   inputNm: { type: String, require: false, default: '' },
-//   type: { type: String, require: false, default: '' },
-//   placeholder: { type: String, require: false, default: '' },
-//   disabled: { type: Boolean, require: false, default: false },
-//   value: { type: String, require: false, default: '' },
-//   isValid: { type: Boolean, require: false, default: false },
-// });
+
 const emit = defineEmits<{
   (e: 'update:isValid', value: boolean | null): void;
   (e: 'update:value', value: string | null): void;
 }>();
 
 const emptyChk = ref(false);
-
 const notiMessage: Ref<{ valid: boolean | null; msg: string }> = ref({ valid: null, msg: '' });
 
 watch(notiMessage, (res) => {
@@ -59,31 +50,31 @@ const text = computed({
   set: (val) => {
     if (val !== null) {
       switch (props.inputNm) {
-        case '담당자 이름':
+        case t('service.tkcgrNm'):
           if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: 'test' };
+            notiMessage.value = { valid: false, msg: t('service.valid_check_tkcgrNm') };
           }
           break;
-        case '소속':
+        case t('service.tkcgrPos'):
           if (checkLength(val, 1, 20) && checkEnglishNumberKorean(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: 'test' };
+            notiMessage.value = { valid: false, msg: t('service.valid_check_tkcgrPos') };
           }
           break;
-        case 'E-mail':
+        case t('service.tkcgrEml'):
           if (checkLength(val, 1, 20) && checkEmail(val)) {
             notiMessage.value = { valid: true, msg: '' };
           } else if (val == '') {
             notiMessage.value = { valid: null, msg: '' };
           } else {
-            notiMessage.value = { valid: false, msg: 'test' };
+            notiMessage.value = { valid: false, msg: t('service.valid_check_tkcgrEml') };
           }
           break;
       }

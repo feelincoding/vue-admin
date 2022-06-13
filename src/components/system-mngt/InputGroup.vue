@@ -25,8 +25,8 @@
     </div>
   </li>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+
+<script setup lang="ts">
 import {
   checkEmail,
   checkLength,
@@ -35,84 +35,105 @@ import {
   checkEmpty,
   checkEnglishNumberKorean,
 } from '@/utils/validation';
+import { ref, reactive, computed, watch, onMounted } from 'vue';
+import type { PropType } from 'vue';
+import type { Ref } from 'vue';
 
-@Component
-export default class InputGroup extends Vue {
-  @Prop({ default: '' }) inputNm!: string;
-  @Prop({ default: '' }) type!: string;
-  @Prop({ default: '' }) place!: string;
-  @Prop({ default: false }) disabled!: boolean;
-  @Prop({ default: '' }) value!: string;
-  @Prop({ default: false }) isValid!: boolean | null;
-  @Prop({ default: false }) required!: boolean;
+import { BSpinner } from 'bootstrap-vue-3';
 
-  notiMessage: [boolean | null, string] = [null, ''];
+import { useRoute } from 'vue-router';
+import router from '@/router';
 
-  @Watch('notiMessage', { deep: true })
-  messageChanged() {
-    this.$emit('update:isValid', this.notiMessage[0]);
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({});
+
+const props = defineProps({
+  inputNm: { type: String, required: false, default: '' },
+  type: { type: String, required: false, default: '' },
+  place: { type: String, required: false, default: '' },
+  disabled: { type: Boolean, required: false, default: false },
+  value: { type: String, required: false, default: '' },
+  isValid: { type: Boolean, required: false, default: false },
+  required: { type: Boolean, required: false, default: false },
+});
+
+const emit = defineEmits<{
+  (e: 'update:isValid', value: boolean | null | string): void;
+  (e: 'update:value', value: string): void;
+}>();
+
+const notiMessage: Ref<(boolean | null | string)[]> = ref([null, '']);
+watch(notiMessage, () => {
+  emit('update:isValid', notiMessage.value[0] as boolean | null | string);
+});
+
+onMounted(() => {
+  if (props.required === false) {
+    emit('update:isValid', true);
   }
+});
 
-  created() {
-    if (this.required === false) {
-      this.$emit('update:isValid', true);
-    }
-  }
+const v = computed({
+  get: () => {
+    console.log('v:', v.value);
 
-  get v() {
-    return this.value;
-  }
-  set v(val: string) {
-    switch (this.inputNm) {
-      case this.$t('system.id'):
+    return props.value;
+  },
+  set: (val: string) => {
+    console.log('val:', val);
+    switch (props.inputNm) {
+      case t('system.id'):
         if (checkLength(val, 1, 20) && checkEnglishNumber(val)) {
-          this.notiMessage = [true, ''];
+          notiMessage.value = [true, ''];
         } else if (val == '') {
-          this.notiMessage = [false, this.$t('system.empty_check') as string];
+          notiMessage.value = [false, t('system.empty_check') as string];
         } else {
-          this.notiMessage = [false, this.$t('system.valid_check_id') as string];
-          console.log(this.notiMessage);
+          notiMessage.value = [false, t('system.valid_check_id') as string];
+          console.log(notiMessage);
         }
         break;
-      case this.$t('system.tkcgrNm'):
+      case t('system.tkcgrNm'):
         if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
-          this.notiMessage = [true, ''];
+          notiMessage.value = [true, ''];
         } else if (val == '') {
-          this.notiMessage = [true, ''];
+          notiMessage.value = [true, ''];
         } else {
-          this.notiMessage = [false, this.$t('system.valid_check_tkcgrNm') as string];
+          notiMessage.value = [false, t('system.valid_check_tkcgrNm') as string];
         }
         break;
-      case this.$t('system.tkcgrPos'):
+      case t('system.tkcgrPos'):
         if (checkLength(val, 1, 50)) {
-          this.notiMessage = [true, ''];
+          notiMessage.value = [true, ''];
         } else if (val == '') {
-          this.notiMessage = [true, ''];
+          notiMessage.value = [true, ''];
         } else {
-          this.notiMessage = [false, this.$t('system.valid_check_tkcgrPos') as string];
+          notiMessage.value = [false, t('system.valid_check_tkcgrPos') as string];
         }
         break;
-      case this.$t('system.tkcgrEml'):
+      case t('system.tkcgrEml'):
         if (checkLength(val, 1, 20) && checkEmail(val)) {
-          this.notiMessage = [true, ''];
+          notiMessage.value = [true, ''];
         } else if (val == '') {
-          this.notiMessage = [true, ''];
+          notiMessage.value = [true, ''];
         } else {
-          this.notiMessage = [false, this.$t('system.valid_check_tkcgrEml') as string];
+          notiMessage.value = [false, t('system.valid_check_tkcgrEml') as string];
         }
         break;
       default:
-        this.notiMessage = [null, ''];
+        notiMessage.value = [null, ''];
     }
 
-    this.$emit('update:value', val);
+    emit('update:value', val);
+  },
+});
+const emptyChkFunc = () => {
+  if (props.required === true && !checkEmpty(v.value)) {
+    notiMessage.value = [false, t('system.empty_check') as string];
   }
-
-  emptyChkFunc() {
-    if (this.required === true && !checkEmpty(this.v)) {
-      this.notiMessage = [false, this.$t('system.empty_check') as string];
-    }
-  }
-}
+};
+// const v = computed(():string => {
+//   return props.value;
+// });
 </script>
-<style lang=""></style>
+
+<style scoped></style>

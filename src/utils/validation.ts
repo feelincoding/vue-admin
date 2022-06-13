@@ -27,12 +27,12 @@ export const checkEnglishNumber = (value: string) => {
 };
 
 export const checkEnglishKorean = (value: string) => {
-  const r = /^[A-Za-zㄱ-ㅎ가-힣]+$/;
+  const r = /^[A-Za-zㄱ-ㅎ가-힣 ]+$/;
   return r.test(String(value));
 };
 
 export const checkEnglishNumberKorean = (value: string) => {
-  const r = /^[a-zA-Z0-9가-힣]*$/;
+  const r = /^[a-zA-Z0-9ㄱ-ㅎ가-힣 ]*$/;
   return r.test(String(value));
 };
 

@@ -29,12 +29,9 @@
   </li>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-
-@Component
-export default class IfFormlGroup extends Vue {
-  @Prop() public inputNm!: string | null;
-  @Prop() public endPoints!: object | null;
-}
+<script setup lang="ts">
+const props = defineProps<{
+  inputNm: string | null;
+  endPoints: object | null;
+}>();
 </script>

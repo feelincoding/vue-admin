@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 
 import type { Ref } from 'vue';
 import type {
@@ -60,7 +60,12 @@ import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
 import ControlSort from '@/components/monitoring/control/controlSort';
 import MonitoringControlRepository from '@/repository/monitoring-control-repository';
 
+import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
+import { useI18n } from 'vue-i18n';
 import ErrorCode from '@/error/ErrorCodes';
+
+const { t } = useI18n({});
+const modal = inject(modalInjectionKey)!!;
 
 const controlSort = new ControlSort();
 const controlRepository = new MonitoringControlRepository();
@@ -130,7 +135,7 @@ const handleTime = (event: any) => {
       if (err.getErrorCode() == ErrorCode.CANCEL_ERROR) {
         console.log('CONTROL SERVICE API Cancel');
       } else {
-        // $modal.show(`${$t('error.server_error')}`);
+        modal().show(t('error.server_error'));
         isShowProgress.value = false;
       }
     });

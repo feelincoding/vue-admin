@@ -101,19 +101,6 @@ const props = defineProps<{
   progress: boolean;
 }>();
 
-// defineProps({
-//   inputNm: { type: String, require: false, default: '' },
-//   athn: { type: String, require: false, default: '' },
-//   alg: { type: [String], require: false, default: [] },
-//   issuer: { type: String, require: false, default: '' },
-//   subject: { type: String, require: false, default: '' },
-//   publicKey: { type: String, require: false, default: '' },
-//   pickedAlg: { type: String, require: false, default: '' },
-//   basicId: { type: String || null, require: false },
-//   basicPw: { type: String || null, require: false },
-//   isValid: { type: Boolean, require: false, default: false },
-//   progress: { type: Boolean, require: false, default: false },
-// });
 const emit = defineEmits<{
   (e: 'update:isValid', value: boolean | null): void;
   (e: 'update:basicId', value: string | null): void;

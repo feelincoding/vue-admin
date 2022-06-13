@@ -188,7 +188,6 @@ watch(listOption, () => {
 });
 onMounted(() => {
   let param = {} as SearchCondition;
-  console.log('@@@@@');
   if (Object.keys(route.query).filter((key) => key === 'id' && route.query[key] !== '').length > 0) {
     param.id = route.query.id as string;
     searchData.value.id = param.id;
@@ -197,8 +196,7 @@ onMounted(() => {
     param.tkcgrNm = route.query.tkcgrNm as string;
     searchData.value.tkcgrNm = param.tkcgrNm;
   }
-  console.log(route.query);
-  console.log('@@@@@');
+
   // if (Object.entries(route.query).filter((x) => x[0] === 'id' && x[1] !== '').length > 0) {
   //   param.id = route.query.id as string;
   //   searchData.value.id = param.id;
@@ -213,6 +211,7 @@ onMounted(() => {
 });
 
 const _getSystemList = (param: SearchCondition) => {
+  console.log('_getSystemList');
   isShowProgress.value = true;
   // console.log('param : ', param);
   systemModule
@@ -220,10 +219,10 @@ const _getSystemList = (param: SearchCondition) => {
     .then((res) => {
       isShowProgress.value = false;
 
-      // console.log('res : ', res);
-
       listOption.value = res.value;
       systemPagination.value = res.pagination as Pagination;
+      // listOption.value = res.value;
+      // systemPagination.value = res.pagination as Pagination;
     })
     .catch((error: GateWayError) => {
       if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
