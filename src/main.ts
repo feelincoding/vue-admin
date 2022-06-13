@@ -22,12 +22,14 @@ import 'vue-toastification/dist/index.css';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
+// import VueGridLayout
+
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(BootstrapVue3);
 app.use(router);
 app.use(i18n);
+app.use(Toast);
 app.component('Datepicker', Datepicker);
 app.mount('#app');
-app.use(Toast);

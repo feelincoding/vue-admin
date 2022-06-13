@@ -97,7 +97,6 @@ export default class DashBoardRepository {
           `/realtimeApiStat`,
           param
         );
-        console.log('ccs1', response.data.value);
 
         return Promise.resolve(response.data.value);
       } catch (error: GateWayError | any) {

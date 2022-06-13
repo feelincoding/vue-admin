@@ -161,11 +161,11 @@ watch(
   }
 );
 
-watch(props.totalApiTrafficDetail, () => {
-  setTimeout(() => {
-    modalChart.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
-  }, 400);
-});
+// watch(props.totalApiTrafficDetail, () => {
+//   setTimeout(() => {
+//     modalChart.value.setOption(getDetailApiTrafficOption(props.totalApiTrafficDetail as TotalTrafficStat[]));
+//   }, 400);
+// });
 
 // Modal 동작 관련 메서드
 const showModal = () => {

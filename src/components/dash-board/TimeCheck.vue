@@ -64,7 +64,6 @@ onUnmounted(() => {
 watch(
   () => props.isLoadData,
   () => {
-    console.log('changed LoadData!!', props.isLoadData);
     if (props.isLoadData) {
       clearInterval(intervalId.value);
     } else {
@@ -93,7 +92,6 @@ const onCountPause = () => {
 };
 
 const onCountStart = () => {
-  console.log('onCountStart');
   isPlay.value = true;
   intervalId.value = setInterval(setTimer, 1000);
 };

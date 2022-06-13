@@ -48,7 +48,6 @@ const showApiDetailModal = ref(false);
 watch(
   () => props.realTimeStat,
   () => {
-    console.log('ccs', props.realTimeStat.svcStat);
     top5List.value = props.realTimeStat.svcStat
       .sort((a: { totCnt: number }, b: { totCnt: number }) => b.totCnt - a.totCnt)
       .slice(0, 5);

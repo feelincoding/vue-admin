@@ -7,7 +7,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "ES2020.Promise"]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "ES2020.Promise"],
+    "moduleResolution": "node",
   },
 
   "references": [

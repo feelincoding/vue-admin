@@ -2,113 +2,59 @@
   <article class="dashboard">
     <!--- refresh play/pause area --->
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
-    <gridLayout
-      :layout="layout"
-      :col-num="1"
-      :row-height="1"
-      :is-resizable="false"
-      :is-mirrored="false"
-      :use-css-transforms="true"
-      @layout-updated="layoutUpdatedEvent"
-    >
-      <gridItem
-        v-for="item in layout"
-        :x="item.x"
-        :y="item.y"
-        :w="item.w"
-        :h="item.h"
-        :i="item.i"
-        :key="item.i"
-        @move="dragEvent(item.i)"
-        :class="{
-          'total-modal-z-index': item.i == '0',
-        }"
-        dragIgnoreFrom="#real-time-traffic, #lastTraffic , #lastResponse"
-        style="touch-action: none"
-      >
-        <div
-          v-if="item.i == '0'"
-          style="padding: 11px; width: 100%; background-color: #fff"
-          :class="{ 'drag-box': box1 }"
-        >
-          <section class="group col-3" style="height: 219px">
-            <!--- Total API Traffic (24Hour) area --->
-            <TotalApiTraffic
-              v-model:totalApiTraffic="totalTraffic"
-              v-model:isLoadData="isLoadData"
-              v-model:modal="trafficModal"
-              @modalChange="changeTrafficModal"
-              v-model:isDraged="isDraged"
-              v-model:isCommError="isTotalAPITrafficCommError"
-            />
-            <!--- Error stats (24Hour) area --->
-            <ErrorStats
-              v-model:errorStats="errorStats"
-              v-model:isLoadData="isLoadData"
-              v-model:modal="errorModal"
-              @modalChange="changeErrorModal"
-              :isDraged.sync="isDraged"
-              :isCommError.sync="isErrorStatCommError"
-            />
-            <!--- API 평균 응답시간 / TPS area !! --->
-            <ApiResponseAvg
-              v-model:apiResponseStatus="apiResponseStatus"
-              :modal.sync="avgModal"
-              :isDraged.sync="isDraged"
-              :isLoadData="isLoadData"
-              :isCommError.sync="isApiResponseStusCommError"
-            />
-          </section>
-        </div>
-        <div
-          v-if="item.i == '1'"
-          style="padding: 11px; width: 100%; background-color: #fff"
-          :class="{ 'drag-box': box2 }"
-        >
-          <section class="group">
-            <!--- 실시간 Traffic area --->
-            <RealTimeTraffic
-              :isDraged.sync="isDraged"
-              :setParamData.sync="clickedParamData"
-              :modal.sync="realTimeModal"
-            />
-          </section>
-        </div>
-        <div
-          v-if="item.i == '2'"
-          style="padding: 11px; width: 100%; background-color: #fff"
-          :class="{ 'drag-box': box3 }"
-        >
-          <section class="group col-2">
-            <!--- API Top 5 area --->
-            <ApiTop5
-              v-model:realTimeStat="realTimeApiStat"
-              :isCommError.sync="isServiceTop5CommError"
-              @clickModalBtn="
-                (msg) => {
-                  showModal(msg);
-                }
-              "
-            />
-            <!--- Service Top 5 area --->
-            <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
-          </section>
-        </div>
 
-        <div
-          v-if="item.i == '3'"
-          style="padding: 11px; width: 100%; background-color: #fff"
-          :class="{ 'drag-box': box4 }"
-        >
-          <section class="group col-2 bg-pastel">
-            <!--- Last Traffic --->
-            <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
-            <!--- Last Response --->
-            <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
-          </section>
-        </div>
-      </gridItem>
-    </gridLayout>
+    <section class="group col-3" style="height: 219px">
+      <!--- Total API Traffic (24Hour) area --->
+      <TotalApiTraffic
+        v-model:totalApiTraffic="totalTraffic"
+        v-model:isLoadData="isLoadData"
+        v-model:modal="trafficModal"
+        @modalChange="changeTrafficModal"
+        v-model:isDraged="isDraged"
+        v-model:isCommError="isTotalAPITrafficCommError"
+      />
+      <!--- Error stats (24Hour) area --->
+      <ErrorStats
+        v-model:errorStats="errorStats"
+        v-model:isLoadData="isLoadData"
+        v-model:modal="errorModal"
+        @modalChange="changeErrorModal"
+        :isDraged.sync="isDraged"
+        :isCommError.sync="isErrorStatCommError"
+      />
+      <!--- API 평균 응답시간 / TPS area !! --->
+      <ApiResponseAvg
+        v-model:apiResponseStatus="apiResponseStatus"
+        :modal.sync="avgModal"
+        :isDraged.sync="isDraged"
+        :isLoadData="isLoadData"
+        :isCommError.sync="isApiResponseStusCommError"
+      />
+    </section>
+    <section class="group">
+      <!--- 실시간 Traffic area --->
+      <RealTimeTraffic :isDraged.sync="isDraged" :setParamData.sync="clickedParamData" :modal.sync="realTimeModal" />
+    </section>
+    <section class="group col-2">
+      <!--- API Top 5 area --->
+      <ApiTop5
+        v-model:realTimeStat="realTimeApiStat"
+        :isCommError.sync="isServiceTop5CommError"
+        @clickModalBtn="
+          (msg) => {
+            showModal(msg);
+          }
+        "
+      />
+      <!--- Service Top 5 area --->
+      <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
+    </section>
+    <section class="group col-2 bg-pastel">
+      <!--- Last Traffic --->
+      <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
+      <!--- Last Response --->
+      <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
+    </section>
     <ApiDetailModal
       v-if="isShowModal"
       @close="isShowModal = false"
@@ -117,11 +63,6 @@
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
     ></ApiDetailModal>
-    <RealTimeDetailModal
-      v-if="realTimeModal"
-      :modal.sync="realTimeModal"
-      :setParamData.sync="clickedParamData"
-    ></RealTimeDetailModal>
   </article>
 </template>
 <script setup lang="ts">
@@ -137,6 +78,7 @@ import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
 import LastTraffic from '@/components/dash-board/LastTraffic.vue';
 import LastResponse from '@/components/dash-board/LastResponse.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
+import draggable from 'vuedraggable';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
 import { convertBaseTime } from '@/utils/converter';
@@ -221,7 +163,6 @@ const changeErrorModal = (show: boolean) => {
 };
 const avgModal = ref(false);
 const realTimeModal = ref(false);
-const draggable = ref(true);
 const clickedParamData = {};
 
 const isErrorStatCommError = ref(false);
