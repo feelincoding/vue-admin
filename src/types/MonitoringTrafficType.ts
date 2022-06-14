@@ -21,9 +21,15 @@ export interface ApiTrafc {
   failCnt: number;
 }
 
-export interface RequestTrafficParams {
-  svcId?: string;
-  apiId?: string;
+export interface RequestTrafficAPIParams {
+  apiId: string[];
+  statBaseUnit: string;
+  statStTm: string;
+  statEndTm: string;
+}
+
+export interface RequestTrafficServiceParams {
+  svcId: string[];
   statBaseUnit: string;
   statStTm: string;
   statEndTm: string;

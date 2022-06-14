@@ -173,6 +173,7 @@ import { useI18n } from 'vue-i18n';
 import { ko } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
+import type { RequestTrafficAPIParams, RequestTrafficServiceParams } from '@/types/MonitoringTrafficType';
 const modal = inject(modalInjectionKey)!!;
 const { t } = useI18n({});
 const emit = defineEmits<{
@@ -354,37 +355,40 @@ function handleClickSearch() {
     const end = new Date(month.value[1].year, month.value[1].month);
 
     if (props.tab === 'service') {
-      emit('search', {
+      const param: RequestTrafficServiceParams = {
         svcId: selectedServices.value,
         statBaseUnit: selectedUnit.value,
         statStTm: format(start, 'yyyy-MM-dd HH:mm'),
         statEndTm: format(end, 'yyyy-MM-dd HH:mm'),
-      });
+      };
+      emit('search', param);
     } else {
-      emit('search', {
+      const param: RequestTrafficAPIParams = {
         apiId: selectedAPI.value,
         statBaseUnit: selectedUnit.value,
         statStTm: format(start, 'yyyy-MM-dd HH:mm'),
         statEndTm: format(end, 'yyyy-MM-dd HH:mm'),
-      });
+      };
+      emit('search', param);
     }
   } else {
     if (props.tab === 'service') {
-      emit('search', {
+      const param: RequestTrafficServiceParams = {
         svcId: selectedServices.value,
         statBaseUnit: selectedUnit.value,
         statStTm: format(date.value[0], 'yyyy-MM-dd HH:mm'),
         statEndTm: format(date.value[1], 'yyyy-MM-dd HH:mm'),
-      });
+      };
+      emit('search', param);
     } else {
-      emit('search', {
+      const param: RequestTrafficAPIParams = {
         apiId: selectedAPI.value,
         statBaseUnit: selectedUnit.value,
         statStTm: format(date.value[0], 'yyyy-MM-dd HH:mm'),
         statEndTm: format(date.value[1], 'yyyy-MM-dd HH:mm'),
-      });
+      };
+      emit('search', param);
     }
   }
 }
 </script>
-<style></style>
