@@ -91,7 +91,7 @@ const v = computed({
         if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
           notiMessage.value = { isValid: true, message: '' };
         } else if (val == '') {
-          notiMessage.value = { isValid: true, message: '' };
+          notiMessage.value = { isValid: null, message: '' };
         } else {
           notiMessage.value = { isValid: false, message: t('system.valid_check_tkcgrNm') as string };
         }
@@ -100,7 +100,7 @@ const v = computed({
         if (checkLength(val, 1, 50)) {
           notiMessage.value = { isValid: true, message: '' };
         } else if (val == '') {
-          notiMessage.value = { isValid: true, message: '' };
+          notiMessage.value = { isValid: null, message: '' };
         } else {
           notiMessage.value = { isValid: false, message: t('system.valid_check_tkcgrPos') as string };
         }
@@ -109,7 +109,7 @@ const v = computed({
         if (checkLength(val, 1, 20) && checkEmail(val)) {
           notiMessage.value = { isValid: true, message: '' };
         } else if (val == '') {
-          notiMessage.value = { isValid: true, message: '' };
+          notiMessage.value = { isValid: null, message: '' };
         } else {
           notiMessage.value = { isValid: false, message: t('system.valid_check_tkcgrEml') as string };
         }
