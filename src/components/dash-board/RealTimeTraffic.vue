@@ -5,9 +5,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, shallowRef, watch } from 'vue';
+import { onMounted, onUnmounted, ref, shallowRef } from 'vue';
 import * as echarts from 'echarts';
 import { addDate } from '@/utils/converter';
+import { getRealTimeChartOption } from './chart-options';
 
 const myChart = shallowRef({} as echarts.EChartsType);
 const dom = shallowRef({} as HTMLDivElement);
@@ -35,50 +36,34 @@ onMounted(() => {
     addData();
   }
 
-  let da = [data1, data2, data3, data4, data5, data6, data7];
-  myChart.value.setOption(option);
+  myChart.value.setOption(
+    getRealTimeChartOption(
+      date.value,
+      data1.value,
+      data2.value,
+      data3.value,
+      data4.value,
+      data5.value,
+      data6.value,
+      data7.value
+    )
+  );
 
   setInterval(() => {
     addData();
-    myChart.value.setOption({
-      xAxis: {
-        data: date.value,
-      },
-      series: [
-        {
-          name: 'KTDS',
-          data: data1.value,
-        },
-        {
-          name: 'KAKAO',
-          data: data2.value,
-        },
-        {
-          name: 'NAVER',
-          data: data3.value,
-        },
-        {
-          name: 'CUPANG',
-          data: data4.value,
-        },
-        {
-          name: 'GOOGLE',
-          data: data5.value,
-        },
-        {
-          name: 'FACEBOOK',
-          data: data6.value,
-        },
-        {
-          name: 'INSTAGRAM',
-          data: data7.value,
-        },
-      ],
-    });
+    myChart.value.setOption(
+      getRealTimeChartOption(
+        date.value,
+        data1.value,
+        data2.value,
+        data3.value,
+        data4.value,
+        data5.value,
+        data6.value,
+        data7.value
+      )
+    );
   }, 300);
-
-  // myChart.value.on('click', (params) => {
-  // });
 });
 
 onUnmounted(() => {
@@ -95,144 +80,6 @@ const addData = () => {
   data5.value.push(Math.random() * (20 - 10) + data5.value[data5.value.length - 1]);
   data6.value.push(Math.random() * (70 - 30) + data6.value[data6.value.length - 1]);
   data7.value.push(Math.random() * (30 - 20) + data7.value[data7.value.length - 1]);
-};
-
-const option = {
-  animationDuration: 10000,
-  legend: {
-    data: ['KTDS', 'KAKAO', 'NAVER', 'CUPANG', 'GOOGLE', 'FACEBOOK', 'INSTAGRAM'],
-  },
-  tooltip: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-
-    trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      label: {
-        backgroundColor: '#6a7985',
-      },
-    },
-  },
-  xAxis: {
-    type: 'category',
-    boundaryGap: false,
-    nameLocation: 'middle',
-    data: date.value,
-  },
-  yAxis: {
-    boundaryGap: [0, '50%'],
-    type: 'value',
-  },
-  grid: {
-    left: '3%',
-    right: '10%',
-    bottom: '10%',
-    top: '10%',
-    containLabel: true,
-  },
-  dataZoom: [
-    {
-      type: 'inside',
-      throttle: 50,
-    },
-  ],
-  series: [
-    {
-      name: 'KTDS',
-      type: 'line',
-      showSymbol: false,
-      data: data1.value,
-      color: 'red',
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return 'KTDS : ' + params.value.toFixed(0);
-        },
-      },
-    },
-    {
-      name: 'KAKAO',
-      type: 'line',
-      showSymbol: false,
-      data: data2.value,
-      color: 'yellow',
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return 'KAKAO : ' + params.value.toFixed(0);
-        },
-      },
-    },
-    {
-      name: 'NAVER',
-      type: 'line',
-      showSymbol: false,
-      data: data3.value,
-      color: 'green',
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return 'NAVER : ' + params.value.toFixed(0);
-        },
-      },
-    },
-    {
-      name: 'CUPANG',
-      type: 'line',
-      smooth: true,
-      showSymbol: false,
-      data: data4.value,
-      color: 'blue',
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return 'CUPANG : ' + params.value.toFixed(0);
-        },
-      },
-    },
-    {
-      name: 'GOOGLE',
-      type: 'line',
-      smooth: true,
-      showSymbol: false,
-      data: data5.value,
-      color: 'black',
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return 'GOOGLE : ' + params.value.toFixed(0);
-        },
-      },
-    },
-    {
-      name: 'FACEBOOK',
-      type: 'line',
-      smooth: true,
-      showSymbol: false,
-      data: data6.value,
-      color: 'orange',
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return 'FACEBOOK : ' + params.value.toFixed(0);
-        },
-      },
-    },
-    {
-      name: 'INSTAGRAM',
-      type: 'line',
-      smooth: true,
-      showSymbol: false,
-      data: data7.value,
-      color: 'purple',
-      endLabel: {
-        show: true,
-        formatter: function (params: any) {
-          return 'INSTAGRAM : ' + params.value.toFixed(0);
-        },
-      },
-    },
-  ],
 };
 </script>
 <style scoped>

@@ -1,7 +1,7 @@
 <template>
-  <article class="dashboard">
+  <article class="dashboard" ref="dashboardRef">
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
-    <draggable @change="log" v-bind="dragOptions">
+    <draggable v-bind="dragOptions">
       <section class="group" id="section-draggable">
         <div class="total-group">
           <div class="d-total">
@@ -84,7 +84,7 @@
               </dl>
               <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
               <ProgressBar :listItem="item" />
-              <button class="more-btn">
+              <button class="more-btn" @click="showModal(item)">
                 <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
               </button>
             </li>
@@ -139,11 +139,12 @@
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
     ></ApiDetailModal>
+    <b-modal id="modal-xl" size="xl" title="Extra Large Modal">Hello Extra Large Modal!</b-modal>
     <MainFooter></MainFooter>
   </article>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, shallowRef, watch } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
@@ -178,7 +179,12 @@ import type {
   ServiceStat,
 } from '@/types/DashBoardType';
 
-import { getLastTrafficChartOption, getLastResponseChartOption } from '@/components/dash-board/chart-options';
+import {
+  getLastTrafficChartOption,
+  getLastResponseChartOption,
+  getRealTimeChartOption,
+} from '@/components/dash-board/chart-options';
+import { addDate } from '@/utils/converter';
 
 const isLoadData = ref(false);
 
@@ -205,7 +211,40 @@ const dashBoardRepo = new DashBoardRepository();
 onMounted(() => {
   requestAllApi();
   initCharts();
-  getRealTimeSectionHeight();
+  window.addEventListener('resize', () => chartResize(), { passive: true });
+
+  for (var i = 1; i < 30; i++) {
+    addData();
+  }
+
+  realTimeChart.value.setOption(
+    getRealTimeChartOption(
+      date.value,
+      data1.value,
+      data2.value,
+      data3.value,
+      data4.value,
+      data5.value,
+      data6.value,
+      data7.value
+    )
+  );
+
+  setInterval(() => {
+    addData();
+    realTimeChart.value.setOption(
+      getRealTimeChartOption(
+        date.value,
+        data1.value,
+        data2.value,
+        data3.value,
+        data4.value,
+        data5.value,
+        data6.value,
+        data7.value
+      )
+    );
+  }, 300);
 });
 
 const requestAllApi = () => {
@@ -278,12 +317,21 @@ const requestAllApi = () => {
   });
 };
 
-const lastTrafficChart = ref({} as echarts.EChartsType);
-const lastResponseChart = ref({} as echarts.EChartsType);
+const lastTrafficChart = shallowRef({} as echarts.EChartsType);
+const lastResponseChart = shallowRef({} as echarts.EChartsType);
+const realTimeChart = shallowRef({} as echarts.EChartsType);
 
 const initCharts = () => {
   lastTrafficChart.value = echarts.init(document.getElementById('lastTraffic') as HTMLDivElement);
   lastResponseChart.value = echarts.init(document.getElementById('lastResponse') as HTMLDivElement);
+  realTimeChart.value = echarts.init(document.getElementById('real-time-traffic') as HTMLDivElement);
+};
+
+const chartResize = () => {
+  observeSize();
+  lastTrafficChart.value.resize();
+  lastResponseChart.value.resize();
+  realTimeChart.value.resize();
 };
 
 watch(lastTrafficList, () => {
@@ -294,8 +342,7 @@ watch(lastResponseList, () => {
 });
 
 const getRealTimeSectionHeight = () => {
-  console.log(window.screen.availHeight);
-  return window.screen.availHeight - 733;
+  return window.screen.availHeight - 663;
 };
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
@@ -318,21 +365,55 @@ const showModal = (msg: any) => {
   }
 };
 
-const log = (event: any) => {
-  console.log(event);
-};
 const dragOptions = ref({
   animation: 100,
   disabled: false,
   ghostClass: 'ghost',
 });
 
-let message1 = [0, 1, 2, 3];
-const list1 = ref(
-  message1.map((name, index) => {
-    return { order: index + 1 };
-  })
-);
+//실시간차트.. 임시용
+
+const base = ref(new Date(2022, 2, 30));
+const date = ref([] as any);
+const data1 = ref([Math.random() * 50]);
+const data2 = ref([Math.random() * 40]);
+const data3 = ref([Math.random() * 30]);
+const data4 = ref([Math.random() * 30]);
+const data5 = ref([Math.random() * 30]);
+const data6 = ref([Math.random() * 20]);
+const data7 = ref([Math.random() * 10]);
+
+const addData = () => {
+  base.value = addDate(base.value, 1);
+  date.value.push([base.value.getFullYear(), base.value.getMonth() + 1, base.value.getDate()].join('/'));
+  data1.value.push(Math.random() * (150 - 1) + data1.value[data1.value.length - 1]);
+  data2.value.push(Math.random() * (100 - 20) + data2.value[data2.value.length - 1]);
+  data3.value.push(Math.random() * (120 - 10) + data3.value[data3.value.length - 1]);
+  data4.value.push(Math.random() * (80 - 30) + data4.value[data4.value.length - 1]);
+  data5.value.push(Math.random() * (20 - 10) + data5.value[data5.value.length - 1]);
+  data6.value.push(Math.random() * (70 - 30) + data6.value[data6.value.length - 1]);
+  data7.value.push(Math.random() * (30 - 20) + data7.value[data7.value.length - 1]);
+};
+
+const calcedWidth = ref(0);
+const calcedheight = ref(0);
+const dashboardRef = ref<HTMLDivElement | null>(null);
+const observeSize = () => {
+  const ro = new ResizeObserver((entries) => {
+    entries.forEach((entry) => {
+      const { width, height } = entry.contentRect;
+      calcedWidth.value = width;
+      calcedheight.value = height;
+    });
+  });
+  ro.observe(dashboardRef.value as HTMLDivElement);
+};
+watch(calcedWidth, () => {
+  console.log('resize!!');
+  lastTrafficChart.value.resize();
+  lastResponseChart.value.resize();
+  realTimeChart.value.resize();
+});
 </script>
 <style>
 .flip-list-move {
