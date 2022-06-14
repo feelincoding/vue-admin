@@ -18,7 +18,7 @@
           <Datepicker multiCalendars locale="ko-KR" v-model="endDate" :minDate="startDt" @focus="notice()" />
         </div>
       </div>
-      <p v-if="(validation && startDt == null) || (validation && endDt == null)" class="red-txt noti">
+      <p v-if="(validation && startDate == null) || (validation && endDate == null)" class="red-txt noti">
         {{ $t('service.empty_check') }}
       </p>
     </div>

@@ -1,41 +1,35 @@
 export const disableScrolling = () => {
-  const x = window.scrollX;
-  const y = window.scrollY;
-  window.onscroll = () => {
-    window.scrollTo(x, y);
-  };
+  document.body.style.overflow = 'hidden';
 };
 
 export const enableScrolling = () => {
-  window.onscroll = () => {
-    return;
-  };
+  document.body.style.overflow = 'auto';
 };
 
-export const calcCompactCardWidth = (dashBoardSize: number) => {
-  let calcData = dashBoardSize * 0.312;
-  if (calcData < 290) {
-    return 290;
-  }
+// export const calcCompactCardWidth = (dashBoardSize: number) => {
+//   let calcData = dashBoardSize * 0.312;
+//   if (calcData < 290) {
+//     return 290;
+//   }
 
-  if (dashBoardSize <= 1080) {
-    calcData = Math.ceil(calcData);
-  } else {
-    calcData = Math.floor(calcData);
-  }
-  return calcData;
-};
+//   if (dashBoardSize <= 1080) {
+//     calcData = Math.ceil(calcData);
+//   } else {
+//     calcData = Math.floor(calcData);
+//   }
+//   return calcData;
+// };
 
-export const calcExpandedCardWidth = (dashBoardSize: number) => {
-  let calcData = dashBoardSize * 0.312;
-  if (calcData < 290) {
-    return 290;
-  }
+// export const calcExpandedCardWidth = (dashBoardSize: number) => {
+//   let calcData = dashBoardSize * 0.312;
+//   if (calcData < 290) {
+//     return 290;
+//   }
 
-  if (dashBoardSize <= 1080) {
-    calcData = Math.ceil(calcData);
-  } else {
-    calcData = Math.floor(calcData);
-  }
-  return calcData;
-};
+//   if (dashBoardSize <= 1080) {
+//     calcData = Math.ceil(calcData);
+//   } else {
+//     calcData = Math.floor(calcData);
+//   }
+//   return calcData;
+// };
