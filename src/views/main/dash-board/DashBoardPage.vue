@@ -107,13 +107,20 @@
         </ul>
       </div>
       <!--- Service Top 5 area --->
-      <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" v-model:isCommError="isServiceTop5CommError" />
     </section>
     <section class="grid-group" id="section-draggable">
       <!--- Last Traffic --->
-      <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
+      <div class="chart-wrap">
+        <h3 class="h3-tit">전일대비/전주대비 Traffic 추이 (00:00 ~ 24:00)</h3>
+        <ErrorWrapper v-show="isLastTrafficCommError" />
+        <div class="chart-group" id="lastTraffic" ref="lastTrafficRef"></div>
+      </div>
       <!--- Last Response --->
-      <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
+      <div class="chart-wrap">
+        <h3 class="h3-tit">전일대비/전주대비 응답시간 추이 (00:00 ~ 24:00)</h3>
+        <ErrorWrapper v-show="isLastResponseCommError" />
+        <div class="chart-group" id="lastResponse" ref="lastResponseRef"></div>
+      </div>
     </section>
 
     <ApiDetailModal
@@ -127,13 +134,10 @@
   </article>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
-import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
-import LastTraffic from '@/components/dash-board/LastTraffic.vue';
-import LastResponse from '@/components/dash-board/LastResponse.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
 
@@ -141,6 +145,7 @@ import DashBoardRepository from '@/repository/dash-board-repository';
 import { convertBaseTime } from '@/utils/converter';
 import ProgressBar from '@/components/commons/ProgressBar.vue';
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
+import * as echarts from 'echarts';
 
 import {
   TOTAL_TRAFFIC_PARAM,
@@ -161,6 +166,9 @@ import type {
   ApiStat,
   ServiceStat,
 } from '@/types/DashBoardType';
+
+import { getLastTrafficChartOption, getLastResponseChartOption } from '@/components/dash-board/chart-options';
+
 const isLoadData = ref(false);
 
 const totalTraffic: Ref<TotalTrafficStat> = ref({} as TotalTrafficStat);
@@ -185,6 +193,7 @@ const dashBoardRepo = new DashBoardRepository();
 
 onMounted(() => {
   requestAllApi();
+  initCharts();
 });
 
 const requestAllApi = () => {
@@ -256,6 +265,21 @@ const requestAllApi = () => {
     isLoadData.value = false;
   });
 };
+
+const lastTrafficChart = ref({} as echarts.EChartsType);
+const lastResponseChart = ref({} as echarts.EChartsType);
+
+const initCharts = () => {
+  lastTrafficChart.value = echarts.init(document.getElementById('lastTraffic') as HTMLDivElement);
+  lastResponseChart.value = echarts.init(document.getElementById('lastResponse') as HTMLDivElement);
+};
+
+watch(lastTrafficList, () => {
+  lastTrafficChart.value.setOption(getLastTrafficChartOption(lastTrafficList.value));
+});
+watch(lastResponseList, () => {
+  lastResponseChart.value.setOption(getLastResponseChartOption(lastResponseList.value));
+});
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
 const isShowModal = ref(false);

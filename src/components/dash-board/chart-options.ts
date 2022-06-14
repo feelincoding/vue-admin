@@ -1,5 +1,5 @@
 import * as echarts from 'echarts';
-import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType } from '@/types/DashBoardType';
+import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType, LastTrafficType } from '@/types/DashBoardType';
 
 export function getDetailApiTrafficOption(detail: TotalTrafficStat[]) {
   const o: echarts.EChartsOption = {
@@ -438,3 +438,224 @@ export function getErrorDetailChartOption(detail: ErrorStatsType[]) {
 
   return errorStatsDetailOption;
 }
+
+export const getLastTrafficChartOption = (lastTrafficList: any) => {
+  const lastTrafficOption: echarts.EChartsOption = {
+    legend: {
+      show: true,
+    },
+
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      trigger: 'axis',
+    },
+    toolbox: {
+      left: 'right',
+      itemSize: 20,
+      top: -5,
+      feature: {
+        dataZoom: {
+          show: false,
+          yAxisIndex: 'none',
+        },
+        restore: {},
+      },
+    },
+    backgroundColor: '#fff',
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: lastTrafficList.map((item: { statBaseTm: string | any[] }) => item.statBaseTm.slice(11, 16)),
+      splitLine: {
+        show: false,
+      },
+      axisLabel: {
+        show: true,
+        interval: 179,
+        showMaxLabel: true,
+      },
+    },
+    axisPointer: {
+      label: {
+        backgroundColor: '#777',
+      },
+    },
+
+    yAxis: {
+      type: 'value',
+      axisTick: {
+        inside: false,
+      },
+      splitLine: {
+        show: true,
+      },
+      axisLabel: {
+        inside: false,
+        formatter: '{value}\n',
+      },
+      z: 10,
+    },
+    grid: {
+      top: 40,
+      left: 5,
+      right: 20,
+      bottom: 20,
+      containLabel: true,
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    series: [
+      {
+        name: '금일',
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 5,
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 건';
+          },
+        },
+        data: lastTrafficList.map((item: { todayCnt: any }) => item.todayCnt),
+        smooth: true,
+      },
+      {
+        name: '전일',
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 5,
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 건';
+          },
+        },
+        data: lastTrafficList.map((item: { ystdayCnt: any }) => item.ystdayCnt),
+        smooth: true,
+      },
+      {
+        name: '전주',
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 5,
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 건';
+          },
+        },
+        data: lastTrafficList.map((item: { lstWkCnt: any }) => {
+          return item.lstWkCnt;
+        }),
+        smooth: true,
+      },
+    ],
+  };
+
+  return lastTrafficOption;
+};
+
+export const getLastResponseChartOption = (lastResponseList: any) => {
+  const option: echarts.EChartsOption = {
+    legend: {
+      show: true,
+    },
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      trigger: 'axis',
+    },
+    toolbox: {
+      left: 'right',
+      itemSize: 20,
+      top: -5,
+      feature: {
+        dataZoom: {
+          show: false,
+          yAxisIndex: 'none',
+        },
+        restore: {},
+      },
+    },
+    backgroundColor: '#fff',
+    xAxis: {
+      type: 'category',
+      boundaryGap: true,
+      data: lastResponseList.map((item: { statBaseTm: string | any[] }) => item.statBaseTm.slice(11, 16)),
+      splitLine: {
+        show: false,
+      },
+      axisLabel: {
+        show: true,
+        interval: 179,
+        showMaxLabel: true,
+      },
+    },
+    yAxis: {
+      type: 'value',
+    },
+    grid: {
+      top: 40,
+      left: 5,
+      right: 20,
+      bottom: 20,
+      containLabel: true,
+    },
+    dataZoom: [
+      {
+        id: 'dataZoomX',
+        type: 'inside',
+        xAxisIndex: [0],
+      },
+    ],
+    series: [
+      {
+        name: '금일',
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 5,
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' ms';
+          },
+        },
+        data: lastResponseList.map((item: { todayAvgResTm: number }) => {
+          return item.todayAvgResTm as number;
+        }),
+        smooth: true,
+      },
+      {
+        name: '전일',
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 5,
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' ms';
+          },
+        },
+        data: lastResponseList.map((item: { ystdayAvgResTm: any }) => {
+          return item.ystdayAvgResTm;
+        }),
+        smooth: true,
+      },
+      {
+        name: '전주',
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 5,
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' ms';
+          },
+        },
+        data: lastResponseList.map((item: { lstWkAvgResTm: any }) => {
+          return item.lstWkAvgResTm;
+        }),
+        smooth: true,
+      },
+    ],
+  };
+
+  return option;
+};
