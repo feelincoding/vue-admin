@@ -19,9 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import { BSpinner } from 'bootstrap-vue-3';
-import { ref, reactive, computed, watch, onMounted } from 'vue';
-import type { Ref } from 'vue';
 
 const props = defineProps<{
   title?: string | null;

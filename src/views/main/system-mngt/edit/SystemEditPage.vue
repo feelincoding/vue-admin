@@ -6,59 +6,61 @@
     :depth="$t('system.modify_depth')"
   >
     <template v-if="!isShowProgress" v-slot:contents>
-      <ul>
-        <InputGroup
-          type="text"
-          v-model:value.sync="systemItem.id"
-          v-model:isValid.sync="idValid"
-          :inputNm="$t('system.id')"
-          :place="$t('system.id_placeholder')"
-          :disabled="true"
-          :required="true"
-        />
+      <div class="form-wrap">
+        <ul>
+          <InputGroup
+            type="text"
+            v-model:value.sync="systemItem.id"
+            v-model:isValid.sync="idValid"
+            :inputNm="$t('system.id')"
+            :place="$t('system.id_placeholder')"
+            :disabled="true"
+            :required="true"
+          />
 
-        <EdptForm
-          :inputNm="$t('system.edpt')"
-          v-model:strArr.sync="systemItem.edpt"
-          v-model:isValid.sync="edptValid"
-          :editPage="true"
-        />
-        <InputGroup
-          type="text"
-          v-model:value.sync="systemItem.tkcgrNm"
-          v-model:isValid.sync="tkcgrNmValid"
-          :inputNm="$t('system.tkcgrNm')"
-          :place="$t('system.tkcgrNm')"
-        />
+          <EdptForm
+            :inputNm="$t('system.edpt')"
+            v-model:strArr.sync="systemItem.edpt"
+            v-model:isValid.sync="edptValid"
+            :editPage="true"
+          />
+          <InputGroup
+            type="text"
+            v-model:value.sync="systemItem.tkcgrNm"
+            v-model:isValid.sync="tkcgrNmValid"
+            :inputNm="$t('system.tkcgrNm')"
+            :place="$t('system.tkcgrNm')"
+          />
 
-        <InputGroup
-          type="text"
-          v-model:value.sync="systemItem.tkcgrPos"
-          :inputNm="$t('system.tkcgrPos')"
-          :place="$t('system.tkcgrPos')"
-          v-model:isValid.sync="tkcgrPosValid"
-        />
-        <InputGroup
-          type="email"
-          v-model:value.sync="systemItem.tkcgrEml"
-          :inputNm="$t('system.tkcgrEml')"
-          :place="$t('system.tkcgrEml')"
-          v-model:isValid.sync="tkcgrEmlValid"
-        />
-        <TextAreaGroup :inputNm="$t('system.desc')" v-model:value.sync="systemItem.desc" />
-      </ul>
-      <ModalLayout size="s" v-if="isShowModal">
-        <template v-slot:modalHeader
-          ><h1 class="h1-tit">{{ $t('system.modal_system_edit') }}</h1>
-        </template>
-        <template v-slot:modalContainer>
-          <p class="text">{{ $t('system.modal_edit_message') }}</p>
-        </template>
-        <template v-slot:modalFooter
-          ><button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button
-          ><button class="lg-btn white-btn" @click="closeModal">{{ $t('common.cancel') }}</button>
-        </template>
-      </ModalLayout>
+          <InputGroup
+            type="text"
+            v-model:value.sync="systemItem.tkcgrPos"
+            :inputNm="$t('system.tkcgrPos')"
+            :place="$t('system.tkcgrPos')"
+            v-model:isValid.sync="tkcgrPosValid"
+          />
+          <InputGroup
+            type="email"
+            v-model:value.sync="systemItem.tkcgrEml"
+            :inputNm="$t('system.tkcgrEml')"
+            :place="$t('system.tkcgrEml')"
+            v-model:isValid.sync="tkcgrEmlValid"
+          />
+          <TextAreaGroup :inputNm="$t('system.desc')" v-model:value.sync="systemItem.desc" />
+        </ul>
+        <ModalLayout size="s" v-if="isShowModal">
+          <template v-slot:modalHeader
+            ><h1 class="h1-tit">{{ $t('system.modal_system_edit') }}</h1>
+          </template>
+          <template v-slot:modalContainer>
+            <p class="text">{{ $t('system.modal_edit_message') }}</p>
+          </template>
+          <template v-slot:modalFooter
+            ><button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button
+            ><button class="lg-btn white-btn" @click="closeModal">{{ $t('common.cancel') }}</button>
+          </template>
+        </ModalLayout>
+      </div>
     </template>
     <template v-slot:buttons v-if="!isShowProgress">
       <div class="btn-wrap">
@@ -94,14 +96,15 @@ import type { Ref } from 'vue';
 
 import { BSpinner } from 'bootstrap-vue-3';
 
-import { useRoute } from 'vue-router';
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
 const toast = useToast();
 const { t } = useI18n({});
 const route = useRoute();
+const router = useRouter();
+
 const modal = inject(modalInjectionKey)!!;
 
 const systemModule = new SystemModule();

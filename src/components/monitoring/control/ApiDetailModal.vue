@@ -1,49 +1,43 @@
 <template>
-  <div>
-    <transition name="modal" appear>
-      <div class="modal-overlay">
-        <div class="pop-wrap lg-pop">
-          <div class="text-center" v-if="isShowProgress">
-            <b-spinner label="Large Spinner"></b-spinner>
-          </div>
-          <div class="pop-header">
-            <h1 class="h1-tit">{{ msgId }}</h1>
-            <button @click="emit('close')">
-              <i><img src="@/assets/close.svg" :alt="$t('common.close')" :title="$t('common.close')" /></i>
-            </button>
-          </div>
-          <div class="pop-container">
-            <div class="col-2 pop-chart" style="width: 100%">
-              <div class="chart-div" id="stacked-area-chart-servicetop5"></div>
-              <div class="chart-div" id="stacked-horizontal-bar-servicetop5"></div>
-            </div>
-            <div class="stati-wrap" v-if="isShow && !isShowProgress">
-              <div class="tit-wrap" v-if="msgType == 'svc' && serviceList.svcStat">
-                <h3 class="h3-tit">{{ $t('control.api_list') }}</h3>
-                <p class="total">{{ $t('common.total') }} : {{ serviceList.svcStat[0].apiStat.length }}</p>
-              </div>
-              <div class="stati-list">
-                <ul v-if="msgType == 'svc' && serviceList.svcStat !== undefined">
-                  <ApiDetailModalApiList
-                    v-for="(item, index) in serviceList.svcStat[0].apiStat"
-                    :key="index"
-                    :kind="'svc'"
-                    :item="item"
-                  />
-                </ul>
-                <ul v-else-if="msgType == 'api' && apiList.apiStat !== undefined">
-                  <ApiDetailModalApiList :kind="'api'" :item="apiList.apiStat[0]" />
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="pop-footer">
-            <button class="lg-btn purple-btn" @click="$emit('close')">{{ $t('common.ok') }}</button>
-          </div>
+  <ModalLayout size="lg">
+    <div class="text-center" v-if="isShowProgress">
+      <b-spinner label="Large Spinner"></b-spinner>
+    </div>
+    <template v-slot:modalHeader>
+      <h1 class="h2-tit">{{ msgId }}</h1>
+      <button @click="emit('close')">
+        <i><img src="@/assets/close.svg" :alt="$t('common.close')" :title="$t('common.close')" /></i>
+      </button>
+    </template>
+    <template v-slot:modalContainer>
+      <div class="col-2 pop-chart" style="width: 100%">
+        <div class="chart-div" id="stacked-area-chart-servicetop5"></div>
+        <div class="chart-div" id="stacked-horizontal-bar-servicetop5"></div>
+      </div>
+      <div class="stati-wrap" v-if="isShow && !isShowProgress">
+        <div class="tit-wrap" v-if="msgType == 'svc' && serviceList.svcStat">
+          <h3 class="h3-tit">{{ $t('control.api_list') }}</h3>
+          <p class="total">{{ $t('common.total') }} : {{ serviceList.svcStat[0].apiStat.length }}</p>
+        </div>
+        <div class="stati-list">
+          <ul v-if="msgType == 'svc' && serviceList.svcStat !== undefined">
+            <ApiDetailModalApiList
+              v-for="(item, index) in serviceList.svcStat[0].apiStat"
+              :key="index"
+              :kind="'svc'"
+              :item="item"
+            />
+          </ul>
+          <ul v-else-if="msgType == 'api' && apiList.apiStat !== undefined">
+            <ApiDetailModalApiList :kind="'api'" :item="apiList.apiStat[0]" />
+          </ul>
         </div>
       </div>
-    </transition>
-  </div>
+    </template>
+    <template v-slot:modalFooter>
+      <button class="lg-btn purple-btn" @click="$emit('close')">{{ $t('common.ok') }}</button>
+    </template>
+  </ModalLayout>
 </template>
 <script setup lang="ts">
 import { inject, onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
@@ -61,6 +55,7 @@ import type {
 
 import { disableScrolling, enableScrolling } from '@/utils/screen';
 
+import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import ApiDetailModalApiList from '@/components/monitoring/control/ApiDetailModalApiList.vue';
 
 import MonitoringControlRepository from '@/repository/monitoring-control-repository';

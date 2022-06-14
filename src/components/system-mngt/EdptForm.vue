@@ -22,8 +22,10 @@
                 placeholder="domain"
                 v-model="edpt.domain"
                 @input="validCheckDomain(idx)"
-                @focus="emptyChkFunc(idx)"
+                @focusin="focusInDomain(idx)"
+                @focusout="focusOutDomain(idx)"
               />
+              <!-- @focus="emptyChkFunc(idx)"  -->
               <span>:</span>
               <input
                 type="text"
@@ -43,11 +45,17 @@
               </button>
               <button class="xs-btn" @click="deleteEdpt(idx)" v-else><i class="minus"></i></button>
             </div>
-            <p v-if="notiMessageDomain[idx].isValid === false" class="red-txt noti">
+            <p class="gray-txt">- 도메인 양식 준수 및 port번호 5자리</p>
+            <p v-if="notiMessageDomain[idx].isValid === false" class="noti">
               {{ notiMessageDomain[idx].message }}
             </p>
             <p v-if="notiMessagePort[idx].isValid === false" class="red-txt noti">{{ notiMessagePort[idx].message }}</p>
             <p v-if="notiMessageDupl[idx].isValid === false" class="red-txt noti">{{ notiMessageDupl[idx].message }}</p>
+            <!-- <p v-if="notiMessageDomain[idx].isValid === false" class="red-txt noti">
+              {{ notiMessageDomain[idx].message }}
+            </p>
+            <p v-if="notiMessagePort[idx].isValid === false" class="red-txt noti">{{ notiMessagePort[idx].message }}</p>
+            <p v-if="notiMessageDupl[idx].isValid === false" class="red-txt noti">{{ notiMessageDupl[idx].message }}</p> -->
           </li>
         </ul>
       </div>
@@ -72,6 +80,35 @@ import { useRoute } from 'vue-router';
 import router from '@/router';
 
 import { useI18n } from 'vue-i18n';
+
+const focusInDomain = (idx: number) => {
+  console.log('focusInDomain', idx);
+  let domainValue = edpts.value[idx].domain;
+  if (domainValue === '') {
+    notiMessageDomain.value[idx].isValid = false;
+    notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain');
+  }
+  let notiDomCheck = notiMessageDomain.value[idx];
+  console.log('domainValue', domainValue);
+  console.log('notiDomCheck', notiDomCheck);
+  // notiMessageDomain.value[idx].isValid = true;
+};
+const focusOutDomain = (idx: number) => {
+  console.log('focusOutDomain', idx);
+};
+
+const focusInPort = (idx: number) => {
+  console.log('focusInPort', idx);
+  let portValue = edpts.value[idx].port;
+  // 입력할려고 클릭했을 때 빈 값이면 필수 값이라는 메시지를 띄워준다.
+  if (portValue === '') {
+    notiMessagePort.value[idx].isValid = false;
+    notiMessagePort.value[idx].message = t('system.empty_check_edpt_port');
+  }
+};
+const focusOutPort = (idx: number) => {
+  console.log('focusInPort', idx);
+};
 const { t } = useI18n({});
 
 const props = defineProps({
@@ -85,22 +122,16 @@ const emit = defineEmits<{
   (e: 'update:strArr', value: string[]): void;
 }>();
 
-// const valiCheckInit: Ref<ValidationCheckType> = ref({
-//   isValid: null,
-//   message: '',
-// });
 const edpts: Ref<SystemEdptType[]> = ref([]);
 const notiMessageDomain: Ref<ValidationCheckType[]> = ref([]);
 const notiMessagePort: Ref<ValidationCheckType[]> = ref([]);
 const notiMessageDupl: Ref<ValidationCheckType[]> = ref([]);
-// const notiMessageDomain: Ref<[boolean | null, string][]> = ref([]);
-// const notiMessagePort: Ref<[boolean | null, string][]> = ref([]);
-// const notiMessageDupl: Ref<[boolean | null, string][]> = ref([]);
+
 const isDomainEmpty = ref(true);
 
 onMounted(() => {
+  console.log('@@@:', props);
   props.strArr.forEach((str) => {
-    // console.log('onMounted str: ', str);
     edpts.value.push(stringToEdpt(str as string));
     notiMessageDomain.value.push({
       isValid: null,
@@ -114,11 +145,7 @@ onMounted(() => {
       isValid: null,
       message: '',
     });
-    // notiMessageDomain.value.push(valiCheckInit.value);
-    // notiMessagePort.value.push(valiCheckInit.value);
-    // notiMessageDupl.value.push(valiCheckInit.value);
   });
-  // console.log('onMounted edpts: ', edpts.value, props.editPage);
   if (props.editPage) {
     edpts.value.forEach((edpt, idx) => {
       validCheckDomain(idx);
@@ -135,8 +162,6 @@ watch(edpts.value, () => {
     if (!duplCheck(edptToString(edpts.value[idx]))) {
       notiMessageDupl.value[idx].isValid = true;
       notiMessageDupl.value[idx].message = '';
-      // Vue.set(this.notiMessageDupl[idx], 0, true);
-      // Vue.set(this.notiMessageDupl[idx], 1, '');
     } else {
       idxArr.push(idx);
     }
@@ -148,16 +173,11 @@ watch(edpts.value, () => {
     if (edpts.value[0].domain !== '' && edpts.value[0].port !== '') {
       notiMessageDupl.value[idxArr[idxArr.length - 1]].isValid = false;
       notiMessageDupl.value[idxArr[idxArr.length - 1]].message = t('system.dupl_check_edpt_nm') as string;
-      // Vue.set(this.notiMessageDupl[idxArr[idxArr.length - 1]], 0, false);
-      // Vue.set(this.notiMessageDupl[idxArr[idxArr.length - 1]], 1, this.$t('system.dupl_check_edpt_nm') as string);
     }
   }
-  // 모든 값이 유효성 check를 통과했다면, isValid를 true로 변경한다.
-  // * isValid? => SystemRegister/SystemEdit 페이지에서 태그들의 유효성 검사를 위해 사용한다.
+
   let valid: boolean | null | string = true;
-  notiMessageDomain.value.forEach((domain) => {
-    valid = valid && domain.isValid;
-  });
+  notiMessageDomain.value.forEach((domain) => {});
   notiMessagePort.value.forEach((port) => {
     valid = valid && port.isValid;
   });
@@ -166,7 +186,6 @@ watch(edpts.value, () => {
 });
 
 const addEdpt = () => {
-  // console.log('click addEdpt!');
   if (edpts.value.length > 9) {
     return;
   }
@@ -188,9 +207,6 @@ const addEdpt = () => {
     isValid: null,
     message: '',
   });
-  // notiMessagePort.value.push(valiCheckInit.value);
-  // notiMessageDomain.value.push(valiCheckInit.value);
-  // notiMessageDupl.value.push(valiCheckInit.value);
   console.log(notiMessageDomain.value);
 };
 
@@ -214,56 +230,43 @@ const duplCheck = (val: string) => {
   }
   return false;
 };
+
+// 빈칸 체크: 도메인. 포트 각각의 값이 빈칸이면 false, 경고문구를 출력한다.
 const emptyChkFunc = (idx: number) => {
   console.log('emptyChkFunc idx: ', idx);
   if (!checkEmpty(edpts.value[idx].domain)) {
     notiMessageDomain.value[idx].isValid = false;
     notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain') as string;
-    // Vue.set(this.notiMessageDomain[idx], 0, false);
-    // Vue.set(this.notiMessageDomain[idx], 1, this.$t('system.empty_check_edpt_domain') as string);
   }
   if (!checkEmpty(edpts.value[idx].port)) {
     notiMessageDomain.value[idx].isValid = false;
     notiMessageDomain.value[idx].message = t('system.empty_check_edpt_port') as string;
-    // Vue.set(this.notiMessagePort[idx], 0, false);
-    // Vue.set(this.notiMessagePort[idx], 1, this.$t('system.empty_check_edpt_port') as string);
   }
 };
 const validCheckProtocol = (idx: number) => {
-  // console.log('selectChanged!!!');
   if (!duplCheck(edptToString(edpts.value[idx]))) {
     notiMessageDomain.value[idx].isValid = true;
     notiMessageDomain.value[idx].message = '';
-    // Vue.set(this.notiMessageDomain[idx], 0, true);
-    // Vue.set(this.notiMessageDomain[idx], 1, '');
   } else {
     notiMessageDomain.value[idx].isValid = false;
     notiMessageDomain.value[idx].message = t('system.dupl_check_edpt_nm') as string;
-    // Vue.set(this.notiMessageDomain[idx], 0, false);
-    // Vue.set(this.notiMessageDomain[idx], 1, this.$t('system.dupl_check_edpt_nm') as string);
   }
 };
 
 const validCheckDomain = (idx: number) => {
+  console.log('validCheckDomain idx: ', idx);
   let domain = edpts.value[idx].domain;
-  // console.log('validCheckDomain: ', domain);
   if (checkLength(domain, 1, 30) && checkDomain(domain)) {
     // 중복 체크 수행
     // edpt 구조로 저장되어있던 값들을 String 값으로 변환한다.
     notiMessageDomain.value[idx].isValid = true;
     notiMessageDomain.value[idx].message = '';
-    // Vue.set(this.notiMessageDomain[idx], 0, true);
-    // Vue.set(this.notiMessageDomain[idx], 1, '');
   } else if (domain == '') {
     notiMessageDomain.value[idx].isValid = false;
     notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain') as string;
-    // Vue.set(this.notiMessageDomain[idx], 0, false);
-    // Vue.set(this.notiMessageDomain[idx], 1, this.$t('system.empty_check_edpt_domain') as string);
   } else {
     notiMessageDomain.value[idx].isValid = false;
     notiMessageDomain.value[idx].message = t('system.valid_check_edpt_domain') as string;
-    // Vue.set(this.notiMessageDomain[idx], 0, false);
-    // Vue.set(this.notiMessageDomain[idx], 1, this.$t('system.valid_check_edpt_domain') as string);
   }
 };
 
@@ -274,21 +277,12 @@ const validCheckPort = (idx: number) => {
     // edpt 구조로 저장되어있던 값들을 String 값으로 변환한다.
     notiMessagePort.value[idx].isValid = true;
     notiMessagePort.value[idx].message = '';
-
-    // Vue.set(this.notiMessagePort[idx], 0, true);
-    // Vue.set(this.notiMessagePort[idx], 1, '');
   } else if (port == '') {
     notiMessagePort.value[idx].isValid = false;
     notiMessagePort.value[idx].message = t('system.empty_check_edpt_port') as string;
-    // Vue.set(this.notiMessagePort[idx], 0, false);
-    // Vue.set(this.notiMessagePort[idx], 1, this.$t('system.empty_check_edpt_port') as string);
   } else {
     notiMessagePort.value[idx].isValid = false;
     notiMessagePort.value[idx].message = t('system.valid_check_edpt_port') as string;
-    // Vue.set(this.notiMessagePort[idx], 0, false);
-    // Vue.set(this.notiMessagePort[idx], 1, this.$t('system.valid_check_edpt_port') as string);
   }
 };
 </script>
-
-<style scoped></style>
