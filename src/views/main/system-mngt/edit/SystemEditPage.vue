@@ -9,8 +9,8 @@
       <ul>
         <InputGroup
           type="text"
-          :value.sync="systemItem.id"
-          :isValid.sync="idValid"
+          v-model:value.sync="systemItem.id"
+          v-model:isValid.sync="idValid"
           :inputNm="$t('system.id')"
           :place="$t('system.id_placeholder')"
           :disabled="true"
@@ -19,33 +19,33 @@
 
         <EdptForm
           :inputNm="$t('system.edpt')"
-          :strArr.sync="systemItem.edpt"
-          :isValid.sync="edptValid"
+          v-model:strArr.sync="systemItem.edpt"
+          v-model:isValid.sync="edptValid"
           :editPage="true"
         />
         <InputGroup
           type="text"
-          :value.sync="systemItem.tkcgrNm"
-          :isValid.sync="tkcgrNmValid"
+          v-model:value.sync="systemItem.tkcgrNm"
+          v-model:isValid.sync="tkcgrNmValid"
           :inputNm="$t('system.tkcgrNm')"
           :place="$t('system.tkcgrNm')"
         />
 
         <InputGroup
           type="text"
-          :value.sync="systemItem.tkcgrPos"
+          v-model:value.sync="systemItem.tkcgrPos"
           :inputNm="$t('system.tkcgrPos')"
           :place="$t('system.tkcgrPos')"
-          :isValid.sync="tkcgrPosValid"
+          v-model:isValid.sync="tkcgrPosValid"
         />
         <InputGroup
           type="email"
-          :value.sync="systemItem.tkcgrEml"
+          v-model:value.sync="systemItem.tkcgrEml"
           :inputNm="$t('system.tkcgrEml')"
           :place="$t('system.tkcgrEml')"
-          :isValid.sync="tkcgrEmlValid"
+          v-model:isValid.sync="tkcgrEmlValid"
         />
-        <TextAreaGroup :inputNm="$t('system.desc')" :value.sync="systemItem.desc" />
+        <TextAreaGroup :inputNm="$t('system.desc')" v-model:value.sync="systemItem.desc" />
       </ul>
       <ModalLayout size="s" v-if="isShowModal">
         <template v-slot:modalHeader
@@ -62,6 +62,10 @@
     </template>
     <template v-slot:buttons v-if="!isShowProgress">
       <div class="btn-wrap">
+        <button class="lg-btn purple-btn" @click="test" :disabled="isBtnDisabled">
+          등록테스트
+          <b-spinner variant="light" label="Spinning" v-if="isBtnDisabled" small></b-spinner>
+        </button>
         <button class="lg-btn purple-btn" @click="showModal" :disabled="isBtnDisabled">
           {{ $t('common.modify') }}
           <b-spinner variant="light" label="Spinning" v-if="isBtnDisabled" small></b-spinner>
@@ -117,6 +121,9 @@ const isBtnDisabled = ref(false);
 // get system() {
 //   return this.systemModule.system;
 // }
+const test = () => {
+  console.log('test value: ', systemItem.value);
+};
 
 onMounted(() => {
   isShowProgress.value = true;
@@ -143,6 +150,12 @@ const showModal = () => {
   const val =
     idValid.value && tkcgrNmValid.value && tkcgrPosValid.value && tkcgrEmlValid.value && edptValid.value ? true : false;
 
+  console.log('idValid: ', idValid.value);
+  console.log('tkcgrNmValid: ', tkcgrNmValid.value);
+  console.log('tkcgrPosValid: ', tkcgrPosValid.value);
+  console.log('tkcgrEmlValid: ', tkcgrEmlValid.value);
+  console.log('edptValid: ', edptValid.value);
+  console.log('val: ', val);
   if (!val) {
     modal().show(t('system.empty_check_message'));
     return;
