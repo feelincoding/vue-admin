@@ -56,7 +56,7 @@
     </section>
     <section class="group" id="section-draggable">
       <!--- 실시간 Traffic area --->
-      <RealTimeTraffic />
+      <RealTimeTraffic style="height: 300px" />
     </section>
 
     <section class="grid-group" id="section-draggable">
@@ -131,6 +131,7 @@
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
     ></ApiDetailModal>
+    <MainFooter></MainFooter>
   </article>
 </template>
 <script setup lang="ts">
@@ -139,6 +140,8 @@ import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
+import MainFooter from '@/components/layout/footer/MainFooter.vue';
+
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
@@ -194,6 +197,7 @@ const dashBoardRepo = new DashBoardRepository();
 onMounted(() => {
   requestAllApi();
   initCharts();
+  getRealTimeSectionHeight();
 });
 
 const requestAllApi = () => {
@@ -280,6 +284,10 @@ watch(lastTrafficList, () => {
 watch(lastResponseList, () => {
   lastResponseChart.value.setOption(getLastResponseChartOption(lastResponseList.value));
 });
+
+const getRealTimeSectionHeight = () => {
+  return window.screen.availHeight - 763;
+};
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
 const isShowModal = ref(false);
