@@ -5,17 +5,18 @@
     :depth="$t('system.add_depth')"
   >
     <template v-slot:contents>
-      <ul>
-        <TextDebounceForm
-          type="text"
-          :inputNm="$t('system.id')"
-          :check="isDuplicatedId"
-          :placeholder="$t('system.id_placeholder')"
-          v-model:value="systemItem.id"
-          @input="duplicateCheckId()"
-          v-model:isValid="idValid"
-        />
-        <!-- <TextDebounceForm
+      <div class="form-wrap">
+        <ul>
+          <TextDebounceForm
+            type="text"
+            :inputNm="$t('system.id')"
+            :check="isDuplicatedId"
+            :placeholder="$t('system.id_placeholder')"
+            v-model:value="systemItem.id"
+            @input="duplicateCheckId()"
+            v-model:isValid="idValid"
+          />
+          <!-- <TextDebounceForm
           type="text"
           :check="isDuplicatedId"
           v-model="systemItem.id"
@@ -25,48 +26,49 @@
           :required="true"
           @input="duplicateCheckId"
         /> -->
-        <EdptForm :inputNm="$t('system.edpt')" :strArr.sync="systemItem.edpt" :isValid.sync="edptValid" />
+          <EdptForm :inputNm="$t('system.edpt')" :strArr.sync="systemItem.edpt" :isValid.sync="edptValid" />
 
-        <InputGroup
-          type="text"
-          v-model:value.sync="systemItem.tkcgrNm"
-          v-model:isValid.sync="tkcgrNmValid"
-          :inputNm="$t('system.tkcgrNm')"
-          :place="$t('system.tkcgrNm_placeholder')"
-        />
-        <InputGroup
-          type="text"
-          v-model:value.sync="systemItem.tkcgrPos"
-          :inputNm="$t('system.tkcgrPos')"
-          :place="$t('system.tkcgrPos_placeholder')"
-          v-model:isValid.sync="tkcgrPosValid"
-        />
-        <InputGroup
-          type="email"
-          v-model:value.sync="systemItem.tkcgrEml"
-          :inputNm="$t('system.tkcgrEml')"
-          :place="'example@kt.com'"
-          v-model:isValid.sync="tkcgrEmlValid"
-        />
+          <InputGroup
+            type="text"
+            v-model:value.sync="systemItem.tkcgrNm"
+            v-model:isValid.sync="tkcgrNmValid"
+            :inputNm="$t('system.tkcgrNm')"
+            :place="$t('system.tkcgrNm_placeholder')"
+          />
+          <InputGroup
+            type="text"
+            v-model:value.sync="systemItem.tkcgrPos"
+            :inputNm="$t('system.tkcgrPos')"
+            :place="$t('system.tkcgrPos_placeholder')"
+            v-model:isValid.sync="tkcgrPosValid"
+          />
+          <InputGroup
+            type="email"
+            v-model:value.sync="systemItem.tkcgrEml"
+            :inputNm="$t('system.tkcgrEml')"
+            :place="$t('system.tkcgrEml_placeholder', { account: 'example', domain: 'kt.com' })"
+            v-model:isValid.sync="tkcgrEmlValid"
+          />
           <!-- :place="$t('system.tkcgrEml_placeholder')" -->
-        <TextAreaGroup
-          :inputNm="$t('system.desc')"
-          v-model:value.sync="systemItem.desc"
-          v-model:isValid.sync="descValid"
-        />
-      </ul>
-      <ModalLayout size="s" v-if="isShowModal">
-        <template v-slot:modalHeader
-          ><h1 class="h1-tit">{{ $t('system.modal_system_register') }}</h1>
-        </template>
-        <template v-slot:modalContainer>
-          <p class="text">{{ $t('system.modal_register_message') }}</p>
-        </template>
-        <template v-slot:modalFooter
-          ><button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button
-          ><button class="lg-btn white-btn" @click="closeModal">{{ $t('common.cancel') }}</button>
-        </template>
-      </ModalLayout>
+          <TextAreaGroup
+            :inputNm="$t('system.desc')"
+            v-model:value.sync="systemItem.desc"
+            v-model:isValid.sync="descValid"
+          />
+        </ul>
+        <ModalLayout size="s" v-if="isShowModal">
+          <template v-slot:modalHeader
+            ><h1 class="h1-tit">{{ $t('system.modal_system_register') }}</h1>
+          </template>
+          <template v-slot:modalContainer>
+            <p class="text">{{ $t('system.modal_register_message') }}</p>
+          </template>
+          <template v-slot:modalFooter
+            ><button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button
+            ><button class="lg-btn white-btn" @click="closeModal">{{ $t('common.cancel') }}</button>
+          </template>
+        </ModalLayout>
+      </div>
     </template>
     <template v-slot:buttons v-if="!isShowProgress">
       <div class="btn-wrap">
@@ -97,14 +99,14 @@ import type { Ref } from 'vue';
 
 import { BSpinner } from 'bootstrap-vue-3';
 
-import { useRoute } from 'vue-router';
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
 const toast = useToast();
 const { t } = useI18n({});
 const route = useRoute();
+const router = useRouter();
 const modal = inject(modalInjectionKey)!!;
 
 const idValid = ref(false);
