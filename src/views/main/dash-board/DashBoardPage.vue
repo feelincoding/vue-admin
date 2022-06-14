@@ -3,74 +3,90 @@
     <!--- refresh play/pause area --->
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
 
-    <draggable
-      @change="log"
-      v-bind="dragOptions"
-      @start="isDragging = true"
-      @end="isDragging = false"
-      transitionMode=" true"
-    >
-      <transition-group type="transition" name="flip-list">
-        <section class="group col-3" style="height: 219px" :key="list1[0].order" id="section-draggable">
-          {{ list1[0].order }}
-          <!--- Total API Traffic (24Hour) area --->
-          <TotalApiTraffic
-            :totalApiTraffic="totalTraffic"
-            :isLoadData="isLoadData"
-            :modal="trafficModal"
-            :isDraged="isDraged"
-            :isCommError="isTotalAPITrafficCommError"
-          />
-          <!--- Error stats (24Hour) area --->
-          <ErrorStats
-            :errorStats="errorStats"
-            :isLoadData="isLoadData"
-            :modal="errorModal"
-            :isDraged.sync="isDraged"
-            :isCommError.sync="isErrorStatCommError"
-          />
-          <!--- API 평균 응답시간 / TPS area !! --->
-          <ApiResponseAvg
-            v-model:apiResponseStatus="apiResponseStatus"
-            :modal.sync="avgModal"
-            :isDraged.sync="isDraged"
-            :isLoadData="isLoadData"
-            :isCommError.sync="isApiResponseStusCommError"
-          />
-        </section>
-        <section class="group" :key="list1[1].order" id="section-draggable">
-          {{ list1[1].order }}
-          <!--- 실시간 Traffic area --->
-          <RealTimeTraffic
-            :isDraged.sync="isDraged"
-            :setParamData.sync="clickedParamData"
-            :modal.sync="realTimeModal"
-          />
-        </section>
-        <section class="group col-2" :key="list1[2].order" id="section-draggable">
-          {{ list1[2].order }}
-          <!--- API Top 5 area --->
-          <ApiTop5
-            v-model:realTimeStat="realTimeApiStat"
-            :isCommError.sync="isServiceTop5CommError"
-            @clickModalBtn="
-              (msg) => {
-                showModal(msg);
-              }
-            "
-          />
-          <!--- Service Top 5 area --->
-          <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
-        </section>
-        <section class="group col-2 bg-pastel" :key="list1[3].order" id="section-draggable">
-          {{ list1[3].order }}
-          <!--- Last Traffic --->
-          <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
-          <!--- Last Response --->
-          <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
-        </section>
-      </transition-group>
-    </draggable>
+    {{ list1[0].order }}
+    <section class="group" :key="list1[0].order" id="section-draggable">
+      <div class="total-group">
+        <div class="d-total">
+          <div class="ico-wrap">
+            <i><img src="@/assets/d_total_ico.svg" alt="total" /></i>
+            <p>Total</p>
+          </div>
+          <span class="num">{{ totalTraffic.totCnt }}</span>
+        </div>
+        <div class="d-total">
+          <div class="ico-wrap">
+            <i><img src="@/assets/d_success_ico.svg" alt="성공" /></i>
+            <p>성공</p>
+          </div>
+          <span class="num">{{ totalTraffic.sucesCnt }}</span>
+        </div>
+        <div class="d-fail d-total">
+          <div class="ico-wrap">
+            <i><img src="@/assets/d_fail_ico.svg" alt="실패" /></i>
+            <p>실패</p>
+          </div>
+          <span class="num flex">{{ totalTraffic.failCnt }}</span>
+          <div class="fail-group">
+            <div class="fail-list">
+              <span class="label critical"></span><span>{{ errorStats.crCnt }}</span>
+            </div>
+            <div class="fail-list">
+              <span class="label major"></span><span>{{ errorStats.maCnt }}</span>
+            </div>
+            <div class="fail-list">
+              <span class="label minor"></span><span>{{ errorStats.miCnt }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="avg-group">
+        <div class="tps-chart">
+          <div class="ico-wrap">
+            <i><img src="@/assets/req_ico.svg" alt="평균 응답시간" /></i>
+            <p>AVG</p>
+          </div>
+          <span class="num">{{ apiResponseStatus.avgResTm }}<em>ms</em></span>
+        </div>
+        <div class="tps-chart tps-w">
+          <div class="ico-wrap">
+            <i><img src="@/assets/tps_ico.svg" alt="TPS" /></i>
+            <p>TPS</p>
+          </div>
+          <span class="num">{{ apiResponseStatus.tps }}</span>
+        </div>
+      </div>
+
+      <!--- Total API Traffic (24Hour) area --->
+    </section>
+    <section class="group" :key="list1[1].order" id="section-draggable">
+      {{ list1[1].order }}
+      <!--- 실시간 Traffic area --->
+      <RealTimeTraffic :isDraged.sync="isDraged" :setParamData.sync="clickedParamData" :modal.sync="realTimeModal" />
+    </section>
+
+    <section class="grid-group" :key="list1[2].order" id="section-draggable">
+      {{ list1[2].order }}
+      <!--- API Top 5 area --->
+      <ApiTop5
+        v-model:realTimeStat="realTimeApiStat"
+        v-model:isCommError="isServiceTop5CommError"
+        @clickModalBtn="
+          (msg) => {
+            showModal(msg);
+          }
+        "
+      />
+      <!--- Service Top 5 area --->
+      <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" v-model:isCommError="isServiceTop5CommError" />
+    </section>
+    <section class="grid-group" :key="list1[3].order" id="section-draggable">
+      {{ list1[3].order }}
+      <!--- Last Traffic --->
+      <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
+      <!--- Last Response --->
+      <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
+    </section>
 
     <ApiDetailModal
       v-if="isShowModal"

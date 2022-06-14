@@ -1,7 +1,7 @@
 <template>
   <div class="chart-wrap">
     <h3 class="h3-tit">{{ $t('dash-board.api_top5_title') }}</h3>
-    <ul class="list-wrap" style="margin-bottom: 0">
+    <ul class="list-wrap">
       <ErrorWrapper v-show="syncedIsCommError" />
       <li v-for="(item, index) in top5List" :key="index">
         <p class="id-txt">{{ item.sysId }}.{{ item.apiId }}</p>
