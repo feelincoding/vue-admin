@@ -4,13 +4,13 @@
       <!------- handler pop -------->
       <div :class="{ large: l, 'mid-pop': m, 'sm-pop': s, 'lg-pop': lg, 'pop-wrap': true }">
         <div class="pop-header">
-          <slot name="modalHeader" />
+          <slot name="modalHeader"></slot>
         </div>
         <div class="pop-container">
-          <slot name="modalContainer" />
+          <slot name="modalContainer"></slot>
         </div>
         <div class="pop-footer">
-          <slot name="modalFooter" />
+          <slot name="modalFooter"></slot>
         </div>
       </div>
     </div>
@@ -23,18 +23,18 @@
       <!------- handler pop -------->
       <div :class="{ large: l, 'mid-pop': m, 'sm-pop': s, 'lg-pop': lg, 'pop-wrap': true }">
         <div class="pop-header">
-          <slot name="modalHeader" />
+          <slot name="modalHeader"></slot>
           <h1 class="h1-tit">{{ errorTitle }}</h1>
           <button @click="$emit('close')">
             <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
           </button>
         </div>
         <div class="pop-container">
-          <slot name="modalContainer" />
+          <slot name="modalContainer"></slot>
           <p class="text">{{ errorDesc }}</p>
         </div>
         <div class="pop-footer">
-          <slot name="modalFooter" />
+          <slot name="modalFooter"></slot>
           <button class="lg-btn purple-btn" @click="$emit('close')">ok</button>
         </div>
       </div>
