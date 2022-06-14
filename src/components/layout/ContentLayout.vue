@@ -9,13 +9,12 @@
       </div>
     </div>
     <section class="contents-wrap box">
-      <div class="form-wrap">
-        <slot name="contents"></slot>
+      <div class="box-tit" v-if="$route.path.includes('register') || $route.path.includes('edit')">
+        <em class="script">필수 입력사항 입니다.</em>
       </div>
+      <slot name="contents"></slot>
     </section>
-    <div class="btn-wrap">
-      <slot name="buttons"></slot>
-    </div>
+    <slot name="buttons"></slot>
   </div>
 </template>
 

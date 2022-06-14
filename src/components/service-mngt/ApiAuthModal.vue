@@ -4,7 +4,7 @@
       <!------- handler pop -------->
       <div class="pop-wrap lg-pop">
         <div class="pop-header">
-          <h1 class="h1-tit">{{ $t('service.api_mngt') }}</h1>
+          <h2 class="h2-tit">{{ $t('service.api_mngt') }}</h2>
           <button @click="hideApiAuth">
             <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
           </button>
@@ -22,7 +22,7 @@
               </div>
               <ul class="api-list">
                 <li v-for="(system, sysIndex) in apiList" :key="sysIndex">
-                  <a class="stick">{{ system.sysId }}</a>
+                  <p class="stick">{{ system.sysId }}</p>
                   <div class="api-group">
                     <div class="check-all">
                       <div class="check-box">

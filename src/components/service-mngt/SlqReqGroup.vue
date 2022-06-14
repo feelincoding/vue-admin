@@ -1,6 +1,6 @@
 <template>
   <li>
-    <label class="label point">{{ inputNm }}</label>
+    <label class="label point">{{ inputNm }} :</label>
     <div class="form-cont">
       <div class="sla-toggle">
         <button
@@ -184,63 +184,83 @@ watch(showMon, (val) => {
   emit('update:onMon', val);
 });
 
-const sec: Ref<number | null> = computed({
+const sec: Ref<number | string | null> = computed({
   get: () => {
     if (props.secVal != null) {
       showSec.value = true;
     }
     return props.secVal as number | null;
   },
-  set: (val: number | null) => {
-    emit('update:secVal', val);
+  set: (val: number | string | null) => {
+    if (val == '') {
+      emit('update:secVal', null);
+    } else if (typeof val !== 'string') {
+      emit('update:secVal', val);
+    }
   },
 });
 
-const min: Ref<number | null> = computed({
+const min: Ref<number | string | null> = computed({
   get: () => {
     if (props.minVal != null) {
       showMin.value = true;
     }
     return props.minVal as number | null;
   },
-  set: (val: number | null) => {
-    emit('update:minVal', val);
+  set: (val: number | string | null) => {
+    if (val == '') {
+      emit('update:minVal', null);
+    } else if (typeof val !== 'string') {
+      emit('update:minVal', val);
+    }
   },
 });
 
-const hour: Ref<number | null> = computed({
+const hour: Ref<number | string | null> = computed({
   get: () => {
     if (props.hourVal != null) {
       showHr.value = true;
     }
     return props.hourVal as number | null;
   },
-  set: (val: number | null) => {
-    emit('update:hourVal', val);
+  set: (val: number | string | null) => {
+    if (val == '') {
+      emit('update:hourVal', null);
+    } else if (typeof val !== 'string') {
+      emit('update:hourVal', val);
+    }
   },
 });
 
-const day: Ref<number | null> = computed({
+const day: Ref<number | string | null> = computed({
   get: () => {
     if (props.dayVal != null) {
       showDay.value = true;
     }
     return props.dayVal as number | null;
   },
-  set: (val: number | null) => {
-    emit('update:dayVal', val);
+  set: (val: number | string | null) => {
+    if (val == '') {
+      emit('update:dayVal', null);
+    } else if (typeof val !== 'string') {
+      emit('update:dayVal', val);
+    }
   },
 });
 
-const month: Ref<number | null> = computed({
+const month: Ref<number | string | null> = computed({
   get: () => {
     if (props.monthVal != null) {
       showMon.value = true;
     }
     return props.monthVal as number | null;
   },
-  set: (val: number | null) => {
-    emit('update:monthVal', val);
+  set: (val: number | string | null) => {
+    if (val == '') {
+      emit('update:monthVal', null);
+    } else if (typeof val !== 'string') {
+      emit('update:monthVal', val);
+    }
   },
 });
 

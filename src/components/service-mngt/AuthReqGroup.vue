@@ -1,6 +1,6 @@
 <template>
   <li>
-    <label class="label point">{{ inputNm }}</label>
+    <label class="label point">{{ inputNm }} :</label>
     <div class="form-cont">
       <div class="form-group">
         <select class="select-box lg" v-model="auth">

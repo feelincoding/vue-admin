@@ -7,97 +7,104 @@
       :isShowProgress="isShowProgress"
     >
       <template v-if="!isShowProgress" v-slot:contents>
-        <ul>
-          <TextDebounceForm
-            type="text"
-            :inputNm="$t('service.id')"
-            :check="isDuplicatedId"
-            :placeholder="$t('service.idEx')"
-            v-model:value="formData.id"
-            @input="duplicateCheckId()"
-            v-model:isValid="idValid"
-          />
-          <DateGroup
-            :inputNm="$t('service.date')"
-            placeholderStart="YYYY-MM-DD"
-            v-model:startDt="formData.svcStDt"
-            v-model:endDt="formData.svcEndDt"
-            v-model:isValid="dateValid"
-          />
-          <AuthReqGroup
-            @basicAuthClicked="basicAuthClicked"
-            :inputNm="$t('service.authentication_method')"
-            :basicId="formData.athn.basic.id"
-            :basicPw="formData.athn.basic.pw"
-            v-model:athn="formData.athnType"
-            v-model:alg="jwtAlgList"
-            v-model:pickedAlg="formData.athn.jwt.alg"
-            v-model:issuer="formData.athn.jwt.iss"
-            v-model:subject="formData.athn.jwt.aud"
-            v-model:publicKey="formData.athn.jwt.pubKey"
-            v-model:isValid="authValid"
-            :progress="isBasicAuthProgress"
-          />
-          <ApiAuthReqGroup inputNm="권한설정" @showApiAuth="showApiAuth" :setCheck="apiAuthValid" />
-          <SlaReqGroup
-            :inputNm="$t('service.SLA_mngt')"
-            v-model:secVal="formData.sla.sec"
-            v-model:minVal="formData.sla.min"
-            v-model:hourVal="formData.sla.hr"
-            v-model:dayVal="formData.sla.day"
-            v-model:monthVal="formData.sla.mon"
-            v-model:onSec="slaSec"
-            v-model:onMin="slaMin"
-            v-model:onHr="slaHr"
-            v-model:onDay="slaDay"
-            v-model:onMon="slaMon"
-          />
-          <InputGroup
-            type="text"
-            :inputNm="$t('service.tkcgrNm')"
-            :placeholder="$t('service.tkcgrNmEx')"
-            v-model:value="formData.tkcgrNm"
-            v-model:isValid="tkcgrNmValid"
-          />
-          <InputGroup
-            type="text"
-            :inputNm="$t('service.tkcgrPos')"
-            :placeholder="$t('service.tkcgrPosEx')"
-            v-model:value="formData.tkcgrPos"
-            v-model:isValid="tkcgrPosValid"
-          />
-          <InputGroup
-            type="text"
-            :inputNm="$t('service.tkcgrEml')"
-            placeholder="kt0601@kt.com"
-            inputClass="input-box lg check-ok"
-            v-model:value="formData.tkcgrEml"
-            v-model:isValid="tkcgrEmlValid"
-          />
-          <SysExGroup :inputNm="$t('service.desc')" v-model:value="formData.desc" />
-          <ModalLayout size="s" v-if="registerModal">
-            <template v-slot:modalHeader
-              ><h2 class="h1-tit">{{ $t('service.register') }}</h2>
-            </template>
-            <template v-slot:modalContainer>
-              <p v-if="!isRegisterProgress" class="text">{{ $t('service.register_message') }}</p>
-              <div v-if="isRegisterProgress" style="width: 100%; text-align: center">
-                <b-spinner
-                  v-show="isRegisterProgress"
-                  style="width: 2.5rem; height: 2.5rem"
-                  label="Large Spinner"
-                ></b-spinner>
-              </div>
-            </template>
-            <template v-slot:modalFooter
-              ><button class="lg-btn purple-btn" @click="submit()">
-                {{ $t('common.ok') }}</button
-              ><button class="lg-btn white-btn" @click="modalHide()">
-                {{ $t('common.cancel') }}
-              </button>
-            </template>
-          </ModalLayout>
-        </ul>
+        <div class="form-wrap">
+          <ul>
+            <TextDebounceForm
+              type="text"
+              :inputNm="$t('service.id')"
+              :check="isDuplicatedId"
+              :placeholder="$t('service.idEx')"
+              v-model:value="formData.id"
+              @input="duplicateCheckId()"
+              v-model:isValid="idValid"
+            />
+            <DateGroup
+              :inputNm="$t('service.date')"
+              placeholderStart="YYYY-MM-DD"
+              v-model:startDt="formData.svcStDt"
+              v-model:endDt="formData.svcEndDt"
+              v-model:isValid="dateValid"
+            />
+            <AuthReqGroup
+              @basicAuthClicked="basicAuthClicked"
+              :inputNm="$t('service.authentication_method')"
+              :basicId="formData.athn.basic.id"
+              :basicPw="formData.athn.basic.pw"
+              v-model:athn="formData.athnType"
+              v-model:alg="jwtAlgList"
+              v-model:pickedAlg="formData.athn.jwt.alg"
+              v-model:issuer="formData.athn.jwt.iss"
+              v-model:subject="formData.athn.jwt.aud"
+              v-model:publicKey="formData.athn.jwt.pubKey"
+              v-model:isValid="authValid"
+              :progress="isBasicAuthProgress"
+            />
+            <ApiAuthReqGroup inputNm="권한설정" @showApiAuth="showApiAuth" :setCheck="apiAuthValid" />
+            <SlaReqGroup
+              :inputNm="$t('service.SLA_mngt')"
+              v-model:secVal="formData.sla.sec"
+              v-model:minVal="formData.sla.min"
+              v-model:hourVal="formData.sla.hr"
+              v-model:dayVal="formData.sla.day"
+              v-model:monthVal="formData.sla.mon"
+              v-model:onSec="slaSec"
+              v-model:onMin="slaMin"
+              v-model:onHr="slaHr"
+              v-model:onDay="slaDay"
+              v-model:onMon="slaMon"
+            />
+          </ul>
+        </div>
+        <div class="form-wrap option-wrap">
+          <h3 class="h3-tit">선택 입력 항목</h3>
+          <ul>
+            <InputGroup
+              type="text"
+              :inputNm="$t('service.tkcgrNm')"
+              :placeholder="$t('service.tkcgrNmEx')"
+              v-model:value="formData.tkcgrNm"
+              v-model:isValid="tkcgrNmValid"
+            />
+            <InputGroup
+              type="text"
+              :inputNm="$t('service.tkcgrPos')"
+              :placeholder="$t('service.tkcgrPosEx')"
+              v-model:value="formData.tkcgrPos"
+              v-model:isValid="tkcgrPosValid"
+            />
+            <InputGroup
+              type="text"
+              :inputNm="$t('service.tkcgrEml')"
+              placeholder="kt0601@kt.com"
+              inputClass="input-box lg check-ok"
+              v-model:value="formData.tkcgrEml"
+              v-model:isValid="tkcgrEmlValid"
+            />
+            <SysExGroup :inputNm="$t('service.desc')" v-model:value="formData.desc" />
+          </ul>
+        </div>
+        <ModalLayout size="s" v-if="registerModal">
+          <template v-slot:modalHeader
+            ><h2 class="h1-tit">{{ $t('service.register') }}</h2>
+          </template>
+          <template v-slot:modalContainer>
+            <p v-if="!isRegisterProgress" class="text">{{ $t('service.register_message') }}</p>
+            <div v-if="isRegisterProgress" style="width: 100%; text-align: center">
+              <b-spinner
+                v-show="isRegisterProgress"
+                style="width: 2.5rem; height: 2.5rem"
+                label="Large Spinner"
+              ></b-spinner>
+            </div>
+          </template>
+          <template v-slot:modalFooter
+            ><button class="lg-btn purple-btn" @click="submit()">
+              {{ $t('common.ok') }}</button
+            ><button class="lg-btn white-btn" @click="modalHide()">
+              {{ $t('common.cancel') }}
+            </button>
+          </template>
+        </ModalLayout>
       </template>
       <template v-if="!isShowProgress" v-slot:buttons>
         <div class="btn-wrap">
@@ -167,7 +174,6 @@ const isRegisterProgress = ref(false);
 const isShowProgress = ref(false);
 const isApiAuthProgress = ref(false);
 
-const isBtnDisabled = ref(true);
 const idValid = ref(false);
 const tkcgrNmValid = ref(true);
 const tkcgrPosValid = ref(true);
@@ -207,6 +213,10 @@ const formData: Ref<ServiceRegisterRequest> = ref({
   },
   apiAut: [],
   desc: null,
+});
+
+watch(showApiAuthModal, () => {
+  console.log(showApiAuthModal.value);
 });
 
 watch(

@@ -4,19 +4,17 @@
       <!------- handler pop -------->
       <div class="pop-wrap mid-pop">
         <div class="pop-header">
-          <h1 class="h1-tit">
-            API 권한설정 List
-            <p class="total">
-              total : <span>{{ countApiList }} :</span>
-            </p>
-          </h1>
+          <h2 class="h2-tit">API 권한설정 List</h2>
           <button @click="hideApiAuth">
             <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
           </button>
         </div>
         <div class="pop-container">
+          <p class="total">
+            total : <span>{{ countApiList }}</span>
+          </p>
           <!--  end-point list -->
-          <div class="tb-wrap">
+          <div class="pop-tb-wrap">
             <table class="sm-tb">
               <caption>
                 시스템 ID, API ID 항목 테이블
