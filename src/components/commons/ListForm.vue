@@ -1,5 +1,5 @@
 <template>
-  <div class="comp">
+  <section class="contents-wrap">
     <div class="tb-tit">
       <h2 class="h2-tit">
         {{ props.title }}
@@ -16,7 +16,7 @@
     <div class="page-wrap">
       <slot name="pagination" />
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

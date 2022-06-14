@@ -1,5 +1,5 @@
 <template>
-  <article class="contents-wrap">
+  <article class="body-cont">
     <div class="tit-wrap">
       <h1 class="h1-tit">{{ title }}</h1>
     </div>

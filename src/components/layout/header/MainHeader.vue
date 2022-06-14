@@ -1,44 +1,49 @@
 <template>
-  <header class="header-wrap">
-    <aside class="logo">
+  <aside id="side">
+    <div class="logo">
       <a href="javascript:void(0)"><img src="@/assets/logo.svg" alt="API G/W Admin logo" /></a>
-    </aside>
+    </div>
+
+    <div class="member-wrap">
+      <div class="flex">
+        <i><img src="@/assets/member_ico.svg" alt="멤버 아이콘" /></i>
+        <span><strong>홍길동</strong>님</span>
+      </div>
+      <a class="link" href="javascript:void(0)">로그아웃</a>
+    </div>
+
     <nav id="navi">
-      <ul>
-        <li :class="{ on: navState.dashboardState }">
+      <ul class="navi-list">
+        <li class="home" :class="{ on: navState.dashboardState }">
           <router-link :to="`${dashBoardPath}`" @click="changeNavState('dashboardState')">Home</router-link>
         </li>
-        <li :class="{ on: navState.systemState }">
-          <router-link :to="`${systemPath}`" @click="changeNavState('systemState')">시스템 관리</router-link>
+        <li class="sys" :class="{ on: navState.systemState }">
+          <router-link :to="`${systemPath}`" @click="changeNavState('systemState')">System 관리</router-link>
         </li>
-        <li :class="{ on: navState.apiState }">
-          <router-link :to="`${apiPath}`" @click="changeNavState('apiState')">API관리</router-link>
+        <li class="api" :class="{ on: navState.apiState }">
+          <router-link :to="`${apiPath}`" @click="changeNavState('apiState')">API 관리</router-link>
         </li>
-        <li :class="{ on: navState.serviceState }">
-          <router-link :to="`${servicePath}`" @click="changeNavState('serviceState')">서비스 관리</router-link>
+        <li class="serv" :class="{ on: navState.serviceState }">
+          <router-link :to="`${servicePath}`" @click="changeNavState('serviceState')">Service 관리</router-link>
         </li>
-        <li :class="{ on: navState.monitoringState }">
-          <a href="javascript:void(0)" @click="changeShowMonitoring">모니터링</a>
+        <li class="monitor" :class="{ on: navState.monitoringState }">
+          <a href="javascript:void(0)" @click="changeShowMonitoring">monitoring 관리</a>
           <Transition name="fade" appear>
             <div class="depth-menu" v-show="navState.showMonitoring">
               <ul>
-                <li>
-                  <i><img src="@/assets/user_ico.svg" alt="관제" /></i>
-                  <!-- <router-link :to="`${monitoringPath}`">모니터링</router-link> -->
+                <li :class="{ active: navState.monitoringState }">
                   <router-link :to="`${monitoringPath}/control`" @click="changeNavState('monitoringState')"
-                    >관제</router-link
+                    >관제 모니터링</router-link
                   >
                 </li>
-                <li>
-                  <i><img src="@/assets/stati_ico.svg" alt="통계" /></i>
+                <li :class="{ active: navState.monitoringState }">
                   <router-link :to="`${monitoringPath}/statistic`" @click="changeNavState('monitoringState')"
-                    >통계</router-link
+                    >통계 모니터링</router-link
                   >
                 </li>
-                <li>
-                  <i><img src="@/assets/traffic_ico.svg" alt="트래픽" /></i>
+                <li :class="{ active: navState.monitoringState }">
                   <router-link :to="`${monitoringPath}/traffic`" @click="changeNavState('monitoringState')"
-                    >트래픽</router-link
+                    >트래픽 모니터링</router-link
                   >
                 </li>
               </ul>
@@ -48,12 +53,7 @@
       </ul>
     </nav>
     <!------- // navigation -------->
-
-    <div class="member-wrap">
-      <p><span class="bold">홍길동</span>님</p>
-      <p><a class="link">로그아웃</a></p>
-    </div>
-  </header>
+  </aside>
 </template>
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
