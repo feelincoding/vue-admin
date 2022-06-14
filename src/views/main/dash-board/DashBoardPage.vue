@@ -1,10 +1,7 @@
 <template>
   <article class="dashboard">
-    <!--- refresh play/pause area --->
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
-
-    {{ list1[0].order }}
-    <section class="group" :key="list1[0].order" id="section-draggable">
+    <section class="group" id="section-draggable">
       <div class="total-group">
         <div class="d-total">
           <div class="ico-wrap">
@@ -56,32 +53,63 @@
           <span class="num">{{ apiResponseStatus.tps }}</span>
         </div>
       </div>
-
-      <!--- Total API Traffic (24Hour) area --->
     </section>
-    <section class="group" :key="list1[1].order" id="section-draggable">
-      {{ list1[1].order }}
+    <section class="group" id="section-draggable">
       <!--- 실시간 Traffic area --->
-      <RealTimeTraffic :isDraged.sync="isDraged" :setParamData.sync="clickedParamData" :modal.sync="realTimeModal" />
+      <RealTimeTraffic />
     </section>
 
-    <section class="grid-group" :key="list1[2].order" id="section-draggable">
-      {{ list1[2].order }}
+    <section class="grid-group" id="section-draggable">
       <!--- API Top 5 area --->
-      <ApiTop5
-        v-model:realTimeStat="realTimeApiStat"
-        v-model:isCommError="isServiceTop5CommError"
-        @clickModalBtn="
-          (msg) => {
-            showModal(msg);
-          }
-        "
-      />
+      <div class="chart-wrap">
+        <h3 class="h3-tit">{{ $t('dash-board.api_top5_title') }}</h3>
+        <ul class="list-wrap">
+          <ErrorWrapper v-show="isApiTop5CommError" />
+          <li v-for="(item, index) in apiTop5List" :key="index">
+            <p class="id-txt">{{ item.sysId }}.{{ item.apiId }}</p>
+            <dl>
+              <dt><em>Total :</em>{{ item.totCnt }}</dt>
+              <dd>
+                <span class="syan">{{ item.sucesCnt }}</span
+                >/<span class="red">{{ item.failCnt }}</span>
+              </dd>
+            </dl>
+            <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
+            <ProgressBar :listItem="item" />
+            <button class="more-btn">
+              <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="chart-wrap">
+        <h3 class="h3-tit">{{ $t('dash-board.service_top5_title') }}</h3>
+        <ul class="list-wrap">
+          <ErrorWrapper v-show="isServiceTop5CommError" />
+          <li v-for="(item, index) in serviceTop5List" :key="index">
+            <p class="id-txt">{{ item.svcId }}</p>
+            <dl>
+              <dt>
+                <em>{{ $t('common.total') }} :</em>{{ item.totCnt }}
+              </dt>
+              <dd>
+                <span class="syan">{{ item.sucesCnt }}</span
+                >/<span class="red">{{ item.failCnt }}</span>
+              </dd>
+            </dl>
+            <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
+            <ProgressBar :listItem="item" />
+            <button class="more-btn">
+              <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
+            </button>
+          </li>
+        </ul>
+      </div>
       <!--- Service Top 5 area --->
       <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" v-model:isCommError="isServiceTop5CommError" />
     </section>
-    <section class="grid-group" :key="list1[3].order" id="section-draggable">
-      {{ list1[3].order }}
+    <section class="grid-group" id="section-draggable">
       <!--- Last Traffic --->
       <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
       <!--- Last Response --->
@@ -99,14 +127,10 @@
   </article>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
-import TotalApiTraffic from '@/components/dash-board/TotalApiTraffic.vue';
-import ErrorStats from '@/components/dash-board/ErrorStats.vue';
-import ApiResponseAvg from '@/components/dash-board/ApiResponseAvg.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
-import ApiTop5 from '@/components/dash-board/ApiTop5.vue';
 import ServiceTop5 from '@/components/dash-board/ServiceTop5.vue';
 import LastTraffic from '@/components/dash-board/LastTraffic.vue';
 import LastResponse from '@/components/dash-board/LastResponse.vue';
@@ -115,6 +139,16 @@ import { VueDraggableNext as draggable } from 'vue-draggable-next';
 
 import DashBoardRepository from '@/repository/dash-board-repository';
 import { convertBaseTime } from '@/utils/converter';
+import ProgressBar from '@/components/commons/ProgressBar.vue';
+import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
+
+import {
+  TOTAL_TRAFFIC_PARAM,
+  ERROR_STATS_PARAM,
+  API_RESPONSE_PARAM,
+  REAL_TIME_PARAM,
+  getDetailParam,
+} from '@/views/main/dash-board/dash-board-define';
 
 import type {
   RealTimeServiceStat,
@@ -124,95 +158,20 @@ import type {
   LastTrafficType,
   LastResponseType,
   ErrorStatsType,
-  TrafficRequestType,
-  ErrorStatsDetailRequest,
-  ApiResponseRequest,
-  ErrorStatsRequest,
+  ApiStat,
   ServiceStat,
-  RealTimeRequest,
-  TotalApiDetailRequest,
 } from '@/types/DashBoardType';
-
-const log = (event: any) => {
-  console.log(event);
-};
-const isDragging = ref(false);
-const dragOptions = ref({
-  animation: 0,
-  disabled: false,
-  ghostClass: 'ghost',
-});
-
-let message1 = [0, 1, 2, 3];
-const list1 = ref(
-  message1.map((name, index) => {
-    return { order: index + 1 };
-  })
-);
-const DEFAULT_STAT_PERD = 1440;
-const DEFAULT_STAT_BASE_TM = '2022-05-27 20:30';
-const DEFAULT_STAT_BASE_UNIT = 'MI';
-const DEFAULT_SORT_BASE = 'totCnt';
-const DEFAULT_SCV_ID = 'KTSVC';
-const DEFAULT_DAY_TRAFC_COMPR_CNT = 7;
-
-const TOTAL_TRAFFIC_PARAM: TrafficRequestType = {
-  statPerd: DEFAULT_STAT_PERD,
-  statBaseUnit: DEFAULT_STAT_BASE_UNIT,
-};
-
-const ERROR_STATS_PARAM: ErrorStatsRequest = {
-  statPerd: DEFAULT_STAT_PERD,
-  statBaseUnit: DEFAULT_STAT_BASE_UNIT,
-};
-
-const API_RESPONSE_PARAM: ApiResponseRequest = {
-  statPerd: DEFAULT_STAT_PERD,
-};
-
-let TOTAL_DETAIL_TRAFFIC_PARAM: TotalApiDetailRequest = {
-  statBaseTm: '',
-  statPerd: DEFAULT_STAT_PERD,
-  statBaseUnit: DEFAULT_STAT_BASE_UNIT,
-};
-
-let ERROR_STATS_DETAIL_PARAM: ErrorStatsDetailRequest = {
-  statBaseTm: '',
-  statPerd: DEFAULT_STAT_PERD,
-  statBaseUnit: DEFAULT_STAT_BASE_UNIT,
-};
-
-let API_RESPONSE_DETAIL_PARAM = {
-  statBaseTm: '',
-  statPerd: DEFAULT_STAT_PERD,
-  statBaseUnit: DEFAULT_STAT_BASE_UNIT,
-};
-
-const REAL_TIME_PARAM: RealTimeRequest = {
-  statPerd: DEFAULT_STAT_PERD,
-  sortBase: DEFAULT_SORT_BASE,
-};
+const isLoadData = ref(false);
 
 const totalTraffic: Ref<TotalTrafficStat> = ref({} as TotalTrafficStat);
 const apiResponseStatus: Ref<ApiResponseStatus> = ref({} as ApiResponseStatus);
 const errorStats: Ref<ErrorStatsType> = ref({} as ErrorStatsType);
 const realTimeApiStat: Ref<RealTimeApiStat> = ref({} as RealTimeApiStat);
+const apiTop5List: Ref<ApiStat[]> = ref([]);
 const realTimeServiceStat: Ref<RealTimeServiceStat> = ref({} as RealTimeServiceStat);
+const serviceTop5List: Ref<ServiceStat[]> = ref([]);
 const lastTrafficList: Ref<LastTrafficType[]> = ref({} as LastTrafficType[]);
 const lastResponseList: Ref<LastResponseType[]> = ref({} as LastResponseType[]);
-
-const isLoadData = ref(false);
-const trafficModal = ref(false);
-const changeTrafficModal = (show: boolean) => {
-  trafficModal.value = show;
-};
-const errorModal = ref(false);
-const changeErrorModal = (show: boolean) => {
-  errorModal.value = show;
-};
-const avgModal = ref(false);
-const realTimeModal = ref(false);
-const clickedParamData = {};
 
 const isErrorStatCommError = ref(false);
 const isTotalAPITrafficCommError = ref(false);
@@ -222,52 +181,8 @@ const isServiceTop5CommError = ref(false);
 const isLastTrafficCommError = ref(false);
 const isLastResponseCommError = ref(false);
 
-const layout = [
-  { x: 0, y: 0, w: 6, h: 22, i: '0' },
-  { x: 0, y: 1, w: 6, h: 22, i: '1' },
-  { x: 0, y: 2, w: 6, h: 34, i: '2' },
-  { x: 0, y: 3, w: 6, h: 25, i: '3' },
-];
-
-const isDraged = ref(0);
-const layoutUpdatedEvent = () => {
-  // 최초 1회는 막아야한다.
-  // isDraged == 0 : 최초 로딩시
-  // isDraged == 1 : 드래그를 안한 상태
-  // isDraged == 2 : 드래그를 한 상태
-  if (isDraged.value === 0) {
-    isDraged.value = 1;
-    return;
-  } else if (isDraged.value === 1) {
-    isDraged.value = 2;
-    return;
-  }
-};
-
-const box1 = ref(false);
-const box2 = ref(false);
-const box3 = ref(false);
-const box4 = ref(false);
-
-const dragEvent = (i: string) => {
-  if (i == '0') {
-    box1.value = true;
-  } else if (i == '1') {
-    box2.value = true;
-  } else if (i == '2') {
-    box3.value = true;
-  } else if (i == '3') {
-    box4.value = true;
-  }
-  window.addEventListener('mouseup', (e) => {
-    box1.value = false;
-    box2.value = false;
-    box3.value = false;
-    box4.value = false;
-  });
-};
-
 const dashBoardRepo = new DashBoardRepository();
+
 onMounted(() => {
   requestAllApi();
 });
@@ -291,20 +206,26 @@ const requestAllApi = () => {
         if (index == 0) {
           totalTraffic.value = result.value as TotalTrafficStat;
           isTotalAPITrafficCommError.value = false;
-          TOTAL_DETAIL_TRAFFIC_PARAM.statBaseTm = convertBaseTime(totalTraffic.value.statBaseTm);
+          // TOTAL_DETAIL_TRAFFIC_PARAM.statBaseTm = convertBaseTime(totalTraffic.value.statBaseTm);
         } else if (index == 1) {
           errorStats.value = result.value as ErrorStatsType;
           isErrorStatCommError.value = false;
-          ERROR_STATS_DETAIL_PARAM.statBaseTm = convertBaseTime(errorStats.value.statBaseTm);
+          // ERROR_STATS_DETAIL_PARAM.statBaseTm = convertBaseTime(errorStats.value.statBaseTm);
         } else if (index == 2) {
           apiResponseStatus.value = result.value as ApiResponseStatus;
           isApiResponseStusCommError.value = false;
-          API_RESPONSE_DETAIL_PARAM.statBaseTm = convertBaseTime(apiResponseStatus.value.statBaseTm);
+          // API_RESPONSE_DETAIL_PARAM.statBaseTm = convertBaseTime(apiResponseStatus.value.statBaseTm);
         } else if (index == 3) {
           realTimeApiStat.value = result.value as RealTimeApiStat;
+          apiTop5List.value = realTimeApiStat.value.apiStat
+            .sort((a: { totCnt: number }, b: { totCnt: number }) => b.totCnt - a.totCnt)
+            .slice(0, 5) as ApiStat[];
           isApiTop5CommError.value = false;
         } else if (index == 4) {
           realTimeServiceStat.value = result.value as RealTimeServiceStat;
+          serviceTop5List.value = realTimeServiceStat.value.svcStat
+            .sort((a: { totCnt: number }, b: { totCnt: number }) => b.totCnt - a.totCnt)
+            .slice(0, 5) as ServiceStat[];
           isServiceTop5CommError.value = false;
         } else if (index == 5) {
           lastTrafficList.value = result.value as LastTrafficType[];
@@ -357,34 +278,6 @@ const showModal = (msg: any) => {
 };
 </script>
 <style>
-.total-modal-z-index {
-  z-index: 1;
-}
-
-.vue-grid-item.vue-grid-placeholder {
-  background: rgba(130, 130, 130, 0.5) !important;
-}
-
-.realtime-modal {
-  width: 100%;
-  height: 100%;
-}
-
-.chart-size {
-  width: 100%;
-  height: 100%;
-}
-
-.drag-box {
-  border-radius: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.drag-box {
-  box-shadow: 0 0 12px rgba(33, 33, 33, 0.4);
-}
-
 .flip-list-move {
   transition: transform 0.5s;
 }

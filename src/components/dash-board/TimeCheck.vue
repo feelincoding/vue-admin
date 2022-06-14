@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import { getPauseTime } from '@/utils/converter';
-import { timerOption, getTimerOption } from '@/components/dash-board/chart-options';
+import { getProgressOption, getTimerOption } from '@/components/dash-board/chart-options';
 import { drawTotalApiTrafficChart } from '@/utils/chart';
 
 const INTERVAL_VALUE = 60;
@@ -52,7 +52,7 @@ onUpdated(() => {
   // Dom이 Init되지 않았을 때만 Init
   if (!isProgressDomInit.value) {
     isProgressDomInit.value = true;
-    loadingChart.value = drawTotalApiTrafficChart('progressChart', timerOption);
+    loadingChart.value = drawTotalApiTrafficChart('progressChart', getProgressOption());
   }
   observeSize();
 });

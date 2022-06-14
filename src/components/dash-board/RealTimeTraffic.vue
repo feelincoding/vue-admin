@@ -5,36 +5,14 @@
   </div>
 </template>
 <script setup lang="ts">
-// import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
-import { onMounted, onUnmounted, onUpdated, ref, watch, type Ref } from 'vue';
-
+import { onMounted, onUnmounted, ref, shallowRef, watch } from 'vue';
 import * as echarts from 'echarts';
+import { addDate } from '@/utils/converter';
 
-const props = defineProps({
-  syncedModal: {
-    type: Boolean,
-    default: false,
-  },
-  clickedParamData: {
-    type: Object,
-    default: () => ({}),
-  },
-});
+const myChart = shallowRef({} as echarts.EChartsType);
+const dom = shallowRef({} as HTMLDivElement);
 
-const setClickedParam = (paramData: object) => {
-  props.clickedParamData.value = paramData;
-};
-
-const showModal = () => {
-  // emit써야댐
-  // props.syncedModal = true;
-};
-
-const myChart = ref({} as echarts.EChartsType);
-const dom = ref({} as HTMLDivElement);
-
-const base = +ref(new Date(2022, 2, 30));
-const oneDay = ref(24 * 3600 * 1000);
+const base = ref(new Date(2022, 2, 30));
 const date = ref([] as any);
 const data1 = ref([Math.random() * 50]);
 const data2 = ref([Math.random() * 40]);
@@ -44,31 +22,22 @@ const data5 = ref([Math.random() * 30]);
 const data6 = ref([Math.random() * 20]);
 const data7 = ref([Math.random() * 10]);
 
-let now = new Date(base);
-const width1 = ref(0);
-const height1 = ref(0);
-const RealTimeTrafficRef = ref<HTMLDivElement | null>(null);
-const observeSize = () => {
-  const ro = new ResizeObserver((entries) => {
-    entries.forEach((entry) => {
-      const { width, height } = entry.contentRect;
-      width1.value = width;
-      height1.value = height;
-    });
-  });
-  ro.observe(RealTimeTrafficRef.value as HTMLDivElement);
+const chartResize = () => {
+  myChart.value.resize();
 };
 
-watch(width1, () => {
-  resizeChart();
-});
 onMounted(() => {
+  window.addEventListener('resize', () => chartResize(), { passive: true });
+
   dom.value = document.getElementById('real-time-traffic') as HTMLDivElement;
   myChart.value = echarts.init(dom.value);
   for (var i = 1; i < 30; i++) {
     addData();
   }
+
+  let da = [data1, data2, data3, data4, data5, data6, data7];
   myChart.value.setOption(option);
+
   setInterval(() => {
     addData();
     myChart.value.setOption({
@@ -108,20 +77,17 @@ onMounted(() => {
     });
   }, 300);
 
-  myChart.value.on('click', (params) => {
-    showModal();
-    setClickedParam(params as object);
-  });
-  window.addEventListener('resize', observeSize);
+  // myChart.value.on('click', (params) => {
+  // });
 });
 
-const resizeChart = () => {
-  myChart.value.resize();
-};
+onUnmounted(() => {
+  window.removeEventListener('resize', () => chartResize());
+});
 
 const addData = () => {
-  now = new Date([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
-  date.value.push(now);
+  base.value = addDate(base.value, 1);
+  date.value.push([base.value.getFullYear(), base.value.getMonth() + 1, base.value.getDate()].join('/'));
   data1.value.push(Math.random() * (150 - 1) + data1.value[data1.value.length - 1]);
   data2.value.push(Math.random() * (100 - 20) + data2.value[data2.value.length - 1]);
   data3.value.push(Math.random() * (120 - 10) + data3.value[data3.value.length - 1]);
@@ -129,8 +95,6 @@ const addData = () => {
   data5.value.push(Math.random() * (20 - 10) + data5.value[data5.value.length - 1]);
   data6.value.push(Math.random() * (70 - 30) + data6.value[data6.value.length - 1]);
   data7.value.push(Math.random() * (30 - 20) + data7.value[data7.value.length - 1]);
-
-  now = new Date(+new Date(now) + oneDay.value);
 };
 
 const option = {

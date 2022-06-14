@@ -85,3 +85,9 @@ export const getPauseTime = () => {
 
   return `${year}.${month}.${date} ${hours}:${minutes}`;
 };
+
+export const addDate = (date: Date, days: number) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+};
