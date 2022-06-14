@@ -1,5 +1,5 @@
 <template>
-  <article class="contents-wrap" :id="id">
+  <article class="body-cont" :id="id">
     <div class="tit-wrap">
       <h1 class="h1-tit">{{ title }}</h1>
       <div v-if="depth" class="directory-wrap">
