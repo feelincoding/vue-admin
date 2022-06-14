@@ -12,8 +12,8 @@
       <input
         :type="type"
         :class="{
-          'check-ok': notiMessage[0] === true,
-          'check-false': notiMessage[0] === false,
+          'check-ok': notiMessage.isValid === true,
+          'check-false': notiMessage.isValid === false,
         }"
         class="input-box lg"
         :placeholder="place"
@@ -21,29 +21,16 @@
         v-model="v"
         @focus="emptyChkFunc"
       />
-      <p v-if="notiMessage[0] == false" class="red-txt noti">{{ notiMessage[1] }}</p>
+      <p v-if="notiMessage.isValid == false" class="red-txt noti">{{ notiMessage.message }}</p>
     </div>
   </li>
 </template>
 
 <script setup lang="ts">
-import {
-  checkEmail,
-  checkLength,
-  checkEnglishNumber,
-  checkEnglishKorean,
-  checkEmpty,
-  checkEnglishNumberKorean,
-} from '@/utils/validation';
-import { ref, reactive, computed, watch, onMounted } from 'vue';
-import type { PropType } from 'vue';
+import { checkEmail, checkLength, checkEnglishNumber, checkEnglishKorean, checkEmpty } from '@/utils/validation';
+import { ref, computed, watch, onMounted } from 'vue';
 import type { Ref } from 'vue';
-
-import { BSpinner } from 'bootstrap-vue-3';
-
-import { useRoute } from 'vue-router';
-import router from '@/router';
-
+import type { ValidationCheckType } from '@/components/system-mngt/SystemMngtType';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({});
 
@@ -58,14 +45,22 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: 'update:isValid', value: boolean | null | string): void;
+  (e: 'update:isValid', value: boolean | null): void;
   (e: 'update:value', value: string): void;
 }>();
 
-const notiMessage: Ref<(boolean | null | string)[]> = ref([null, '']);
-watch(notiMessage, () => {
-  emit('update:isValid', notiMessage.value[0] as boolean | null | string);
+const notiMessage: Ref<ValidationCheckType> = ref({
+  isValid: null,
+  message: '',
 });
+
+watch(
+  () => notiMessage.value.isValid,
+  () => {
+    emit('update:isValid', notiMessage.value.isValid);
+  },
+  { immediate: true, deep: true }
+);
 
 onMounted(() => {
   if (props.required === false) {
@@ -84,43 +79,43 @@ const v = computed({
     switch (props.inputNm) {
       case t('system.id'):
         if (checkLength(val, 1, 20) && checkEnglishNumber(val)) {
-          notiMessage.value = [true, ''];
+          notiMessage.value = { isValid: true, message: '' };
         } else if (val == '') {
-          notiMessage.value = [false, t('system.empty_check') as string];
+          notiMessage.value = { isValid: false, message: t('system.empty_check') as string };
         } else {
-          notiMessage.value = [false, t('system.valid_check_id') as string];
+          notiMessage.value = { isValid: false, message: t('system.valid_check_id') as string };
           console.log(notiMessage);
         }
         break;
       case t('system.tkcgrNm'):
         if (checkLength(val, 1, 20) && checkEnglishKorean(val)) {
-          notiMessage.value = [true, ''];
+          notiMessage.value = { isValid: true, message: '' };
         } else if (val == '') {
-          notiMessage.value = [true, ''];
+          notiMessage.value = { isValid: true, message: '' };
         } else {
-          notiMessage.value = [false, t('system.valid_check_tkcgrNm') as string];
+          notiMessage.value = { isValid: false, message: t('system.valid_check_tkcgrNm') as string };
         }
         break;
       case t('system.tkcgrPos'):
         if (checkLength(val, 1, 50)) {
-          notiMessage.value = [true, ''];
+          notiMessage.value = { isValid: true, message: '' };
         } else if (val == '') {
-          notiMessage.value = [true, ''];
+          notiMessage.value = { isValid: true, message: '' };
         } else {
-          notiMessage.value = [false, t('system.valid_check_tkcgrPos') as string];
+          notiMessage.value = { isValid: false, message: t('system.valid_check_tkcgrPos') as string };
         }
         break;
       case t('system.tkcgrEml'):
         if (checkLength(val, 1, 20) && checkEmail(val)) {
-          notiMessage.value = [true, ''];
+          notiMessage.value = { isValid: true, message: '' };
         } else if (val == '') {
-          notiMessage.value = [true, ''];
+          notiMessage.value = { isValid: true, message: '' };
         } else {
-          notiMessage.value = [false, t('system.valid_check_tkcgrEml') as string];
+          notiMessage.value = { isValid: false, message: t('system.valid_check_tkcgrEml') as string };
         }
         break;
       default:
-        notiMessage.value = [null, ''];
+        notiMessage.value = { isValid: null, message: '' };
     }
 
     emit('update:value', val);
@@ -128,12 +123,9 @@ const v = computed({
 });
 const emptyChkFunc = () => {
   if (props.required === true && !checkEmpty(v.value)) {
-    notiMessage.value = [false, t('system.empty_check') as string];
+    notiMessage.value = { isValid: false, message: t('system.empty_check') as string };
   }
 };
-// const v = computed(():string => {
-//   return props.value;
-// });
 </script>
 
 <style scoped></style>
