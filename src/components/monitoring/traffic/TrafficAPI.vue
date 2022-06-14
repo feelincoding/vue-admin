@@ -27,7 +27,7 @@ import MonitoringTrafficRepository from '@/repository/monitoring-traffic-reposit
 import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
 import type { TrafficApi } from '@/types/MonitoringTrafficType';
 import type { ApiSearch } from '@/types/MonitoringStatisticType';
-// import TrafficAPIChart from '@/components/monitoring/TrafficAPIChart.vue';
+import TrafficAPIChart from '@/components/monitoring/traffic/TrafficAPIChart.vue';
 const props = defineProps<{
   isSearchFocus: boolean;
 }>();

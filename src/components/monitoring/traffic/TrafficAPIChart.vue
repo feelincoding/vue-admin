@@ -1,167 +1,162 @@
 <template>
-  <h3 class="h3-tit">{{ $t('traffic.api_traffic') }}</h3>
+  <!-- <h3 class="h3-tit">{{ $t('traffic.api_traffic') }}</h3> -->
   <div class="chart-group chart-group-height" id="trafficAPI" ref="trafficAPI"></div>
 </template>
-<!-- <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
 import * as echarts from 'echarts';
-import { TrafficApi } from '@/types/MonitoringTrafficType';
+import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
+import type { TrafficApi } from '@/types/MonitoringTrafficType';
 
-@Component
-export default class TrafficAPIChart extends Vue {
-  @Prop() apiList!: TrafficApi[];
-  @Prop() timeUnit!: string;
-  trafficAPIChart = {} as echarts.EChartsType;
+const props = defineProps<{ apiList: TrafficApi[]; timeUnit: string }>();
 
-  mounted() {
-    console.log(this.apiList);
-    const dom = document.getElementById('trafficAPI') as HTMLDivElement;
-    this.trafficAPIChart = echarts.init(dom);
-    window.addEventListener('resize', this.observeSize);
-    this.trafficAPIChart.setOption(this.getTrafficAPIChartOption(this.apiList));
-  }
+const trafficAPIChart = ref({} as echarts.EChartsType);
 
-  beforeDestroy() {
-    window.removeEventListener('resize', this.observeSize);
-  }
+onMounted(() => {
+  const dom = document.getElementById('trafficAPI') as HTMLDivElement;
+  trafficAPIChart.value = echarts.init(dom);
+  window.addEventListener('resize', observeSize);
+  trafficAPIChart.value.setOption(getTrafficAPIChartOption(props.apiList));
+});
 
-  resizeChart() {
-    this.trafficAPIChart.resize();
-  }
+onUnmounted(() => {
+  window.removeEventListener('resize', observeSize);
+});
 
-  @Watch('width')
-  onWidthChange() {
-    this.resizeChart();
-  }
+const resizeChart = () => {
+  trafficAPIChart.value.resize();
+};
 
-  width = 0;
-  height = 0;
-  observeSize() {
-    const ro = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        const { width, height } = entry.contentRect;
-        this.width = width;
-        this.height = height;
-      });
+const width1 = ref(0);
+const height1 = ref(0);
+const trafficAPIRef = ref<HTMLDivElement | null>(null);
+
+const observeSize = () => {
+  const ro = new ResizeObserver((entries) => {
+    entries.forEach((entry) => {
+      const { width, height } = entry.contentRect;
+      width1.value = width;
+      height1.value = height;
     });
-    ro.observe(this.$refs.trafficAPI as HTMLDivElement);
-  }
+  });
+  ro.observe(trafficAPIRef.value as HTMLDivElement);
+};
+watch(width1, () => {
+  resizeChart();
+});
 
-  getTrafficAPIChartOption(apiList: TrafficApi[]) {
-    const trafficAPIOption: echarts.EChartsOption = {
-      legend: {
-        show: true,
-      },
+const getTrafficAPIChartOption = (trafficAPI: TrafficApi[]) => {
+  const trafficAPIOption: echarts.EChartsOption = {
+    legend: {
+      show: true,
+    },
 
-      tooltip: {
-        trigger: 'axis',
-      },
-      toolbox: {
-        left: 'right',
-        itemSize: 20,
-        top: -5,
-        feature: {
-          dataZoom: {
-            show: false,
-            yAxisIndex: 'none',
-          },
-          restore: {},
+    tooltip: {
+      trigger: 'axis',
+    },
+    toolbox: {
+      left: 'right',
+      itemSize: 20,
+      top: -5,
+      feature: {
+        dataZoom: {
+          show: false,
+          yAxisIndex: 'none',
         },
+        restore: {},
       },
-      backgroundColor: '#fff',
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: apiList[0].apiTrafc.map((item) =>
-          this.timeUnit === 'MM'
-            ? item.statBaseTm.slice(5, 7) + '월'
-            : this.timeUnit === 'DD'
-            ? item.statBaseTm.slice(5, 7) + '월 ' + item.statBaseTm.slice(8, 10) + '일'
-            : this.timeUnit === 'HH'
-            ? item.statBaseTm.slice(5, 7) +
-              '월 ' +
-              item.statBaseTm.slice(8, 10) +
-              '일 ' +
-              item.statBaseTm.slice(11, 13) +
-              '시 '
-            : item.statBaseTm.slice(5, 7) +
-              '월 ' +
-              item.statBaseTm.slice(8, 10) +
-              '일 ' +
-              item.statBaseTm.slice(11, 13) +
-              '시 ' +
-              item.statBaseTm.slice(14, 16) +
-              '분'
-        ),
+    },
+    backgroundColor: '#fff',
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: trafficAPI[0].apiTrafc.map((item) =>
+        props.timeUnit === 'MM'
+          ? item.statBaseTm.slice(5, 7) + '월'
+          : props.timeUnit === 'DD'
+          ? item.statBaseTm.slice(5, 7) + '월 ' + item.statBaseTm.slice(8, 10) + '일'
+          : props.timeUnit === 'HH'
+          ? item.statBaseTm.slice(5, 7) +
+            '월 ' +
+            item.statBaseTm.slice(8, 10) +
+            '일 ' +
+            item.statBaseTm.slice(11, 13) +
+            '시 '
+          : item.statBaseTm.slice(5, 7) +
+            '월 ' +
+            item.statBaseTm.slice(8, 10) +
+            '일 ' +
+            item.statBaseTm.slice(11, 13) +
+            '시 ' +
+            item.statBaseTm.slice(14, 16) +
+            '분'
+      ),
 
-        axisPointer: {
-          type: 'line',
-          label: {
-            backgroundColor: '#777',
-          },
-        },
-        // axisLabel: {
-        //   inside: true,
-        //   formatter: '{value}\n',
-        // },
-      },
       axisPointer: {
+        type: 'line',
         label: {
           backgroundColor: '#777',
         },
       },
-
-      yAxis: {
-        type: 'value',
-        axisTick: {
-          inside: false,
-        },
-        splitLine: {
-          show: true,
-        },
-        axisLabel: {
-          inside: false,
-          formatter: '{value}\n',
-        },
-        z: 10,
+      // axisLabel: {
+      //   inside: true,
+      //   formatter: '{value}\n',
+      // },
+    },
+    axisPointer: {
+      label: {
+        backgroundColor: '#777',
       },
-      grid: {
-        top: 40,
-        left: 5,
-        right: 20,
-        bottom: 20,
-        containLabel: true,
+    },
+
+    yAxis: {
+      type: 'value',
+      axisTick: {
+        inside: false,
       },
-      dataZoom: [
-        {
-          type: 'inside',
-          throttle: 50,
-        },
-      ],
-      series: apiList.map((api) => {
-        return {
-          name: api.apiId,
-          type: 'line',
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 5,
-          data: api.apiTrafc.map((item) => item.totCnt),
-        };
-      }),
-    };
+      splitLine: {
+        show: true,
+      },
+      axisLabel: {
+        inside: false,
+        formatter: '{value}\n',
+      },
+      z: 10,
+    },
+    grid: {
+      top: 40,
+      left: 5,
+      right: 20,
+      bottom: 20,
+      containLabel: true,
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    series: trafficAPI.map((api) => {
+      return {
+        name: api.apiId,
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 5,
+        data: api.apiTrafc.map((item) => item.totCnt),
+      };
+    }),
+  };
+  return trafficAPIOption;
+};
 
-    return trafficAPIOption;
-  }
-
-  @Watch('apiList')
-  changedApiList() {
-    this.trafficAPIChart.clear();
-    this.trafficAPIChart.setOption(this.getTrafficAPIChartOption(this.apiList));
-    this.trafficAPIChart.resize();
-  }
-}
-</script> -->
-
+watch(props.apiList, () => {
+  console.log(props.apiList);
+  trafficAPIChart.value.clear();
+  trafficAPIChart.value.setOption(getTrafficAPIChartOption(props.apiList));
+  trafficAPIChart.value.resize();
+});
+</script>
 <style scoped>
 .chart-group-height {
   height: 340px;

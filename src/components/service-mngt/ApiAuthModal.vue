@@ -31,9 +31,8 @@
                             type="checkbox"
                             :id="system.sysId + '-all'"
                             :checked="
-                              checkedApiList.find((item) => item.sysId === system.sysId) &&
-                              checkedApiList.find((item) => item.sysId === system.sysId).apiId.length ===
-                                system.apiId.length
+                              checkedApiList.find((item) => item.sysId === system.sysId)?.apiId.length ===
+                              system.apiId.length
                             "
                             @click="checkApiAll(system)"
                           /><span class="checkmark"></span>
@@ -47,10 +46,7 @@
                           <input
                             type="checkbox"
                             :id="api"
-                            :checked="
-                              checkedApiList.find((item) => item.sysId === system.sysId) &&
-                              checkedApiList.find((item) => item.sysId === system.sysId).apiId.includes(api)
-                            "
+                            :checked="checkedApiList.find((item) => item.sysId === system.sysId)?.apiId.includes(api)"
                             @click="checkApi(system.sysId, api)"
                           /><span class="checkmark"></span>
                         </div>
@@ -102,7 +98,6 @@
 <script setup lang="ts">
 import type { ApiAuthResponse } from '@/types/ServiceType';
 import { BSpinner } from 'bootstrap-vue-3';
-import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { disableScrolling, enableScrolling } from '@/utils/screen';
 import { ref, watch } from 'vue';
 import type { Ref } from 'vue';
