@@ -4,32 +4,28 @@
       <!-- <template slot='search-form'> -->
       <div class="search-wrap">
         <!-- Input Box 옵션 -->
-        <div class="search-cont">
-          <InputBox
-            v-model="(searchData['id'] as string)"
-            :label="$t('system.id')"
-            :placeholder="$t('common.placeholder')"
-            @submit="searchOnClieckEvent"
-            @input="
-              (val) => {
-                searchData['id'] = val;
-              }
-            "
-          ></InputBox>
-        </div>
-        <div class="search-cont">
-          <InputBox
-            v-model="(searchData['tkcgrNm'] as string)"
-            :label="$t('system.tkcgrNm')"
-            :placeholder="$t('common.placeholder')"
-            @submit="searchOnClieckEvent"
-            @input="
-              (val) => {
-                searchData['tkcgrNm'] = val;
-              }
-            "
-          />
-        </div>
+        <InputBox
+          v-model="(searchData['id'] as string)"
+          :label="$t('system.id')"
+          :placeholder="$t('common.placeholder')"
+          @submit="searchOnClieckEvent"
+          @input="
+            (val) => {
+              searchData['id'] = val;
+            }
+          "
+        ></InputBox>
+        <InputBox
+          v-model="(searchData['tkcgrNm'] as string)"
+          :label="$t('system.tkcgrNm')"
+          :placeholder="$t('common.placeholder')"
+          @submit="searchOnClieckEvent"
+          @input="
+            (val) => {
+              searchData['tkcgrNm'] = val;
+            }
+          "
+        />
         <button class="mid-btn" @click="searchOnClieckEvent">
           <i><img src="@/assets/search_ico.svg" :alt="$t('common.search')" /></i>{{ $t('common.search') }}
         </button>
@@ -38,7 +34,7 @@
     <template v-slot:list-form>
       <ListForm :title="$t('system.list_cont_title')" :total="systemPagination.totalElements">
         <template v-slot:list-btn-area>
-          <button class="mid-btn" @click="registerOnClickEvent">
+          <button class="green-btn mid-btn" @click="registerOnClickEvent">
             <i><img src="@/assets/check_ico.svg" :alt="$t('common.register')" /></i>{{ $t('common.register') }}
           </button>
         </template>

@@ -6,7 +6,7 @@
     <li class="page-btn" v-show="isShowPrevBtn == true && !isListEmpty">
       <a @click="onChangedPage(pagingOption.currentPage - 1)"><img src="@/assets/page_before.svg" alt="이전" /></a>
     </li>
-    <li v-for="(page, index) in pageList" :key="index" :class="page === pagingOption.currentPage ? 'active' : ''">
+    <li v-for="(page, index) in pageList" :key="index" :class="{ active: page === pagingOption.currentPage }">
       <a @click="onChangedPage(page)">{{ page + 1 }}</a>
     </li>
     <li class="page-btn" v-show="isShowNextBtn == true && !isListEmpty">
@@ -20,9 +20,7 @@
 
 <script setup lang="ts">
 import type { Pagination } from '@/types/GateWayResponse';
-import { ref, reactive, computed, watch, onMounted } from 'vue';
-import type { Ref } from 'vue';
-import { number } from '@intlify/core-base';
+import { computed } from 'vue';
 
 const props = defineProps<{
   pagingOption: Pagination;

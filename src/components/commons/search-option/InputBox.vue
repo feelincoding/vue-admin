@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="search-cont">
     <label class="label" for="sysName">{{ props.label }}</label>
     <input
       type="text"
