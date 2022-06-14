@@ -43,11 +43,12 @@
               </button>
               <button class="xs-btn" @click="deleteEdpt(idx)" v-else><i class="minus"></i></button>
             </div>
-            <p v-if="notiMessageDomain[idx].isValid === false" class="red-txt noti">
+            <p class="gray-txt">- 도메인 양식 준수 및 port번호 5자리</p>
+            <p v-if="notiMessageDomain[idx].isValid === false" class="noti">
               {{ notiMessageDomain[idx].message }}
             </p>
-            <p v-if="notiMessagePort[idx].isValid === false" class="red-txt noti">{{ notiMessagePort[idx].message }}</p>
-            <p v-if="notiMessageDupl[idx].isValid === false" class="red-txt noti">{{ notiMessageDupl[idx].message }}</p>
+            <p v-if="notiMessagePort[idx].isValid === false" class="noti">{{ notiMessagePort[idx].message }}</p>
+            <p v-if="notiMessageDupl[idx].isValid === false" class="noti">{{ notiMessageDupl[idx].message }}</p>
           </li>
         </ul>
       </div>

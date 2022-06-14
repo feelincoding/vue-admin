@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import type { Ref } from 'vue';
 
 import ListLayout from '@/components/layout/ListLayout.vue';
@@ -141,7 +141,6 @@ import ErrorCode from '@/error/ErrorCodes';
 
 import { useRoute } from 'vue-router';
 import router from '@/router';
-// import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
 
 const systemModule = new SystemModule();
@@ -217,13 +216,13 @@ onMounted(() => {
 });
 
 const _getSystemList = (param: SearchCondition) => {
-  console.log('_getSystemList param: ', param);
+  // console.log('_getSystemList param: ', param);
   isShowProgress.value = true;
   // console.log('param : ', param);
   systemModule
     .getSystemList(param)
     .then((res) => {
-      console.log('getSystemList res: ', res);
+      // console.log('getSystemList res: ', res);
 
       isShowProgress.value = false;
 
@@ -249,7 +248,7 @@ const searchOnClieckEvent = () => {
     const value = searchData.value[key as keyof SearchCondition];
     if (value === '') delete searchData.value[key as keyof SearchCondition];
   });
-  console.log('searchOnClieckEvent', searchData.value);
+  // console.log('searchOnClieckEvent', searchData.value);
   // console.log('searchOnClieckEvent', searchData.value.id, searchData.value.tkcgrNm);
 
   // for (const [key, value] of Object.entries(this.searchData)) {

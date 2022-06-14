@@ -7,7 +7,7 @@
             <b-spinner label="Large Spinner"></b-spinner>
           </div>
           <div class="pop-header">
-            <h1 class="h1-tit">{{ msgId }}</h1>
+            <h1 class="h2-tit">{{ msgId }}</h1>
             <button @click="emit('close')">
               <i><img src="@/assets/close.svg" :alt="$t('common.close')" :title="$t('common.close')" /></i>
             </button>

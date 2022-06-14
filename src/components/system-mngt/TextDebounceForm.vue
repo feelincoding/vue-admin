@@ -58,7 +58,7 @@ const text = ref('');
 // });
 
 watch(text, (val: string) => {
-  console.log('val:',val);
+  console.log('val:', val);
   if (checkLength(val, 1, 20) && checkEnglishNumber(val)) {
     notiMessage.value = [true, ''];
   } else if (val == '') {

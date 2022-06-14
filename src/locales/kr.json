@@ -62,7 +62,7 @@
     "pos": "소속",
     "pos-place": "ktds",
     "eml": "이메일",
-    "eml-place": "example@test.com",
+    "eml-place": "{example}{'@'}{test.com}",
 
     "modal-register": "회원가입",
     "modal-register-message": "가입 하시겠습니까?",
@@ -204,7 +204,7 @@
     "tkcgrPos": "소속",
     "tkcgrPos_placeholder": "Agile Core팀",
     "tkcgrEml": "E-mail",
-    "tkcgrEml_placeholder": "example@kt.com",
+    "tkcgrEml_placeholder": "{account}{'@'}{domain}",
     "edpt": "End-point",
     "desc": "시스템 설명",
     "update": "Update",
