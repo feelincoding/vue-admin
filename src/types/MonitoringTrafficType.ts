@@ -20,3 +20,11 @@ export interface ApiTrafc {
   sucesCnt: number;
   failCnt: number;
 }
+
+export interface RequestTrafficParams {
+  svcId?: string;
+  apiId?: string;
+  statBaseUnit: string;
+  statStTm: string;
+  statEndTm: string;
+}

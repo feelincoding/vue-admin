@@ -1,10 +1,11 @@
 <template>
-  <!-- <div>
+  <div>
     <TrafficSelectSearch
       :isFocus="isSearchFocus"
       :placeholder="'서비스'"
       tab="service"
       :propServiceList="searchServiceList"
+      :propApiList="null"
       @search="getSearchOption"
     />
 
@@ -16,45 +17,41 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 </template>
-<!-- <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import TrafficSelectSearch from '@/components/monitoring/TrafficSelectSearch.vue';
-import { getModule } from 'vuex-module-decorators';
-import MonitoringTrafficModule from '@/store/modules/MonitoringTrafficModule';
-import MonitoringStatisticModule from '@/store/modules/MonitoringStatisticModule';
-import TrafficServiceChart from '@/components/monitoring/TrafficServiceChart.vue';
-@Component({ components: { TrafficSelectSearch, TrafficServiceChart } })
-export default class TrafficService extends Vue {
-  @Prop({ default: false }) isSearchFocus!: boolean;
-  trafficModule = getModule(MonitoringTrafficModule, this.$store);
-  statModule = getModule(MonitoringStatisticModule, this.$store);
-  timeUnit = 'MM';
-  get serviceList() {
-    return this.trafficModule.serviceList;
+<script setup lang="ts">
+import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import TrafficSelectSearch from '@/components/monitoring/traffic/TrafficSelectSearch.vue';
+import MonitoringTrafficRepository from '@/repository/monitoring-traffic-repository';
+import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
+import type { RequestTrafficParams, TrafficService } from '@/types/MonitoringTrafficType';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({});
+const props = defineProps<{
+  isSearchFocus: boolean;
+}>();
+const trafficRepository = new MonitoringTrafficRepository();
+const statisticRepository = new MonitoringStatisticRepository();
+const timeUnit = ref('MM');
+const serviceList: Ref<TrafficService[]> = ref([]);
+const searchServiceList: Ref<string[]> = ref([]);
+onMounted(() => {
+  statisticRepository.getSearchSvcList().then((res) => {
+    searchServiceList.value = res;
+  });
+});
+const emptyMsg = ref(t('traffic.need_search'));
+watch(serviceList, () => {
+  if (serviceList.value.length === 0) {
+    emptyMsg.value = '조회 가능한 데이터가 없습니다.';
+  } else if (serviceList.value === undefined) {
+    emptyMsg.value = '데이터를 조회해주세요.';
   }
-
-  get searchServiceList() {
-    return this.statModule.searchSvcList;
-  }
-  mounted() {
-    this.trafficModule.trafficReset();
-    this.statModule.getSearchSvcList();
-  }
-  @Watch('serviceList')
-  handleChangeServiceList() {
-    console.log('getservice');
-    if (this.serviceList.length === 0) {
-      this.emptyMsg = this.$t('traffic.no_data') as string;
-    } else {
-      this.emptyMsg = '';
-    }
-  }
-  getSearchOption(event: any) {
-    this.timeUnit = event.statBaseUnit as string;
-    this.trafficModule.getServiceList(event);
-  }
-  emptyMsg = this.$t('traffic.need_search') as string;
+});
+function getSearchOption(event: RequestTrafficParams) {
+  timeUnit.value = event.statBaseUnit;
+  trafficRepository.getServiceList(event).then((res) => {
+    serviceList.value = res;
+  });
 }
-</script> -->
+</script>
