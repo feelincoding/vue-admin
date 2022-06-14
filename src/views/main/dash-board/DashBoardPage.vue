@@ -3,24 +3,29 @@
     <!--- refresh play/pause area --->
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
 
-    <draggable @change="log" v-bind="dragOptions" @start="isDragging = true" @end="isDragging = false">
-      <TransitionGroup name="flip-list">
-        <section class="group col-3" style="height: 219px" :key="0" id="section-draggable">
+    <draggable
+      @change="log"
+      v-bind="dragOptions"
+      @start="isDragging = true"
+      @end="isDragging = false"
+      transitionMode=" true"
+    >
+      <transition-group type="transition" name="flip-list">
+        <section class="group col-3" style="height: 219px" :key="list1[0].order" id="section-draggable">
+          {{ list1[0].order }}
           <!--- Total API Traffic (24Hour) area --->
           <TotalApiTraffic
-            v-model:totalApiTraffic="totalTraffic"
-            v-model:isLoadData="isLoadData"
-            v-model:modal="trafficModal"
-            @modalChange="changeTrafficModal"
-            v-model:isDraged="isDraged"
-            v-model:isCommError="isTotalAPITrafficCommError"
+            :totalApiTraffic="totalTraffic"
+            :isLoadData="isLoadData"
+            :modal="trafficModal"
+            :isDraged="isDraged"
+            :isCommError="isTotalAPITrafficCommError"
           />
           <!--- Error stats (24Hour) area --->
           <ErrorStats
-            v-model:errorStats="errorStats"
-            v-model:isLoadData="isLoadData"
-            v-model:modal="errorModal"
-            @modalChange="changeErrorModal"
+            :errorStats="errorStats"
+            :isLoadData="isLoadData"
+            :modal="errorModal"
             :isDraged.sync="isDraged"
             :isCommError.sync="isErrorStatCommError"
           />
@@ -33,7 +38,8 @@
             :isCommError.sync="isApiResponseStusCommError"
           />
         </section>
-        <section class="group" :key="1" id="section-draggable">
+        <section class="group" :key="list1[1].order" id="section-draggable">
+          {{ list1[1].order }}
           <!--- 실시간 Traffic area --->
           <RealTimeTraffic
             :isDraged.sync="isDraged"
@@ -41,7 +47,8 @@
             :modal.sync="realTimeModal"
           />
         </section>
-        <section class="group col-2" :key="2" id="section-draggable">
+        <section class="group col-2" :key="list1[2].order" id="section-draggable">
+          {{ list1[2].order }}
           <!--- API Top 5 area --->
           <ApiTop5
             v-model:realTimeStat="realTimeApiStat"
@@ -55,13 +62,14 @@
           <!--- Service Top 5 area --->
           <ServiceTop5 v-model:realTimeStat="realTimeServiceStat" :isCommError.sync="isServiceTop5CommError" />
         </section>
-        <section class="group col-2 bg-pastel" :key="3" id="section-draggable">
+        <section class="group col-2 bg-pastel" :key="list1[3].order" id="section-draggable">
+          {{ list1[3].order }}
           <!--- Last Traffic --->
           <LastTraffic :lastTrafficList="lastTrafficList" :isCommError="isLastTrafficCommError" />
           <!--- Last Response --->
           <LastResponse :lastResponseList="lastResponseList" :isCommError="isLastResponseCommError" />
         </section>
-      </TransitionGroup>
+      </transition-group>
     </draggable>
 
     <ApiDetailModal
@@ -118,6 +126,13 @@ const dragOptions = ref({
   disabled: false,
   ghostClass: 'ghost',
 });
+
+let message1 = [0, 1, 2, 3];
+const list1 = ref(
+  message1.map((name, index) => {
+    return { order: index + 1 };
+  })
+);
 const DEFAULT_STAT_PERD = 1440;
 const DEFAULT_STAT_BASE_TM = '2022-05-27 20:30';
 const DEFAULT_STAT_BASE_UNIT = 'MI';
