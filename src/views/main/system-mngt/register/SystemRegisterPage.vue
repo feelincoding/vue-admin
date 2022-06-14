@@ -90,9 +90,8 @@ import type { Ref } from 'vue';
 
 import { BSpinner } from 'bootstrap-vue-3';
 
-import { useRoute } from 'vue-router';
-import router from '@/router';
-const route = useRoute();
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const idValid = ref(false);
 const tkcgrNmValid = ref(false);

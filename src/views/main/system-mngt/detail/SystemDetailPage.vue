@@ -61,14 +61,14 @@ import { ref, onMounted, inject } from 'vue';
 
 import { BSpinner } from 'bootstrap-vue-3';
 
-import { useRoute } from 'vue-router';
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
 const toast = useToast();
 const { t } = useI18n({});
 const route = useRoute();
+const router = useRouter();
 const modal = inject(modalInjectionKey)!!;
 
 const props = defineProps({

@@ -139,9 +139,10 @@ import { convertDate, convertTime } from '@/utils/converter';
 import type { GateWayError } from '@/error/GateWayError';
 import ErrorCode from '@/error/ErrorCodes';
 
-import { useRoute } from 'vue-router';
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
 import { BSpinner } from 'bootstrap-vue-3';
+
+const router = useRouter();
 
 const systemModule = new SystemModule();
 
