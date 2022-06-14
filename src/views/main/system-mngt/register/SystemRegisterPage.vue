@@ -26,7 +26,7 @@
           :required="true"
           @input="duplicateCheckId"
         /> -->
-          <EdptForm :inputNm="$t('system.edpt')" :strArr.sync="systemItem.edpt" :isValid.sync="edptValid" />
+          <EdptForm :inputNm="$t('system.edpt')" v-model:strArr.sync="systemItem.edpt" v-model:isValid.sync="edptValid" />
 
           <InputGroup
             type="text"
@@ -159,7 +159,13 @@ const showModal = () => {
     descValid.value
       ? true
       : false;
-
+  console.log('idValid: ', idValid.value);
+  console.log('tkcgrNmValid: ', tkcgrNmValid.value);
+  console.log('tkcgrPosValid: ', tkcgrPosValid.value);
+  console.log('tkcgrEmlValid: ', tkcgrEmlValid.value);
+  console.log('edptValid: ', edptValid.value);
+  console.log('val: ', val);
+  console.log('systemItem.value: ', systemItem.value);
   if (!val) {
     modal().show(t('system.empty_check_message'));
     return;

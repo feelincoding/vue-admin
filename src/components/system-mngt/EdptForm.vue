@@ -95,7 +95,7 @@ const notiMessageDupl: Ref<ValidationCheckType[]> = ref([]);
 const isDomainEmpty = ref(true);
 
 onMounted(() => {
-  console.log('@@@:', props);
+  // console.log('@@@:', props);
   props.strArr.forEach((str) => {
     edpts.value.push(stringToEdpt(str as string));
     notiMessageDomain.value.push({
