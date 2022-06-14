@@ -3,19 +3,23 @@
   <div class="chart-group chart-group-height" id="trafficAPI" ref="trafficAPI"></div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
+import { onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
 import * as echarts from 'echarts';
-import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 import type { TrafficApi } from '@/types/MonitoringTrafficType';
 
 const props = defineProps<{ apiList: TrafficApi[]; timeUnit: string }>();
 
-const trafficAPIChart = ref({} as echarts.EChartsType);
+// 트래픽 API탭 차트
+const trafficAPIChart = shallowRef({} as echarts.EChartsType);
 
 onMounted(() => {
+  // 차트 초기화
   const dom = document.getElementById('trafficAPI') as HTMLDivElement;
   trafficAPIChart.value = echarts.init(dom);
+  trafficAPIChart.value.clear;
   window.addEventListener('resize', observeSize);
+
+  // 차트 옵션 설정
   trafficAPIChart.value.setOption(getTrafficAPIChartOption(props.apiList));
 });
 
@@ -23,10 +27,12 @@ onUnmounted(() => {
   window.removeEventListener('resize', observeSize);
 });
 
+// 차트 크기 재조정 함수
 const resizeChart = () => {
   trafficAPIChart.value.resize();
 };
 
+// 차트 크기 재조정 이벤트 추적용 변수
 const width1 = ref(0);
 const height1 = ref(0);
 const trafficAPIRef = ref<HTMLDivElement | null>(null);
@@ -45,7 +51,39 @@ watch(width1, () => {
   resizeChart();
 });
 
+// 차트 옵션 생성 함수
 const getTrafficAPIChartOption = (trafficAPI: TrafficApi[]) => {
+  const data = trafficAPI[0].apiTrafc.map((item) =>
+    props.timeUnit === 'MM'
+      ? item.statBaseTm.slice(5, 7) + '월'
+      : props.timeUnit === 'DD'
+      ? item.statBaseTm.slice(5, 7) + '월 ' + item.statBaseTm.slice(8, 10) + '일'
+      : props.timeUnit === 'HH'
+      ? item.statBaseTm.slice(5, 7) +
+        '월 ' +
+        item.statBaseTm.slice(8, 10) +
+        '일 ' +
+        item.statBaseTm.slice(11, 13) +
+        '시 '
+      : item.statBaseTm.slice(5, 7) +
+        '월 ' +
+        item.statBaseTm.slice(8, 10) +
+        '일 ' +
+        item.statBaseTm.slice(11, 13) +
+        '시 ' +
+        item.statBaseTm.slice(14, 16) +
+        '분'
+  );
+  const series: echarts.SeriesOption[] = trafficAPI.map((api) => {
+    return {
+      name: api.apiId,
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 5,
+      data: api.apiTrafc.map((item) => item.totCnt),
+    };
+  });
   const trafficAPIOption: echarts.EChartsOption = {
     legend: {
       show: true,
@@ -63,34 +101,13 @@ const getTrafficAPIChartOption = (trafficAPI: TrafficApi[]) => {
           show: false,
           yAxisIndex: 'none',
         },
-        restore: {},
       },
     },
     backgroundColor: '#fff',
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: trafficAPI[0].apiTrafc.map((item) =>
-        props.timeUnit === 'MM'
-          ? item.statBaseTm.slice(5, 7) + '월'
-          : props.timeUnit === 'DD'
-          ? item.statBaseTm.slice(5, 7) + '월 ' + item.statBaseTm.slice(8, 10) + '일'
-          : props.timeUnit === 'HH'
-          ? item.statBaseTm.slice(5, 7) +
-            '월 ' +
-            item.statBaseTm.slice(8, 10) +
-            '일 ' +
-            item.statBaseTm.slice(11, 13) +
-            '시 '
-          : item.statBaseTm.slice(5, 7) +
-            '월 ' +
-            item.statBaseTm.slice(8, 10) +
-            '일 ' +
-            item.statBaseTm.slice(11, 13) +
-            '시 ' +
-            item.statBaseTm.slice(14, 16) +
-            '분'
-      ),
+      data: data,
 
       axisPointer: {
         type: 'line',
@@ -136,26 +153,19 @@ const getTrafficAPIChartOption = (trafficAPI: TrafficApi[]) => {
         throttle: 50,
       },
     ],
-    series: trafficAPI.map((api) => {
-      return {
-        name: api.apiId,
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 5,
-        data: api.apiTrafc.map((item) => item.totCnt),
-      };
-    }),
+    series: series,
   };
   return trafficAPIOption;
 };
 
-watch(props.apiList, () => {
-  console.log(props.apiList);
-  trafficAPIChart.value.clear();
-  trafficAPIChart.value.setOption(getTrafficAPIChartOption(props.apiList));
-  trafficAPIChart.value.resize();
-});
+watch(
+  () => props.apiList,
+  () => {
+    trafficAPIChart.value.clear();
+    trafficAPIChart.value.setOption(getTrafficAPIChartOption(props.apiList));
+    trafficAPIChart.value.resize();
+  }
+);
 </script>
 <style scoped>
 .chart-group-height {

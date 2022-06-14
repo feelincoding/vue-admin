@@ -3,19 +3,23 @@
   <div class="chart-group chart-group-height" id="trafficService" ref="trafficServiceRef"></div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
+import { onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
 import * as echarts from 'echarts';
-import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';
 import type { TrafficService } from '@/types/MonitoringTrafficType';
 
 const props = defineProps<{ serviceList: TrafficService[]; timeUnit: string }>();
 
-const trafficServiceChart = ref({} as echarts.EChartsType);
+// 트래픽 서비스탭 차트
+const trafficServiceChart = shallowRef({} as echarts.EChartsType);
 
 onMounted(() => {
+  // 차트 초기화
   const dom = document.getElementById('trafficService') as HTMLDivElement;
   trafficServiceChart.value = echarts.init(dom);
+  trafficServiceChart.value.clear();
   window.addEventListener('resize', observeSize);
+
+  // 차트 옵션 설정
   trafficServiceChart.value.setOption(getTrafficServiceChartOption(props.serviceList));
 });
 
@@ -23,10 +27,12 @@ onUnmounted(() => {
   window.removeEventListener('resize', observeSize);
 });
 
+// 차트 크기 재조정 함수
 const resizeChart = () => {
   trafficServiceChart.value.resize();
 };
 
+// 차트 크기 재조정 이벤트 추적용 변수
 const width1 = ref(0);
 const height1 = ref(0);
 const trafficServiceRef = ref<HTMLDivElement | null>(null);
@@ -45,12 +51,43 @@ watch(width1, () => {
   resizeChart();
 });
 
+// 차트 옵션 생성 함수
 const getTrafficServiceChartOption = (trafficService: TrafficService[]) => {
+  const data = trafficService[0].svcTrafc.map((item) =>
+    props.timeUnit === 'MM'
+      ? item.statBaseTm.slice(5, 7) + '월'
+      : props.timeUnit === 'DD'
+      ? item.statBaseTm.slice(5, 7) + '월 ' + item.statBaseTm.slice(8, 10) + '일'
+      : props.timeUnit === 'HH'
+      ? item.statBaseTm.slice(5, 7) +
+        '월 ' +
+        item.statBaseTm.slice(8, 10) +
+        '일 ' +
+        item.statBaseTm.slice(11, 13) +
+        '시 '
+      : item.statBaseTm.slice(5, 7) +
+        '월 ' +
+        item.statBaseTm.slice(8, 10) +
+        '일 ' +
+        item.statBaseTm.slice(11, 13) +
+        '시 ' +
+        item.statBaseTm.slice(14, 16) +
+        '분'
+  );
+  const series: echarts.SeriesOption[] = trafficService.map((service) => {
+    return {
+      name: service.svcId,
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 5,
+      data: service.svcTrafc.map((item) => item.totCnt),
+    };
+  });
   const trafficServiceOption: echarts.EChartsOption = {
     legend: {
       show: true,
     },
-
     tooltip: {
       trigger: 'axis',
     },
@@ -63,35 +100,13 @@ const getTrafficServiceChartOption = (trafficService: TrafficService[]) => {
           show: false,
           yAxisIndex: 'none',
         },
-        restore: {},
       },
     },
     backgroundColor: '#fff',
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: trafficService[0].svcTrafc.map((item) =>
-        props.timeUnit === 'MM'
-          ? item.statBaseTm.slice(5, 7) + '월'
-          : props.timeUnit === 'DD'
-          ? item.statBaseTm.slice(5, 7) + '월 ' + item.statBaseTm.slice(8, 10) + '일'
-          : props.timeUnit === 'HH'
-          ? item.statBaseTm.slice(5, 7) +
-            '월 ' +
-            item.statBaseTm.slice(8, 10) +
-            '일 ' +
-            item.statBaseTm.slice(11, 13) +
-            '시 '
-          : item.statBaseTm.slice(5, 7) +
-            '월 ' +
-            item.statBaseTm.slice(8, 10) +
-            '일 ' +
-            item.statBaseTm.slice(11, 13) +
-            '시 ' +
-            item.statBaseTm.slice(14, 16) +
-            '분'
-      ),
-
+      data: data,
       axisPointer: {
         type: 'line',
         label: {
@@ -103,12 +118,6 @@ const getTrafficServiceChartOption = (trafficService: TrafficService[]) => {
       //   formatter: '{value}\n',
       // },
     },
-    axisPointer: {
-      label: {
-        backgroundColor: '#777',
-      },
-    },
-
     yAxis: {
       type: 'value',
       axisTick: {
@@ -136,24 +145,15 @@ const getTrafficServiceChartOption = (trafficService: TrafficService[]) => {
         throttle: 50,
       },
     ],
-    series: trafficService.map((service) => {
-      return {
-        name: service.svcId,
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 5,
-        data: service.svcTrafc.map((item) => item.totCnt),
-      };
-    }),
+    series: series,
   };
   return trafficServiceOption;
 };
 
+// 프롭 변경시 차트 업데이트
 watch(
   () => props.serviceList,
   () => {
-    console.log(props.serviceList);
     trafficServiceChart.value.clear();
     trafficServiceChart.value.setOption(getTrafficServiceChartOption(props.serviceList));
     trafficServiceChart.value.resize();
