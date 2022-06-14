@@ -115,7 +115,7 @@ import { apiValidationCheck } from '@/repository/api-repository';
 import type { SystemIdEdpt } from '@/types/SystemType';
 import SystemModule from '@/repository/system-repository';
 import ApiModule from '@/repository/api-repository';
-import HandlerModule from '@/repository/HandlerRepository';
+import HandlerModule from '@/repository/handler-repository';
 import { inject, onMounted, ref, watch, type Ref } from 'vue';
 import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
