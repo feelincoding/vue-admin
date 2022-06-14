@@ -124,7 +124,7 @@ import { ref, reactive, computed, watch, onMounted } from 'vue';
 import type { Ref } from 'vue';
 
 import ListLayout from '@/components/layout/ListLayout.vue';
-import SystemModule from '@/stores/modules/SystemModule';
+import SystemModule from '@/repository/system-repository';
 
 import InputBox from '@/components/commons/search-option/InputBox.vue';
 import ListForm from '@/components/commons/ListForm.vue';

@@ -117,7 +117,7 @@ import ListLayout from '@/components/layout/ListLayout.vue';
 import ListForm from '@/components/commons/ListForm.vue';
 import ListRow from '@/components/api-mngt/list/ListRow.vue';
 import type { ApiDetailResponse } from '@/types/ApiType';
-import ApiModule from '@/repository/ApiMngtRepository';
+import ApiModule from '@/repository/api-repository';
 import SelectBox from '@/components/commons/search-option/SelectBox.vue';
 import type { SearchCondition, SelectOptionType } from '@/types/SearchType';
 import Paging from '@/components/commons/Paging.vue';
@@ -215,7 +215,6 @@ const fetchApiList = () => {
       }
     });
 };
-
 
 const deleteApi = async () => {
   const query = { id: deleteMsg.value.id, sysId: deleteMsg.value.sysId };

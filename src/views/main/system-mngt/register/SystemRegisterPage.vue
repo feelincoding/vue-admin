@@ -40,7 +40,11 @@
           :place="$t('system.tkcgrEml_placeholder')"
           v-model:isValid.sync="tkcgrEmlValid"
         />
-        <TextAreaGroup :inputNm="$t('system.desc')" v-model:value.sync="systemItem.desc" v-model:isValid.sync="descValid" />
+        <TextAreaGroup
+          :inputNm="$t('system.desc')"
+          v-model:value.sync="systemItem.desc"
+          v-model:isValid.sync="descValid"
+        />
       </ul>
       <ModalLayout size="s" v-if="isShowModal">
         <template v-slot:modalHeader
@@ -70,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import SystemModule from '@/stores/modules/SystemModule';
+import SystemModule from '@/repository/system-repository';
 import ContentLayout from '@/components/system-mngt/ContentLayout.vue';
 import InputGroup from '@/components/system-mngt/InputGroup.vue';
 import TextAreaGroup from '@/components/system-mngt/TextAreaGroup.vue';
