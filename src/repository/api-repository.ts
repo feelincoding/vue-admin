@@ -13,7 +13,7 @@ interface ApiListResponse {
   apiList: ApiDetailResponse[];
   pagination: Pagination | undefined;
 }
-export default class ApiMngtRepository {
+export default class ApiRepository {
   //api 리스트 요청
 
   public apiList: ApiDetailResponse[] = [];

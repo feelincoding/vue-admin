@@ -16,7 +16,7 @@ function handleCommonError(error: GateWayError | any) {
   }
   return Promise.reject(error);
 }
-export default class HandlerModule {
+export default class HandlerRepository {
   // 핸들러 Req 그룹리스트
   public reqHandlerGroupList: HandlerGroupDetail[] = [];
   async getReqHandlerGroupList() {

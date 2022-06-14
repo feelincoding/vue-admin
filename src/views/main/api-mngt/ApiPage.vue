@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ListLayout :title="$t('api.apiManagement')" subTitle="API List">
+    <ListLayout :title="$t('api.apiManagement')">
       <template v-slot:search-form>
         <div class="search-wrap">
           <!-- <h2 class="h2-tit">{{ $t('common.search') }}</h2> -->
@@ -29,7 +29,7 @@
           <template v-slot:list-table>
             <div class="tb-wrap">
               <div class="text-center" v-if="isShowProgress">
-                <b-spinner label="Large Spinner"></b-spinner>
+                <BSpinner label="Large Spinner"></BSpinner>
               </div>
               <table class="list-tb" v-if="!isShowProgress">
                 <caption>
@@ -58,11 +58,11 @@
                   </tr>
                 </thead>
                 <div class="text-center">
-                  <b-spinner
+                  <BSpinner
                     v-show="isShowProgress"
                     style="width: 2rem; height: 2rem; position: absolute; left: 50%"
                     label="Large Spinner"
-                  ></b-spinner>
+                  ></BSpinner>
                 </div>
                 <tbody v-if="apiList.length > 0">
                   <ListRow
@@ -97,7 +97,7 @@
               <template v-slot:modalFooter
                 ><button class="lg-btn purple-btn" @click="deleteApi" :disabled="isModalProgress">
                   {{ $t('common.ok')
-                  }}<b-spinner variant="light" label="Spinning" v-if="isModalProgress" small></b-spinner>
+                  }}<BSpinner variant="light" label="Spinning" v-if="isModalProgress" small></BSpinner>
                 </button>
                 <button class="lg-btn white-btn" @click="showModal = false" :disabled="isModalProgress">
                   {{ $t('common.cancel') }}
