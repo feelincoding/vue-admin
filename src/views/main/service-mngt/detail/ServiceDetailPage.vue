@@ -8,66 +8,74 @@
       :isEmShow="false"
     >
       <template v-if="!isShowProgress" v-slot:contents>
-        <ul>
-          <InfoGroup :inputNm="$t('service.id')" :value="service.id" />
-          <DateInfoGroup
-            :inputNm="$t('service.date')"
-            :startDt="getDate(service.svcStDt)"
-            :endDt="getDate(service.svcEndDt)"
-          />
-          <AuthGroup
-            :inputNm="$t('service.authentication_method')"
-            :athn="service.athnType"
-            :id="service.athn.basic.id"
-            :pw="service.athn.basic.pw"
-            :alg="service.athn.jwt.alg"
-            :iss="service.athn.jwt.iss"
-            :aud="service.athn.jwt.aud"
-            :pubKey="service.athn.jwt.pubKey"
-          />
-          <ApiAuthGroup :inputNm="$t('service.api_mngt')" :countApiList="countApiList" @setShowApiAuth="showApiAuth" />
-          <SlaGroup
-            :inputNm="$t('service.SLA_mngt')"
-            :secVal="service.sla.sec"
-            :minVal="service.sla.min"
-            :hourVal="service.sla.hr"
-            :dayVal="service.sla.day"
-            :monthVal="service.sla.mon"
-          />
-          <InfoGroup :inputNm="$t('service.tkcgrNm')" :value="service.tkcgrNm" />
-          <InfoGroup :inputNm="$t('service.tkcgrPos')" :value="service.tkcgrPos" />
-          <InfoGroup :inputNm="$t('service.tkcgrEml')" :value="service.tkcgrEml" />
-          <InfoGroup :inputNm="$t('service.desc')" :value="service.desc" />
-          <ModalLayout size="s" v-if="deleteModal">
-            <template v-slot:modalHeader
-              ><h1 class="h1-tit">{{ $t('service.delete') }}</h1>
-            </template>
-            <template v-slot:modalContainer>
-              <p class="text">{{ $t('service.delete_message') }}</p>
-            </template>
-            <template v-slot:modalFooter
-              ><button class="lg-btn purple-btn" @click="deleteService(deleteId)">{{ $t('common.ok') }}</button
-              ><button class="lg-btn white-btn" @click="modalHide()">{{ $t('common.cancel') }}</button>
-            </template>
-          </ModalLayout>
-        </ul>
+        <div class="form-wrap">
+          <ul>
+            <InfoGroup :inputNm="$t('service.id')" :value="service.id" />
+            <DateInfoGroup
+              :inputNm="$t('service.date')"
+              :startDt="getDate(service.svcStDt)"
+              :endDt="getDate(service.svcEndDt)"
+            />
+            <AuthGroup
+              :inputNm="$t('service.authentication_method')"
+              :athn="service.athnType"
+              :id="service.athn.basic.id"
+              :pw="service.athn.basic.pw"
+              :alg="service.athn.jwt.alg"
+              :iss="service.athn.jwt.iss"
+              :aud="service.athn.jwt.aud"
+              :pubKey="service.athn.jwt.pubKey"
+            />
+            <ApiAuthGroup
+              :inputNm="$t('service.api_mngt')"
+              :countApiList="countApiList"
+              @setShowApiAuth="showApiAuth"
+            />
+            <SlaGroup
+              :inputNm="$t('service.SLA_mngt')"
+              :secVal="service.sla.sec"
+              :minVal="service.sla.min"
+              :hourVal="service.sla.hr"
+              :dayVal="service.sla.day"
+              :monthVal="service.sla.mon"
+            />
+            <InfoGroup :inputNm="$t('service.tkcgrNm')" :value="service.tkcgrNm" />
+            <InfoGroup :inputNm="$t('service.tkcgrPos')" :value="service.tkcgrPos" />
+            <InfoGroup :inputNm="$t('service.tkcgrEml')" :value="service.tkcgrEml" />
+            <InfoGroup :inputNm="$t('service.desc')" :value="service.desc" />
+            <ModalLayout size="s" v-if="deleteModal">
+              <template v-slot:modalHeader
+                ><h1 class="h1-tit">{{ $t('service.delete') }}</h1>
+              </template>
+              <template v-slot:modalContainer>
+                <p class="text">{{ $t('service.delete_message') }}</p>
+              </template>
+              <template v-slot:modalFooter
+                ><button class="lg-btn purple-btn" @click="deleteService(deleteId)">{{ $t('common.ok') }}</button
+                ><button class="lg-btn white-btn" @click="modalHide()">{{ $t('common.cancel') }}</button>
+              </template>
+            </ModalLayout>
+          </ul>
+        </div>
       </template>
 
       <template v-if="!isShowProgress" v-slot:buttons>
-        <button
-          class="lg-btn purple-btn"
-          @click="$router.push({ name: 'service-edit', params: { id: $route.params.id } })"
-          :disabled="isRegisterProgress"
-        >
-          {{ $t('common.modify') }}
-        </button>
-        <button class="lg-btn white-btn" @click="modalShow(service.id)" :disabled="isRegisterProgress">
-          {{ $t('common.delete') }}
-          <b-spinner v-show="isRegisterProgress" small></b-spinner>
-        </button>
-        <button class="lg-btn gray-btn" @click="$router.back()" :disabled="isRegisterProgress">
-          {{ $t('common.list') }}
-        </button>
+        <div class="btn-wrap">
+          <button
+            class="lg-btn purple-btn"
+            @click="$router.push({ name: 'service-edit', params: { id: $route.params.id } })"
+            :disabled="isRegisterProgress"
+          >
+            {{ $t('common.modify') }}
+          </button>
+          <button class="lg-btn white-btn" @click="modalShow(service.id)" :disabled="isRegisterProgress">
+            {{ $t('common.delete') }}
+            <b-spinner v-show="isRegisterProgress" small></b-spinner>
+          </button>
+          <button class="lg-btn gray-btn" @click="$router.back()" :disabled="isRegisterProgress">
+            {{ $t('common.list') }}
+          </button>
+        </div>
       </template>
     </ContentLayout>
     <ApiAuthVueModal
