@@ -1,22 +1,15 @@
 <template>
-  <div class="comp">
+  <section class="contents-wrap">
     <div class="tb-tit">
       <h2 class="h2-tit">
-        {{ props.title }}
-        <span
-          >[Total :<em>{{ props.total }}</em
-          >]
-        </span>
+        Total :<em>{{ props.total }}</em>
       </h2>
-      <div class="btn-wrap">
-        <slot name="list-btn-area" />
-      </div>
+      <slot name="list-btn-area" />
     </div>
     <slot name="list-table" />
-    <div class="page-wrap">
-      <slot name="pagination" />
-    </div>
-  </div>
+
+    <slot name="pagination" />
+  </section>
 </template>
 
 <script setup lang="ts">

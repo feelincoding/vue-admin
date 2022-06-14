@@ -1,0 +1,136 @@
+<template>
+  <aside id="side">
+    <div class="logo">
+      <a href="javascript:void(0)"><img src="@/assets/logo.svg" alt="API G/W Admin logo" /></a>
+    </div>
+
+    <div class="member-wrap">
+      <div class="flex">
+        <i><img src="@/assets/member_ico.svg" alt="멤버 아이콘" /></i>
+        <span><strong>홍길동</strong>님</span>
+      </div>
+      <a class="link" href="javascript:void(0)">로그아웃</a>
+    </div>
+
+    <nav id="navi">
+      <ul class="navi-list">
+        <li class="home" :class="{ on: $route.path.includes('dashboard') }">
+          <router-link :to="`${dashBoardPath}`" @click="changeNavState('dashboardState')">Home</router-link>
+        </li>
+        <li class="sys" :class="{ on: $route.path.includes('system') }">
+          <router-link :to="`${systemPath}`" @click="changeNavState('systemState')">System 관리</router-link>
+        </li>
+        <li class="api" :class="{ on: $route.path.includes('api') }">
+          <router-link :to="`${apiPath}`" @click="changeNavState('apiState')">API 관리</router-link>
+        </li>
+        <li class="serv" :class="{ on: $route.path.includes('service') }">
+          <router-link :to="`${servicePath}`" @click="changeNavState('serviceState')">Service 관리</router-link>
+        </li>
+        <li
+          class="monitor"
+          :class="{
+            on: navState.showMonitoring || $route.path.includes('monitoring'),
+          }"
+        >
+          <a href="javascript:void(0)" @click="changeShowMonitoring()">Monitoring 관리</a>
+          <Transition name="fade" appear>
+            <div class="depth-menu" v-show="navState.showMonitoring || $route.path.includes('monitoring')">
+              <ul>
+                <li :class="{ active: $route.path.includes('control') }">
+                  <router-link :to="`${monitoringPath}/control`" @click="changeNavState('controlState')"
+                    >관제 모니터링</router-link
+                  >
+                </li>
+                <li :class="{ active: $route.path.includes('statistic') }">
+                  <router-link :to="`${monitoringPath}/statistic`" @click="changeNavState('statisticState')"
+                    >통계 모니터링</router-link
+                  >
+                </li>
+                <li :class="{ active: $route.path.includes('traffic') }">
+                  <router-link :to="`${monitoringPath}/traffic`" @click="changeNavState('trafficState')"
+                    >트래픽 모니터링</router-link
+                  >
+                </li>
+              </ul>
+            </div>
+          </Transition>
+        </li>
+        <li class="manage" :class="{ on: navState.showManagement }">
+          <a href="javascript:void(0)">Management</a>
+        </li>
+      </ul>
+    </nav>
+    <!------- // navigation -------->
+  </aside>
+</template>
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router';
+import { SYSTEM, SERVICE, API, MONITORING, MANAGEMENT } from '@/router/Names';
+import { onMounted, ref, type Ref } from 'vue';
+
+interface NavState {
+  [key: string]: boolean;
+  dashBoardState: boolean;
+  systemState: boolean;
+  apiState: boolean;
+  serviceState: boolean;
+  monitoringState: boolean;
+  controlState: boolean;
+  statisticState: boolean;
+  trafficState: boolean;
+  managementState: boolean;
+  showMonitoring: boolean;
+  showManagement: boolean;
+}
+
+const navState: Ref<NavState> = ref({
+  dashBoardState: true,
+  systemState: false,
+  apiState: false,
+  serviceState: false,
+  monitoringState: false,
+  controlState: false,
+  statisticState: false,
+  trafficState: false,
+  managementState: false,
+  showMonitoring: false,
+  showManagement: false,
+});
+
+const changeShowMonitoring = () => {
+  if (!navState.value.showMonitoring) {
+    navState.value.showMonitoring = true;
+    if (navState.value.showManagement) {
+      navState.value.showManagement = false;
+    }
+  } else {
+    navState.value.showMonitoring = false;
+  }
+  console.log(navState.value.showMonitoring);
+};
+
+const changeNavState = (state: string) => {
+  console.log(state);
+  for (const key of Object.keys(navState)) {
+    navState.value[key] = false;
+  }
+  navState.value[state] = true;
+};
+
+const dashBoardPath = '/dashboard';
+const systemPath = SYSTEM;
+const apiPath = API;
+const servicePath = SERVICE;
+const monitoringPath = MONITORING;
+const managementPath = MANAGEMENT;
+</script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>

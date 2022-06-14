@@ -15,8 +15,8 @@
 </template>
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
-import TrafficAPI from '@/components/monitoring/TrafficAPI.vue';
-import TrafficService from '@/components/monitoring/TrafficService.vue';
+import TrafficAPI from '@/components/monitoring/traffic/TrafficAPI.vue';
+import TrafficService from '@/components/monitoring/traffic/TrafficService.vue';
 const selectedTab = ref('service');
 const isSearchFocus = ref(false);
 function handleOnClick(event: any) {
