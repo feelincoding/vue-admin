@@ -25,7 +25,7 @@ import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
 import TrafficSelectSearch from '@/components/monitoring/traffic/TrafficSelectSearch.vue';
 import MonitoringTrafficRepository from '@/repository/monitoring-traffic-repository';
 import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
-import type { TrafficApi } from '@/types/MonitoringTrafficType';
+import type { RequestTrafficAPIParams, TrafficApi } from '@/types/MonitoringTrafficType';
 import type { ApiSearch } from '@/types/MonitoringStatisticType';
 import TrafficAPIChart from '@/components/monitoring/traffic/TrafficAPIChart.vue';
 const props = defineProps<{
@@ -50,7 +50,7 @@ watch(apiList, () => {
   }
 });
 
-function getSearchOption(event: any) {
+function getSearchOption(event: RequestTrafficAPIParams) {
   console.log(event);
   timeUnit.value = event.statBaseUnit as string;
   trafficRepository.getApiList(event).then((res) => {

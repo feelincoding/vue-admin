@@ -716,3 +716,153 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
 
   return option;
 };
+
+export const getRealTimeChartOption = (
+  date: any[],
+  data1: number[],
+  data2: number[],
+  data3: number[],
+  data4: number[],
+  data5: number[],
+  data6: number[],
+  data7: number[]
+) => {
+  const o: echarts.EChartsOption = {
+    animationDuration: 10000,
+    legend: {
+      data: ['KTDS', 'KAKAO', 'NAVER', 'CUPANG', 'GOOGLE', 'FACEBOOK', 'INSTAGRAM'],
+    },
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      nameLocation: 'middle',
+      data: date,
+    },
+    yAxis: {
+      boundaryGap: [0, '50%'],
+      type: 'value',
+    },
+    grid: {
+      left: '3%',
+      right: '10%',
+      bottom: '10%',
+      top: '10%',
+      containLabel: true,
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    series: [
+      {
+        name: 'KTDS',
+        type: 'line',
+        showSymbol: false,
+        data: data1,
+        color: 'red',
+        endLabel: {
+          show: true,
+          formatter: function (params: any) {
+            return 'KTDS : ' + params.value.toFixed(0);
+          },
+        },
+      },
+      {
+        name: 'KAKAO',
+        type: 'line',
+        showSymbol: false,
+        data: data2,
+        color: 'yellow',
+        endLabel: {
+          show: true,
+          formatter: function (params: any) {
+            return 'KAKAO : ' + params.value.toFixed(0);
+          },
+        },
+      },
+      {
+        name: 'NAVER',
+        type: 'line',
+        showSymbol: false,
+        data: data3,
+        color: 'green',
+        endLabel: {
+          show: true,
+          formatter: function (params: any) {
+            return 'NAVER : ' + params.value.toFixed(0);
+          },
+        },
+      },
+      {
+        name: 'CUPANG',
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        data: data4,
+        color: 'blue',
+        endLabel: {
+          show: true,
+          formatter: function (params: any) {
+            return 'CUPANG : ' + params.value.toFixed(0);
+          },
+        },
+      },
+      {
+        name: 'GOOGLE',
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        data: data5,
+        color: 'black',
+        endLabel: {
+          show: true,
+          formatter: function (params: any) {
+            return 'GOOGLE : ' + params.value.toFixed(0);
+          },
+        },
+      },
+      {
+        name: 'FACEBOOK',
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        data: data6,
+        color: 'orange',
+        endLabel: {
+          show: true,
+          formatter: function (params: any) {
+            return 'FACEBOOK : ' + params.value.toFixed(0);
+          },
+        },
+      },
+      {
+        name: 'INSTAGRAM',
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        data: data7,
+        color: 'purple',
+        endLabel: {
+          show: true,
+          formatter: function (params: any) {
+            return 'INSTAGRAM : ' + params.value.toFixed(0);
+          },
+        },
+      },
+    ],
+  };
+  return o;
+};

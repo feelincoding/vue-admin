@@ -1,4 +1,9 @@
-import type { RequestTrafficParams, TrafficApi, TrafficService } from '@/types/MonitoringTrafficType';
+import type {
+  RequestTrafficAPIParams,
+  RequestTrafficServiceParams,
+  TrafficApi,
+  TrafficService,
+} from '@/types/MonitoringTrafficType';
 import { AxiosClient } from '@/axios/AxiosClient';
 import type { GateWayResponse } from '@/types/GateWayResponse';
 
@@ -6,7 +11,7 @@ export default class MonitoringTrafficRepository {
   public apiList: TrafficApi[] = [];
   public serviceList: TrafficService[] = [];
 
-  async getServiceList(param: RequestTrafficParams) {
+  async getServiceList(param: RequestTrafficServiceParams) {
     const response = await AxiosClient.getInstance()
       .get<GateWayResponse<TrafficService[]>>(`/trafc/services`, param)
       .then((res) => {
@@ -19,7 +24,7 @@ export default class MonitoringTrafficRepository {
     return response;
   }
 
-  async getApiList(param: RequestTrafficParams) {
+  async getApiList(param: RequestTrafficAPIParams) {
     const response = await AxiosClient.getInstance()
       .get<GateWayResponse<TrafficApi[]>>(`/trafc/apis`, param)
       .then((res) => {

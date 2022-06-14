@@ -25,7 +25,7 @@ import TrafficSelectSearch from '@/components/monitoring/traffic/TrafficSelectSe
 import TrafficServiceChart from '@/components/monitoring/traffic/TrafficServiceChart.vue';
 import MonitoringTrafficRepository from '@/repository/monitoring-traffic-repository';
 import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
-import type { RequestTrafficParams, TrafficService } from '@/types/MonitoringTrafficType';
+import type { RequestTrafficServiceParams, TrafficService } from '@/types/MonitoringTrafficType';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({});
 const props = defineProps<{
@@ -49,7 +49,7 @@ watch(serviceList, () => {
     emptyMsg.value = '데이터를 조회해주세요.';
   }
 });
-function getSearchOption(event: RequestTrafficParams) {
+function getSearchOption(event: RequestTrafficServiceParams) {
   timeUnit.value = event.statBaseUnit;
   trafficRepository.getServiceList(event).then((res) => {
     console.log(event);
