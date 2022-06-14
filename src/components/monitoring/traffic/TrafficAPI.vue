@@ -22,7 +22,7 @@
 </template>
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
-import TrafficSelectSearch from '@/components/monitoring/TrafficSelectSearch.vue';
+import TrafficSelectSearch from '@/components/monitoring/traffic/TrafficSelectSearch.vue';
 import MonitoringTrafficRepository from '@/repository/monitoring-traffic-repository';
 import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
 import type { TrafficApi } from '@/types/MonitoringTrafficType';
