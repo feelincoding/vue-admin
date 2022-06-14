@@ -1,128 +1,129 @@
 <template>
   <article class="dashboard">
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
-    <section class="group" id="section-draggable">
-      <div class="total-group">
-        <div class="d-total">
-          <div class="ico-wrap">
-            <i><img src="@/assets/d_total_ico.svg" alt="total" /></i>
-            <p>Total</p>
-          </div>
-          <span class="num">{{ totalTraffic.totCnt }}</span>
-        </div>
-        <div class="d-total">
-          <div class="ico-wrap">
-            <i><img src="@/assets/d_success_ico.svg" alt="성공" /></i>
-            <p>성공</p>
-          </div>
-          <span class="num">{{ totalTraffic.sucesCnt }}</span>
-        </div>
-        <div class="d-fail d-total">
-          <div class="ico-wrap">
-            <i><img src="@/assets/d_fail_ico.svg" alt="실패" /></i>
-            <p>실패</p>
-          </div>
-          <span class="num flex">{{ totalTraffic.failCnt }}</span>
-          <div class="fail-group">
-            <div class="fail-list">
-              <span class="label critical"></span><span>{{ errorStats.crCnt }}</span>
+    <draggable @change="log" v-bind="dragOptions">
+      <section class="group" id="section-draggable">
+        <div class="total-group">
+          <div class="d-total">
+            <div class="ico-wrap">
+              <i><img src="@/assets/d_total_ico.svg" alt="total" /></i>
+              <p>Total</p>
             </div>
-            <div class="fail-list">
-              <span class="label major"></span><span>{{ errorStats.maCnt }}</span>
+            <span class="num">{{ totalTraffic.totCnt }}</span>
+          </div>
+          <div class="d-total">
+            <div class="ico-wrap">
+              <i><img src="@/assets/d_success_ico.svg" alt="성공" /></i>
+              <p>성공</p>
             </div>
-            <div class="fail-list">
-              <span class="label minor"></span><span>{{ errorStats.miCnt }}</span>
+            <span class="num">{{ totalTraffic.sucesCnt }}</span>
+          </div>
+          <div class="d-fail d-total">
+            <div class="ico-wrap">
+              <i><img src="@/assets/d_fail_ico.svg" alt="실패" /></i>
+              <p>실패</p>
+            </div>
+            <span class="num flex">{{ totalTraffic.failCnt }}</span>
+            <div class="fail-group">
+              <div class="fail-list">
+                <span class="label critical"></span><span>{{ errorStats.crCnt }}</span>
+              </div>
+              <div class="fail-list">
+                <span class="label major"></span><span>{{ errorStats.maCnt }}</span>
+              </div>
+              <div class="fail-list">
+                <span class="label minor"></span><span>{{ errorStats.miCnt }}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="avg-group">
-        <div class="tps-chart">
-          <div class="ico-wrap">
-            <i><img src="@/assets/req_ico.svg" alt="평균 응답시간" /></i>
-            <p>AVG</p>
+        <div class="avg-group">
+          <div class="tps-chart">
+            <div class="ico-wrap">
+              <i><img src="@/assets/req_ico.svg" alt="평균 응답시간" /></i>
+              <p>AVG</p>
+            </div>
+            <span class="num">{{ apiResponseStatus.avgResTm }}<em>ms</em></span>
           </div>
-          <span class="num">{{ apiResponseStatus.avgResTm }}<em>ms</em></span>
-        </div>
-        <div class="tps-chart tps-w">
-          <div class="ico-wrap">
-            <i><img src="@/assets/tps_ico.svg" alt="TPS" /></i>
-            <p>TPS</p>
+          <div class="tps-chart tps-w">
+            <div class="ico-wrap">
+              <i><img src="@/assets/tps_ico.svg" alt="TPS" /></i>
+              <p>TPS</p>
+            </div>
+            <span class="num">{{ apiResponseStatus.tps }}</span>
           </div>
-          <span class="num">{{ apiResponseStatus.tps }}</span>
         </div>
-      </div>
-    </section>
-    <section class="group" id="section-draggable">
-      <!--- 실시간 Traffic area --->
-      <RealTimeTraffic />
-    </section>
+      </section>
+      <section class="group" id="section-draggable">
+        <!--- 실시간 Traffic area --->
+        <RealTimeTraffic />
+      </section>
 
-    <section class="grid-group" id="section-draggable">
-      <!--- API Top 5 area --->
-      <div class="chart-wrap">
-        <h3 class="h3-tit">{{ $t('dash-board.api_top5_title') }}</h3>
-        <ul class="list-wrap">
-          <ErrorWrapper v-show="isApiTop5CommError" />
-          <li v-for="(item, index) in apiTop5List" :key="index">
-            <p class="id-txt">{{ item.sysId }}.{{ item.apiId }}</p>
-            <dl>
-              <dt><em>Total :</em>{{ item.totCnt }}</dt>
-              <dd>
-                <span class="syan">{{ item.sucesCnt }}</span
-                >/<span class="red">{{ item.failCnt }}</span>
-              </dd>
-            </dl>
-            <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
-            <ProgressBar :listItem="item" />
-            <button class="more-btn">
-              <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
-            </button>
-          </li>
-        </ul>
-      </div>
+      <section class="grid-group" id="section-draggable">
+        <!--- API Top 5 area --->
+        <div class="chart-wrap">
+          <h3 class="h3-tit">{{ $t('dash-board.api_top5_title') }}</h3>
+          <ul class="list-wrap">
+            <ErrorWrapper v-show="isApiTop5CommError" />
+            <li v-for="(item, index) in apiTop5List" :key="index">
+              <p class="id-txt">{{ item.sysId }}.{{ item.apiId }}</p>
+              <dl>
+                <dt><em>Total :</em>{{ item.totCnt }}</dt>
+                <dd>
+                  <span class="syan">{{ item.sucesCnt }}</span
+                  >/<span class="red">{{ item.failCnt }}</span>
+                </dd>
+              </dl>
+              <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
+              <ProgressBar :listItem="item" />
+              <button class="more-btn">
+                <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
+              </button>
+            </li>
+          </ul>
+        </div>
 
-      <div class="chart-wrap">
-        <h3 class="h3-tit">{{ $t('dash-board.service_top5_title') }}</h3>
-        <ul class="list-wrap">
-          <ErrorWrapper v-show="isServiceTop5CommError" />
-          <li v-for="(item, index) in serviceTop5List" :key="index">
-            <p class="id-txt">{{ item.svcId }}</p>
-            <dl>
-              <dt>
-                <em>{{ $t('common.total') }} :</em>{{ item.totCnt }}
-              </dt>
-              <dd>
-                <span class="syan">{{ item.sucesCnt }}</span
-                >/<span class="red">{{ item.failCnt }}</span>
-              </dd>
-            </dl>
-            <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
-            <ProgressBar :listItem="item" />
-            <button class="more-btn">
-              <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
-            </button>
-          </li>
-        </ul>
-      </div>
-      <!--- Service Top 5 area --->
-    </section>
-    <section class="grid-group" id="section-draggable">
-      <!--- Last Traffic --->
-      <div class="chart-wrap">
-        <h3 class="h3-tit">전일대비/전주대비 Traffic 추이 (00:00 ~ 24:00)</h3>
-        <ErrorWrapper v-show="isLastTrafficCommError" />
-        <div class="chart-group" id="lastTraffic" ref="lastTrafficRef"></div>
-      </div>
-      <!--- Last Response --->
-      <div class="chart-wrap">
-        <h3 class="h3-tit">전일대비/전주대비 응답시간 추이 (00:00 ~ 24:00)</h3>
-        <ErrorWrapper v-show="isLastResponseCommError" />
-        <div class="chart-group" id="lastResponse" ref="lastResponseRef"></div>
-      </div>
-    </section>
-
+        <div class="chart-wrap">
+          <h3 class="h3-tit">{{ $t('dash-board.service_top5_title') }}</h3>
+          <ul class="list-wrap">
+            <ErrorWrapper v-show="isServiceTop5CommError" />
+            <li v-for="(item, index) in serviceTop5List" :key="index">
+              <p class="id-txt">{{ item.svcId }}</p>
+              <dl>
+                <dt>
+                  <em>{{ $t('common.total') }} :</em>{{ item.totCnt }}
+                </dt>
+                <dd>
+                  <span class="syan">{{ item.sucesCnt }}</span
+                  >/<span class="red">{{ item.failCnt }}</span>
+                </dd>
+              </dl>
+              <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
+              <ProgressBar :listItem="item" />
+              <button class="more-btn">
+                <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <!--- Service Top 5 area --->
+      </section>
+      <section class="grid-group" id="section-draggable">
+        <!--- Last Traffic --->
+        <div class="chart-wrap">
+          <h3 class="h3-tit">전일대비/전주대비 Traffic 추이 (00:00 ~ 24:00)</h3>
+          <ErrorWrapper v-show="isLastTrafficCommError" />
+          <div class="chart-group" id="lastTraffic" ref="lastTrafficRef"></div>
+        </div>
+        <!--- Last Response --->
+        <div class="chart-wrap">
+          <h3 class="h3-tit">전일대비/전주대비 응답시간 추이 (00:00 ~ 24:00)</h3>
+          <ErrorWrapper v-show="isLastResponseCommError" />
+          <div class="chart-group" id="lastResponse" ref="lastResponseRef"></div>
+        </div>
+      </section>
+    </draggable>
     <ApiDetailModal
       v-if="isShowModal"
       @close="isShowModal = false"
@@ -300,6 +301,22 @@ const showModal = (msg: any) => {
     msgEndTime.value = realTimeServiceStat.value.statBaseTm;
   }
 };
+
+const log = (event: any) => {
+  console.log(event);
+};
+const dragOptions = ref({
+  animation: 100,
+  disabled: false,
+  ghostClass: 'ghost',
+});
+
+let message1 = [0, 1, 2, 3];
+const list1 = ref(
+  message1.map((name, index) => {
+    return { order: index + 1 };
+  })
+);
 </script>
 <style>
 .flip-list-move {
