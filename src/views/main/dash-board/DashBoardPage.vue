@@ -132,6 +132,7 @@
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
     ></ApiDetailModal>
+    <trafficDetailModal></trafficDetailModal>
     <MainFooter></MainFooter>
   </article>
 </template>
@@ -141,6 +142,7 @@ import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
+import trafficDetailModal from '@/components/dash-board/TrafficDetailModal.vue';
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 
 import { VueDraggableNext as draggable } from 'vue-draggable-next';

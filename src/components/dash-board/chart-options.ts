@@ -1,6 +1,63 @@
 import * as echarts from 'echarts';
 import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType, LastTrafficType } from '@/types/DashBoardType';
 
+export const getTotalTrafficDetailOption = (traffic: TotalTrafficStat[]) => {
+  const totalTrafficDetailOption: echarts.EChartsOption = {
+    legend: {},
+    tooltip: {
+      trigger: 'axis',
+      showContent: false,
+    },
+    dataset: {
+      source: [
+        ['date', ...traffic.map((item) => item.statBaseTm.substr(11, 5))],
+
+        [
+          'success',
+          ...traffic.map((item) => {
+            return item.sucesCnt as number;
+          }),
+        ],
+        [
+          'fail',
+          ...traffic.map((item) => {
+            return item.failCnt as number;
+          }),
+        ],
+      ],
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: traffic.map((item) => item.statBaseTm.substr(11, 5)),
+      },
+    ],
+    yAxis: [
+      {
+        gridIndex: 0,
+        type: 'value',
+      },
+    ],
+    series: [
+      {
+        type: 'bar',
+        stack: 'stack',
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' },
+        color: '#6998FF',
+      },
+      {
+        type: 'bar',
+        stack: 'stack',
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' },
+        color: '#FF4E63',
+      },
+    ],
+  };
+  return totalTrafficDetailOption;
+};
+
 export function getDetailApiTrafficOption(detail: TotalTrafficStat[]) {
   const o: echarts.EChartsOption = {
     color: '#FFBF00',

@@ -30,16 +30,17 @@ export default class DashBoardRepository {
     }
   }
 
-  async getTrafficStatDetail(param: TotalApiDetailRequest) {
-    const response = await AxiosClient.getInstance()
-      .get<GateWayResponse<TotalTrafficStat[]>>(`/getDashboardTrafficStatDetail`, param)
-      .then((res) => {
-        return res.data.value;
-      })
-      .catch((err) => {
-        return Promise.reject(err);
-      });
-    return response;
+  async getTotalAPITrafficDetail(param: TotalApiDetailRequest) {
+    try {
+      const response = await AxiosClient.getInstance().get<GateWayResponse<TotalTrafficStat[]>>(
+        `/getDashboardTrafficStatDetail`,
+        param
+      );
+      return Promise.resolve(response.data.value);
+    } catch (error: GateWayError | any) {
+      console.log(error);
+      return Promise.reject(error);
+    }
   }
 
   async getErrorStats(param: ErrorStatsRequest) {
@@ -56,11 +57,11 @@ export default class DashBoardRepository {
 
   async getErrorStatsDetail(param: ErrorStatsDetailRequest) {
     try {
-      const response = await AxiosClient.getInstance().get<GateWayResponse<ErrorStatsType>>(
+      const response = await AxiosClient.getInstance().get<GateWayResponse<ErrorStatsType[]>>(
         `/getDashboardErrorStatDetail`,
         param
       );
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
     }
