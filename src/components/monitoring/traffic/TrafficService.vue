@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
 import TrafficSelectSearch from '@/components/monitoring/traffic/TrafficSelectSearch.vue';
+import TrafficServiceChart from '@/components/monitoring/traffic/TrafficServiceChart.vue';
 import MonitoringTrafficRepository from '@/repository/monitoring-traffic-repository';
 import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
 import type { RequestTrafficParams, TrafficService } from '@/types/MonitoringTrafficType';
@@ -51,6 +52,8 @@ watch(serviceList, () => {
 function getSearchOption(event: RequestTrafficParams) {
   timeUnit.value = event.statBaseUnit;
   trafficRepository.getServiceList(event).then((res) => {
+    console.log(event);
+    console.log(res);
     serviceList.value = res;
   });
 }
