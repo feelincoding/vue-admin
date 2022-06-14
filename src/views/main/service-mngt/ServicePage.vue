@@ -41,9 +41,11 @@
         :total="servicePagination.totalElements"
       >
         <template v-slot:list-btn-area>
-          <button class="mid-btn" @click="$router.push({ name: 'service-register' })">
-            <i><img src="@/assets/check_ico.svg" :alt="$t('common.register')" /></i>{{ $t('common.register') }}
-          </button>
+          <div class="btn-wrap">
+            <button class="green-btn mid-btn" @click="$router.push({ name: 'service-register' })">
+              <i><img src="@/assets/check_ico.svg" :alt="$t('common.register')" /></i>{{ $t('common.register') }}
+            </button>
+          </div>
         </template>
 
         <template v-slot:list-table>
@@ -114,7 +116,9 @@
           </div>
         </template>
         <template v-slot:pagination v-if="!isShowProgress">
-          <Paging :pagingOption="servicePagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
+          <div class="page-wrap">
+            <Paging :pagingOption="servicePagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
+          </div>
         </template>
       </ListForm>
       <ModalLayout size="s" v-if="modal">
