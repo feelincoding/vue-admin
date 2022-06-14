@@ -69,8 +69,8 @@ import URIGroup from '@/components/api-mngt/detail/URIGroup.vue';
 import EndPointGroup from '@/components/api-mngt/register/EndPointGroup.vue';
 import ContentLayout from '@/components/layout/ContentLayout.vue';
 import type { ApiDetailResponse } from '@/types/ApiType';
-import ApiModule from '@/repository/ApiMngtRepository';
-import SystemModule from '@/stores/modules/SystemModule';
+import ApiModule from '@/repository/api-repository';
+import SystemModule from '@/repository/system-repository';
 import { type Ref, ref, onMounted, inject, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import router from '@/router';
@@ -127,6 +127,7 @@ onMounted(() => {
 });
 
 watch(apiDetail, () => {
+  console.log('apiDetail changed');
   if (apiDetail) {
     systemModule
       .getSystemDetail(apiDetail.value.sysId)

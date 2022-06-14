@@ -33,7 +33,7 @@ export interface ApiCreateRequestBody {
   [x: string]: any;
   id: string;
   sysId: string;
-  meth: string[] | string;
+  meth: string[];
   uriIn: string;
   uriOut: string;
   reqHndlrGrpId: string;
