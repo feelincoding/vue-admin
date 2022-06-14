@@ -4,11 +4,16 @@
       <h2 class="h2-tit">
         Total :<em>{{ props.total }}</em>
       </h2>
-      <slot name="list-btn-area" />
+      <div class="btn-wrap">
+        <slot name="list-btn-area" />
+      </div>
     </div>
-    <slot name="list-table" />
-
-    <slot name="pagination" />
+    <div class="tb-wrap">
+      <slot name="list-table" />
+    </div>
+    <div class="page-wrap">
+      <slot name="pagination" />
+    </div>
   </section>
 </template>
 
