@@ -2,8 +2,10 @@
   <div class="body-wrap">
     <div class="wrap">
       <Navbar />
-      <router-view />
-      <!-- <MainFooter></MainFooter> -->
+      <article class="body-cont">
+        <router-view />
+        <MainFooter></MainFooter>
+      </article>
       <ModalLayout
         v-if="showModal"
         :alert="true"
@@ -23,7 +25,7 @@ import { ref, computed, watch } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { provide } from 'vue';
 import Navbar from '@/components/layout/header/Navbar.vue';
-// import MainFooter from '@/components/layout/footer/MainFooter.vue';
+import MainFooter from '@/components/layout/footer/MainFooter.vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { modalInjectionKey, type IModal, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 const showModal = ref(false);

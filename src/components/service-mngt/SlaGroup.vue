@@ -1,27 +1,42 @@
 <template>
   <li>
-    <label class="label">{{ inputNm }}</label>
+    <label class="label">{{ inputNm }} :</label>
     <div class="form-cont">
-      <div class="sla-group col-2">
-        <div v-if="monthVal != null" class="sla-form">
-          <span class="bold">Month : </span><span>{{ monthVal }}</span
-          ><span>건</span>
+      <div class="sla-group">
+        <div class="sla-block" v-if="monthVal != null">
+          <label class="label">Month : </label>
+          <span class="black-txt"
+            ><em class="bold">{{ monthVal }}</em
+            >건</span
+          >
         </div>
-        <div v-if="dayVal != null" class="sla-form">
-          <span class="bold">Day : </span><span>{{ dayVal }}</span
-          ><span>건</span>
+        <div class="sla-block" v-if="dayVal != null">
+          <label class="label">Day : </label>
+          <span class="black-txt"
+            ><em class="bold">{{ dayVal }}</em
+            >건</span
+          >
         </div>
-        <div v-if="hourVal != null" class="sla-form">
-          <span class="bold">Hour : </span><span>{{ hourVal }}</span
-          ><span>건</span>
+        <div class="sla-block" v-if="hourVal != null">
+          <label class="label">Hour : </label>
+          <span class="black-txt"
+            ><em class="bold">{{ hourVal }}</em
+            >건</span
+          >
         </div>
-        <div v-if="minVal != null" class="sla-form">
-          <span class="bold">Min : </span><span>{{ minVal }}</span
-          ><span>건</span>
+        <div class="sla-block" v-if="minVal != null">
+          <label class="label">Min : </label>
+          <span class="black-txt"
+            ><em class="bold">{{ minVal }}</em
+            >건</span
+          >
         </div>
-        <div v-if="secVal != null" class="sla-form">
-          <span class="bold">Sec : </span><span>{{ secVal }}</span
-          ><span>건</span>
+        <div class="sla-block" v-if="secVal != null">
+          <label class="label">sec : </label>
+          <span class="black-txt"
+            ><em class="bold">{{ secVal }}</em
+            >건</span
+          >
         </div>
       </div>
     </div>

@@ -41,84 +41,78 @@
         :total="servicePagination.totalElements"
       >
         <template v-slot:list-btn-area>
-          <div class="btn-wrap">
-            <button class="green-btn mid-btn" @click="$router.push({ name: 'service-register' })">
-              <i><img src="@/assets/check_ico.svg" :alt="$t('common.register')" /></i>{{ $t('common.register') }}
-            </button>
-          </div>
+          <button class="green-btn mid-btn" @click="$router.push({ name: 'service-register' })">
+            <i><img src="@/assets/check_ico.svg" :alt="$t('common.register')" /></i>{{ $t('common.register') }}
+          </button>
         </template>
 
         <template v-slot:list-table>
-          <div class="tb-wrap">
-            <div class="text-center" v-if="isShowProgress">
-              <b-spinner label="Large Spinner"></b-spinner>
-            </div>
-            <table class="list-tb" v-if="!isShowProgress">
-              <colgroup>
-                <col width="7%" />
-                <col width="20%" />
-                <col width="13%" />
-                <col width="*" />
-                <col width="17%" />
-                <col width="10%" />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th>{{ $t('service.no') }}</th>
-                  <th>{{ $t('service.id') }}</th>
-                  <th>{{ $t('service.authentication_method') }}</th>
-                  <th>{{ $t('service.validity') }}</th>
-                  <th>{{ $t('service.update') }}</th>
-                  <th>{{ $t('service.action') }}</th>
-                </tr>
-              </thead>
-              <div class="text-center">
-                <b-spinner
-                  v-show="isShowProgress"
-                  style="width: 2rem; height: 2rem; position: absolute; left: 50%; margin-top: 2.5%"
-                  label="Large Spinner"
-                ></b-spinner>
-              </div>
-              <tbody v-if="serviceList.length > 0">
-                <tr v-for="(list, index) in serviceList" :key="index">
-                  <td v-text="getIdx(index)"></td>
-                  <td class="tl" @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
-                    {{ list.id }}
-                  </td>
-                  <td @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
-                    {{ list.athnType }}
-                  </td>
-                  <td @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
-                    <span>{{ list.svcStDt.slice(0, 10) }}</span> ~ <span>{{ list.svcEndDt.slice(0, 10) }}</span>
-                  </td>
-                  <td @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
-                    <p class="date-txt">
-                      <span> {{ getDate(list.updDt) }}</span
-                      ><span>{{ getHours(list.updDt) }}</span>
-                    </p>
-                  </td>
-                  <td>
-                    <button class="mod-btn" @click="$router.push({ name: 'service-edit', params: { id: list.id } })">
-                      <i>{{ $t('common.modify') }}</i>
-                    </button>
-                    <button class="del-btn" @click="modalShow(list.id)">
-                      <i>{{ $t('common.delete') }}</i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody v-else>
-                <tr>
-                  <td class="no-data" colspan="6">{{ $t('common.no_data') }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="text-center" v-if="isShowProgress">
+            <b-spinner label="Large Spinner"></b-spinner>
           </div>
+          <table class="list-tb" v-if="!isShowProgress">
+            <colgroup>
+              <col width="7%" />
+              <col width="20%" />
+              <col width="13%" />
+              <col width="*" />
+              <col width="17%" />
+              <col width="10%" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>{{ $t('service.no') }}</th>
+                <th>{{ $t('service.id') }}</th>
+                <th>{{ $t('service.authentication_method') }}</th>
+                <th>{{ $t('service.validity') }}</th>
+                <th>{{ $t('service.update') }}</th>
+                <th>{{ $t('service.action') }}</th>
+              </tr>
+            </thead>
+            <div class="text-center">
+              <b-spinner
+                v-show="isShowProgress"
+                style="width: 2rem; height: 2rem; position: absolute; left: 50%; margin-top: 2.5%"
+                label="Large Spinner"
+              ></b-spinner>
+            </div>
+            <tbody v-if="serviceList.length > 0">
+              <tr v-for="(list, index) in serviceList" :key="index">
+                <td v-text="getIdx(index)"></td>
+                <td class="tl" @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
+                  {{ list.id }}
+                </td>
+                <td @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
+                  {{ list.athnType }}
+                </td>
+                <td @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
+                  <span>{{ list.svcStDt.slice(0, 10) }}</span> ~ <span>{{ list.svcEndDt.slice(0, 10) }}</span>
+                </td>
+                <td @click="$router.push({ name: 'service-detail', params: { id: list.id } })">
+                  <p class="date-txt">
+                    <span> {{ getDate(list.updDt) }}</span
+                    ><span>{{ getHours(list.updDt) }}</span>
+                  </p>
+                </td>
+                <td>
+                  <button class="mod-btn" @click="$router.push({ name: 'service-edit', params: { id: list.id } })">
+                    <i>{{ $t('common.modify') }}</i>
+                  </button>
+                  <button class="del-btn" @click="modalShow(list.id)">
+                    <i>{{ $t('common.delete') }}</i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td class="no-data" colspan="6">{{ $t('common.no_data') }}</td>
+              </tr>
+            </tbody>
+          </table>
         </template>
         <template v-slot:pagination v-if="!isShowProgress">
-          <div class="page-wrap">
-            <Paging :pagingOption="servicePagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
-          </div>
+          <Paging :pagingOption="servicePagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
         </template>
       </ListForm>
       <ModalLayout size="s" v-if="modal">

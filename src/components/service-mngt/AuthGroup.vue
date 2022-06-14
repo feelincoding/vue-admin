@@ -1,6 +1,6 @@
 <template>
   <li>
-    <label class="label">{{ inputNm }}</label>
+    <label class="label">{{ inputNm }} :</label>
     <div v-if="athn == 'basic'" class="form-cont">
       <p class="bold">Basic Auth</p>
       <div class="sub-group">

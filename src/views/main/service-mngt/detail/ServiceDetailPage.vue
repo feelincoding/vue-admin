@@ -54,22 +54,20 @@
       </template>
 
       <template v-if="!isShowProgress" v-slot:buttons>
-        <div class="btn-wrap">
-          <button
-            class="lg-btn purple-btn"
-            @click="$router.push({ name: 'service-edit', params: { id: $route.params.id } })"
-            :disabled="isRegisterProgress"
-          >
-            {{ $t('common.modify') }}
-          </button>
-          <button class="lg-btn white-btn" @click="modalShow(service.id)" :disabled="isRegisterProgress">
-            {{ $t('common.delete') }}
-            <b-spinner v-show="isRegisterProgress" small></b-spinner>
-          </button>
-          <button class="lg-btn gray-btn" @click="$router.back()" :disabled="isRegisterProgress">
-            {{ $t('common.list') }}
-          </button>
-        </div>
+        <button
+          class="lg-btn purple-btn"
+          @click="$router.push({ name: 'service-edit', params: { id: $route.params.id } })"
+          :disabled="isRegisterProgress"
+        >
+          {{ $t('common.modify') }}
+        </button>
+        <button class="lg-btn white-btn" @click="modalShow(service.id)" :disabled="isRegisterProgress">
+          {{ $t('common.delete') }}
+          <b-spinner v-show="isRegisterProgress" small></b-spinner>
+        </button>
+        <button class="lg-btn gray-btn" @click="$router.back()" :disabled="isRegisterProgress">
+          {{ $t('common.list') }}
+        </button>
       </template>
     </ContentLayout>
     <ApiAuthVueModal

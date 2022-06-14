@@ -7,7 +7,7 @@
           <h1 class="h1-tit">
             API 권한설정 List
             <p class="total">
-              total : <span>{{ countApiList }}</span>
+              total : <span>{{ countApiList }} :</span>
             </p>
           </h1>
           <button @click="hideApiAuth">

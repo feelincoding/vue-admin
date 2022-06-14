@@ -1,8 +1,8 @@
 <template lang="">
   <li>
-    <label class="label">{{ inputNm }}</label>
+    <label class="label">{{ inputNm }} :</label>
     <div class="form-cont">
-      <p>{{ startDt }} ~ {{ endDt }}</p>
+      <p class="black-txt">{{ startDt }} ~ {{ endDt }}</p>
     </div>
   </li>
 </template>

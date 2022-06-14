@@ -1,5 +1,5 @@
 <template>
-  <article class="body-cont" :id="id">
+  <div :id="id">
     <div class="tit-wrap">
       <h1 class="h1-tit">{{ title }}</h1>
       <div v-if="depth" class="directory-wrap">
@@ -8,20 +8,15 @@
         <span>{{ title }}</span>
       </div>
     </div>
-    <div class="box comp">
-      <div class="box-tit">
-        <h2 class="h2-tit">{{ subTitle }}</h2>
-        <em class="script" v-if="isEmShow && !isShowProgress">{{ $t('common.necessary_input') }}</em>
-        <div class="text-center">
-          <b-spinner v-show="isShowProgress" label="Large Spinner"></b-spinner>
-        </div>
-      </div>
+    <section class="contents-wrap box">
       <div class="form-wrap">
         <slot name="contents"></slot>
       </div>
+    </section>
+    <div class="btn-wrap">
       <slot name="buttons"></slot>
     </div>
-  </article>
+  </div>
 </template>
 
 <script setup lang="ts">

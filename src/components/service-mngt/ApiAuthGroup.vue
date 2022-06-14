@@ -1,6 +1,6 @@
 <template>
   <li>
-    <label class="label">{{ inputNm }}</label>
+    <label class="label">{{ inputNm }} :</label>
     <div class="form-cont">
       <div class="form-group">
         <p class="api-more">
