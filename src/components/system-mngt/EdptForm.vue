@@ -23,7 +23,6 @@
                 v-model="edpt.domain"
                 @input="validCheckDomain(idx)"
                 @focusin="focusInDomain(idx)"
-                @focusout="focusOutDomain(idx)"
               />
               <!-- @focus="emptyChkFunc(idx)"  -->
               <span>:</span>
@@ -39,7 +38,6 @@
                 maxlength="5"
                 @input="validCheckPort(idx)"
                 @focusin="focusInPort(idx)"
-                @focusout="focusOutPort(idx)"
               />
               <button class="xs-btn" @click="addEdpt" v-if="idx === 0">
                 <i class="plus"></i>
@@ -76,34 +74,6 @@ import type { PropType } from 'vue';
 import type { Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const focusInDomain = (idx: number) => {
-  console.log('focusInDomain', idx);
-  let domainValue = edpts.value[idx].domain;
-  if (domainValue === '') {
-    notiMessageDomain.value[idx].isValid = false;
-    notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain');
-  }
-  let notiDomCheck = notiMessageDomain.value[idx];
-  console.log('domainValue', domainValue);
-  console.log('notiDomCheck', notiDomCheck);
-  // notiMessageDomain.value[idx].isValid = true;
-};
-const focusOutDomain = (idx: number) => {
-  console.log('focusOutDomain', idx);
-};
-
-const focusInPort = (idx: number) => {
-  console.log('focusInPort', idx);
-  let portValue = edpts.value[idx].port;
-  // 입력할려고 클릭했을 때 빈 값이면 필수 값이라는 메시지를 띄워준다.
-  if (portValue === '') {
-    notiMessagePort.value[idx].isValid = false;
-    notiMessagePort.value[idx].message = t('system.empty_check_edpt_port');
-  }
-};
-const focusOutPort = (idx: number) => {
-  console.log('focusInPort', idx);
-};
 const { t } = useI18n({});
 
 const props = defineProps({
@@ -149,40 +119,63 @@ onMounted(() => {
   }
 });
 
-watch(
-  () => edpts.value,
-  (newV: SystemEdptType[], oldV: SystemEdptType[]) => {
-    console.log('watch edpts', newV, oldV);
-    console.log('watch edpts!!');
-    // 중복 검사를 수행한다.
-    let idxArr: number[] = [];
-    edpts.value.forEach((edpt, idx) => {
+watch(edpts.value, () => {
+  console.log('watch edpts!!');
+
+  let idxArr: number[] = [];
+  // 중복 검사를 수행한다.(도메인, 포트가 둘 중 하나라도 입력일 때만)
+  edpts.value.forEach((edpt, idx) => {
+    if (!(edpt.domain === '' && edpt.port === '')) {
       if (!duplCheck(edptToString(edpts.value[idx]))) {
         notiMessageDupl.value[idx].isValid = true;
         notiMessageDupl.value[idx].message = '';
       } else {
         idxArr.push(idx);
       }
-    });
-
-    // 중복된 값이 하나라도 있으면,
-    // 마지막에 입력한 엔드포인트에 경고문구를 출력한다.
-    if (idxArr.length > 1) {
-      if (edpts.value[0].domain !== '' && edpts.value[0].port !== '') {
-        notiMessageDupl.value[idxArr[idxArr.length - 1]].isValid = false;
-        notiMessageDupl.value[idxArr[idxArr.length - 1]].message = t('system.dupl_check_edpt_nm') as string;
-      }
     }
+  });
 
-    let valid: boolean | null | string = true;
-    notiMessageDomain.value.forEach((domain) => {});
-    notiMessagePort.value.forEach((port) => {
-      valid = valid && port.isValid;
-    });
-    emit('update:isValid', valid);
-    emit('update:strArr', edptArrToStringArr(edpts.value));
+  // 중복된 값이 하나라도 있으면,
+  // 마지막에 입력한 엔드포인트에 경고문구를 출력한다.
+  if (idxArr.length > 1) {
+    if (edpts.value[0].domain !== '' && edpts.value[0].port !== '') {
+      notiMessageDupl.value[idxArr[idxArr.length - 1]].isValid = false;
+      notiMessageDupl.value[idxArr[idxArr.length - 1]].message = t('system.dupl_check_edpt_nm') as string;
+    }
   }
-);
+
+  let valid: boolean | null | string = true;
+  notiMessageDomain.value.forEach((domain) => {});
+  notiMessagePort.value.forEach((port) => {
+    valid = valid && port.isValid;
+  });
+  emit('update:isValid', valid);
+  emit('update:strArr', edptArrToStringArr(edpts.value));
+});
+
+const focusInDomain = (idx: number) => {
+  let domainValue = edpts.value[idx].domain;
+  if (domainValue === '') {
+    notiMessageDomain.value[idx].isValid = false;
+    notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain');
+  }
+  let notiDomCheck = notiMessageDomain.value[idx];
+};
+// const focusOutDomain = (idx: number) => {
+//   console.log('focusOutDomain', idx);
+// };
+
+const focusInPort = (idx: number) => {
+  let portValue = edpts.value[idx].port;
+  // 입력할려고 클릭했을 때 빈 값이면 필수 값이라는 메시지를 띄워준다.
+  if (portValue === '') {
+    notiMessagePort.value[idx].isValid = false;
+    notiMessagePort.value[idx].message = t('system.empty_check_edpt_port');
+  }
+};
+// const focusOutPort = (idx: number) => {
+//   console.log('focusInPort', idx);
+// };
 
 const addEdpt = () => {
   if (edpts.value.length > 9) {
@@ -206,7 +199,6 @@ const addEdpt = () => {
     isValid: null,
     message: '',
   });
-  // console.log(notiMessageDomain.value);
 };
 
 const deleteEdpt = (idx: number) => {
@@ -253,14 +245,6 @@ const validCheckProtocol = (idx: number) => {
       notiMessageDupl.value[idx].message = t('system.dupl_check_edpt_nm') as string;
     }
   }
-
-  // if (!duplCheck(edptToString(edpts.value[idx]))) {
-  //   notiMessageDomain.value[idx].isValid = true;
-  //   notiMessageDomain.value[idx].message = '';
-  // } else {
-  //   notiMessageDomain.value[idx].isValid = false;
-  //   notiMessageDomain.value[idx].message = t('system.dupl_check_edpt_nm') as string;
-  // }
 };
 
 const validCheckDomain = (idx: number) => {
