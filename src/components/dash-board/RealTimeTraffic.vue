@@ -1,7 +1,7 @@
 <template>
-  <div class="chart-wrap">
+  <div class="chart-wrap" style="height: 100%">
     <h3 class="h3-tit">실시간 Traffic</h3>
-    <div ref="RealTimeTrafficRef" class="chart-group" id="real-time-traffic"></div>
+    <div ref="RealTimeTrafficRef" class="chart-group" id="real-time-traffic" style="height: 100%"></div>
   </div>
 </template>
 <script setup lang="ts">

@@ -55,7 +55,14 @@
           </div>
         </div>
       </section>
-      <section class="group" id="section-draggable">
+
+      <section
+        class="group"
+        id="section-draggable"
+        :style="{
+          height: `${getRealTimeSectionHeight()}px`,
+        }"
+      >
         <!--- 실시간 Traffic area --->
         <RealTimeTraffic />
       </section>
@@ -287,7 +294,8 @@ watch(lastResponseList, () => {
 });
 
 const getRealTimeSectionHeight = () => {
-  return window.screen.availHeight - 763;
+  console.log(window.screen.availHeight);
+  return window.screen.availHeight - 733;
 };
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
