@@ -1,4 +1,4 @@
-<template lang="">
+<template>
   <li>
     <label class="label">{{ props.inputNm }}</label>
     <div class="form-cont">

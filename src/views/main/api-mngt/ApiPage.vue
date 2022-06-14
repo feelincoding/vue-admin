@@ -174,6 +174,7 @@ const searchOption: { type: string; label: string; placeholder: string; selectOp
     { label: 'uriIn', value: t('api.uri') },
   ],
 };
+const modal = inject(modalInjectionKey) as ModalFunction;
 
 onMounted(() => {
   fetchApiList();
@@ -214,7 +215,7 @@ const fetchApiList = () => {
       }
     });
 };
-const modal = inject(modalInjectionKey) as ModalFunction;
+
 
 const deleteApi = async () => {
   const query = { id: deleteMsg.value.id, sysId: deleteMsg.value.sysId };
