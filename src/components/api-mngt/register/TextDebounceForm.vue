@@ -49,9 +49,12 @@ const notiMessage = ref(validationCheck);
 const text = ref('');
 const show = ref(false);
 
-watch(notiMessage, () => {
-  emit('update:isvalid', Boolean(notiMessage.value.isCheck));
-});
+// watch(
+//   () => notiMessage,
+//   () => {
+//     emit('update:isvalid', Boolean(notiMessage.value.isCheck));
+//   }
+// );
 
 watch(text, (val: string) => {
   if (checkLength(val, 1, 20) && checkEnglishNumber(val)) {
@@ -65,6 +68,7 @@ watch(text, (val: string) => {
     notiMessage.value.message = t('api.valid_check_id');
   }
   emit('update:value', val);
+  emit('update:isvalid', Boolean(notiMessage.value.isCheck));
 });
 
 watch(

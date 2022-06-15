@@ -162,10 +162,10 @@ const requestBody: Ref<ApiUpdateRequestBody> = ref({
 });
 
 const isButtonDisabled = ref(false);
-const methodValid = ref(false);
-const uriValid = ref(false);
-const timeoutValid = ref(false);
-const descValid = ref(false);
+const methodValid = ref(true);
+const uriValid = ref(true);
+const timeoutValid = ref(true);
+const descValid = ref(true);
 
 const fetchApiDetail = async () => {
   const query = route.query as { id: string; sysId: string };
@@ -244,6 +244,7 @@ const onClickSubmitButton = () => {
     requestBody.value.reqHndlrGrpId &&
     requestBody.value.resHndlrGrpId;
   // const val = true;
+  console.log(methodValid.value, uriValid.value, timeoutValid.value, descValid.value);
   if (!val) {
     modal().show(t('api.empty_check_message'));
     return;
@@ -255,9 +256,9 @@ const onClickSubmitButton = () => {
 const onSubmit = async () => {
   isButtonDisabled.value = true;
   showModal.value = false;
-  const apiUpdateRequestBody = { ...requestBody };
+  const apiUpdateRequestBody = { ...requestBody.value };
   await apiRepository
-    .putApi(apiUpdateRequestBody.value)
+    .putApi(apiUpdateRequestBody)
     .then(() => {
       router.back();
     })

@@ -55,6 +55,7 @@ export default class ApiRepository {
 
   // API 생성
   async postApi(api: ApiCreateRequestBody) {
+    console.log('postApi', api);
     try {
       await AxiosClient.getInstance().post<GateWayResponse<ApiDetailResponse>>('/createApi', api);
     } catch (error: GateWayError | any) {

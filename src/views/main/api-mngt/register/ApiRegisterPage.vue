@@ -64,7 +64,7 @@
             :groupNm="$t('api.apiDescription')"
             type="textarea"
             v-model:value="requestBody.desc"
-            :isvalid.sync="descValid"
+            v-model:isvalid="descValid"
           />
         </ul>
         <ModalLayout size="s" v-if="isShowModal">
@@ -214,8 +214,6 @@ watch(
 watch(
   () => isDuplicatedId.value,
   () => {
-    console.log('isDuplicatedId', requestBody.value.sysId);
-    console.log('isDuplicatedId', requestBody.value.id);
     if (isDuplicatedId.value) {
       requestBody.value.uriIn = '/' + requestBody.value.sysId + '/v1/' + requestBody.value.id;
       requestBody.value.uriOut = '/' + requestBody.value.sysId + '/v1/' + requestBody.value.id;
@@ -232,8 +230,6 @@ const duplicateCheckId = () => {
   }
 
   timerId = setTimeout(async () => {
-    console.log('id 입력 1초 경과');
-    console.log(requestBody.value.id);
     isDuplicatedId.value = await apiValidationCheck(requestBody.value.id, requestBody.value.sysId);
   }, 1000);
 };
@@ -260,9 +256,9 @@ const onClickSubmitButton = () => {
 const onSubmit = async () => {
   isButtonDisabled.value = true;
   isShowModal.value = false;
-  const apiCreateRequestBody = { ...requestBody };
+  const apiCreateRequestBody = { ...requestBody.value };
   await apiModule
-    .postApi(apiCreateRequestBody.value)
+    .postApi(apiCreateRequestBody)
     .then(() => {
       router.push('/api');
     })
