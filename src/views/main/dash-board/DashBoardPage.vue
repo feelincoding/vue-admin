@@ -3,7 +3,7 @@
     <TimeCheck v-model:isLoadData="isLoadData" :callBack="requestAllApi" />
     <draggable v-bind="dragOptions">
       <section class="group" id="section-draggable">
-        <div class="total-group">
+        <div class="total-group" @click="trafficModal = true">
           <div class="d-total">
             <div class="ico-wrap">
               <i><img src="@/assets/d_total_ico.svg" alt="total" /></i>
@@ -139,7 +139,7 @@
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
     ></ApiDetailModal>
-    <trafficDetailModal></trafficDetailModal>
+    <TrafficDetailModal v-if="trafficModal" @close="trafficModal = false"></TrafficDetailModal>
     <b-modal id="modal-xl" size="xl" title="Extra Large Modal">Hello Extra Large Modal!</b-modal>
     <MainFooter></MainFooter>
   </article>
@@ -150,7 +150,7 @@ import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
-import trafficDetailModal from '@/components/dash-board/TrafficDetailModal.vue';
+import TrafficDetailModal from '@/components/dash-board/TrafficDetailModal.vue';
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
@@ -189,6 +189,7 @@ import {
 import { addDate } from '@/utils/converter';
 
 const isLoadData = ref(false);
+const trafficModal = ref(false);
 
 const totalTraffic: Ref<TotalTrafficStat> = ref({} as TotalTrafficStat);
 const apiResponseStatus: Ref<ApiResponseStatus> = ref({} as ApiResponseStatus);
