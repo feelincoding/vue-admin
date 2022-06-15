@@ -38,7 +38,7 @@
           </div>
         </div>
 
-        <div class="avg-group">
+        <div class="avg-group" @click="avgModal = true">
           <div class="tps-chart">
             <div class="ico-wrap">
               <i><img src="@/assets/req_ico.svg" alt="평균 응답시간" /></i>
@@ -146,6 +146,8 @@
       :msgTimeInterval="gseTimeInterval"
     ></ApiServiceDetailModal>
     <TrafficDetailModal v-if="trafficModal" @close="trafficModal = false"></TrafficDetailModal>
+    <AvgDetailModal v-if="avgModal" @close="avgModal = false"></AvgDetailModal>
+
     <MainFooter></MainFooter>
   </article>
 </template>
@@ -157,6 +159,8 @@ import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
 import ApiServiceDetailModal from '@/components/commons/modal/ApiServiceDetailModal.vue';
 
 import TrafficDetailModal from '@/components/dash-board/TrafficDetailModal.vue';
+import AvgDetailModal from '@/components/dash-board/AvgDetailModal.vue';
+
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
@@ -196,6 +200,7 @@ import { addDate } from '@/utils/converter';
 
 const isLoadData = ref(false);
 const trafficModal = ref(false);
+const avgModal = ref(false);
 
 const totalTraffic: Ref<TotalTrafficStat> = ref({} as TotalTrafficStat);
 const apiResponseStatus: Ref<ApiResponseStatus> = ref({} as ApiResponseStatus);

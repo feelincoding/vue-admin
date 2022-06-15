@@ -2,7 +2,7 @@
   <transition v-if="!alert" name="modal" appear>
     <div class="modal-overlay">
       <!------- handler pop -------->
-      <div :class="{ large: l, 'mid-pop': m, 'sm-pop': s, 'lg-pop': lg, 'pop-wrap': true }">
+      <div :class="{ large: l, 'mid-pop': m, 'sm-pop': s, 'lg-pop': lg, 'xl-pop': xl, 'pop-wrap': true }">
         <div class="pop-header">
           <slot name="modalHeader"></slot>
         </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { disableScrolling, enableScrolling } from '@/utils/screen';
 
 const props = defineProps<{
@@ -59,6 +59,7 @@ const l = ref(false);
 const m = ref(false);
 const s = ref(false);
 const lg = ref(false);
+const xl = ref(false);
 onMounted(() => {
   disableScrolling();
   if (props.size == 'l') {
@@ -66,21 +67,31 @@ onMounted(() => {
     m.value = false;
     s.value = false;
     lg.value = false;
+    xl.value = false;
   } else if (props.size == 'm') {
     l.value = false;
     m.value = true;
     s.value = false;
     lg.value = false;
+    xl.value = false;
   } else if (props.size == 's') {
     l.value = false;
     m.value = false;
     s.value = true;
     lg.value = false;
+    xl.value = false;
   } else if (props.size == 'lg') {
     l.value = false;
     m.value = false;
     s.value = false;
     lg.value = true;
+    xl.value = false;
+  } else if (props.size == 'xl') {
+    l.value = false;
+    m.value = false;
+    s.value = false;
+    lg.value = false;
+    xl.value = true;
   }
 });
 
@@ -90,9 +101,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.large {
-}
-
 .modal-enter,
 .modal-leave-to,
 .alertLayout-enter,

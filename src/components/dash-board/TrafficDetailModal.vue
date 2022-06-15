@@ -1,5 +1,5 @@
 <template>
-  <ModalLayout size="lg"
+  <ModalLayout size="xl"
     ><template v-slot:modalHeader
       ><h2 class="h2-tit">Total Traffic Detail</h2>
       <button @click="$emit('close')">
