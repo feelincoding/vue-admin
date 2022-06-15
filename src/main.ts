@@ -4,12 +4,13 @@ import i18n from '@/plugins/Locale';
 
 import App from './App.vue';
 import router from './router';
-import '@/style/reset.css';
-import '@/style/common.css';
-import '@/style/admin.css';
 import '@/style/dash-board.css';
 import '@/style/bootstrap.css';
 import '@/style/bootstrap-vue-3.css';
+
+import '@/style/reset.css';
+import '@/style/common.css';
+import '@/style/admin.css';
 
 // import Datepicker
 import Datepicker from '@vuepic/vue-datepicker';
