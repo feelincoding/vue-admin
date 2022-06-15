@@ -112,7 +112,7 @@
               </dl>
               <div class="sm-bar">{{ $t('dash-board.success_rate') }}</div>
               <ProgressBar :listItem="item" />
-              <button class="more-btn">
+              <button class="more-btn" @click="showModal(item)">
                 <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
               </button>
             </li>
@@ -137,16 +137,15 @@
         </div>
       </section>
     </draggable>
-    <ApiDetailModal
+    <Top5Modal
       v-if="isShowModal"
       @close="isShowModal = false"
       :msgId="msgId"
       :msgType="msgType"
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
-    ></ApiDetailModal>
+    ></Top5Modal>
     <TrafficDetailModal v-if="trafficModal" @close="trafficModal = false"></TrafficDetailModal>
-    <b-modal id="modal-xl" size="xl" title="Extra Large Modal">Hello Extra Large Modal!</b-modal>
     <MainFooter></MainFooter>
   </article>
 </template>
@@ -156,6 +155,7 @@ import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
 import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
+import Top5Modal from '@/components/dash-board/Top5Modal.vue';
 import TrafficDetailModal from '@/components/dash-board/TrafficDetailModal.vue';
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 
@@ -191,7 +191,7 @@ import {
   getLastTrafficChartOption,
   getLastResponseChartOption,
   getRealTimeChartOption,
-} from '@/components/dash-board/chart-options';
+} from '@/components/dash-board/chartOptions';
 import { addDate } from '@/utils/converter';
 
 const isLoadData = ref(false);

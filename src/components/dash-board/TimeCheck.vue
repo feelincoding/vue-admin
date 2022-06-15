@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import { getPauseTime } from '@/utils/converter';
-import { getProgressOption, getTimerOption } from '@/components/dash-board/chart-options';
+import { getProgressOption, getTimerOption } from '@/components/dash-board/chartOptions';
 import { drawTotalApiTrafficChart } from '@/utils/chart';
 
 const INTERVAL_VALUE = 60;

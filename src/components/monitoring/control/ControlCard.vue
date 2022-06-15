@@ -17,13 +17,13 @@
     <div class="script-wrap">
       <div class="script-cont">
         <p class="text">
-          {{ $t('control.avg_res_time') }} : <span>{{ item.avgResTm }}</span
+          {{ $t('control.avg_res_time') }} : <span>{{ numberWithCommas(item.avgResTm) }}</span
           >ms
         </p>
       </div>
       <div class="script-cont">
         <p class="text">
-          {{ $t('control.tps') }} : <span>{{ item.tps }}</span>
+          {{ $t('control.tps') }} : <span>{{ numberWithCommas(item.tps) }}</span>
         </p>
       </div>
     </div>
@@ -39,13 +39,13 @@
           {{ $t('control.success_rate') }} : <em>{{ item.sucesRate }}%</em>
         </dt>
         <dd>
-          {{ $t('common.total') }} : <em>{{ item.totCnt }}</em>
+          {{ $t('common.total') }} : <em>{{ numberWithCommas(item.totCnt) }}</em>
         </dd>
         <dd>
-          {{ $t('common.success_eng') }} : <em class="syan">{{ item.sucesCnt }}</em>
+          {{ $t('common.success_eng') }} : <em class="syan">{{ numberWithCommas(item.sucesCnt) }}</em>
         </dd>
         <dd>
-          {{ $t('common.fail_eng') }} : <em class="red">{{ item.failCnt }}</em>
+          {{ $t('common.fail_eng') }} : <em class="red">{{ numberWithCommas(item.failCnt) }}</em>
         </dd>
       </dl>
     </div>
@@ -60,15 +60,15 @@
     <div class="fail-group card-fail">
       <div class="fail-list">
         <span class="label critical">Cr</span>
-        <span class="txt">{{ props.item.crCnt }}</span>
+        <span class="txt">{{ numberWithCommas(props.item.crCnt) }}</span>
       </div>
       <div class="fail-list">
         <span class="label major">Ma</span>
-        <span class="txt">{{ props.item.maCnt }}</span>
+        <span class="txt">{{ numberWithCommas(props.item.maCnt) }}</span>
       </div>
       <div class="fail-list">
         <span class="label minor">Mi</span>
-        <span class="txt">{{ props.item.miCnt }}</span>
+        <span class="txt">{{ numberWithCommas(props.item.miCnt) }}</span>
       </div>
     </div>
   </li>
@@ -79,6 +79,8 @@ import * as echarts from 'echarts';
 
 import type { EChartsType } from 'echarts';
 import type { ApiStat, ServiceStat } from '@/types/MonitoringControlType';
+
+import { numberWithCommas } from '@/utils/validation';
 
 const props = defineProps<{
   item: ServiceStat | ApiStat;

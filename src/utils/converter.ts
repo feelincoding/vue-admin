@@ -91,3 +91,27 @@ export const addDate = (date: Date, days: number) => {
   d.setDate(d.getDate() + days);
   return d;
 };
+
+export const getTimeArr = (endTime: string, timeInterval: number): string[] => {
+  let tempEndTime = new Date(endTime);
+  let tempStartTime = new Date(endTime);
+  tempEndTime.setMinutes(tempEndTime.getMinutes() - 1);
+  tempStartTime.setMinutes(tempStartTime.getMinutes() - timeInterval);
+
+  let yearEnd = tempEndTime.getFullYear();
+  let monthEnd = String(tempEndTime.getMonth() + 1).padStart(2, '0');
+  let dateEnd = String(tempEndTime.getDate()).padStart(2, '0');
+  let hoursEnd = String(tempEndTime.getHours()).padStart(2, '0');
+  let minutesEnd = String(tempEndTime.getMinutes()).padStart(2, '0');
+
+  let yearStart = tempStartTime.getFullYear();
+  let monthStart = String(tempStartTime.getMonth() + 1).padStart(2, '0');
+  let dateStart = String(tempStartTime.getDate()).padStart(2, '0');
+  let hoursStart = String(tempStartTime.getHours()).padStart(2, '0');
+  let minutesStart = String(tempStartTime.getMinutes()).padStart(2, '0');
+
+  return [
+    `${yearEnd}-${monthEnd}-${dateEnd} ${hoursEnd}:${minutesEnd}`,
+    `${yearStart}-${monthStart}-${dateStart} ${hoursStart}:${minutesStart}`,
+  ];
+};

@@ -54,3 +54,8 @@ export const checkDomain = (value: string) => {
   }
   return r.test(String(value));
 };
+
+// 숫자 단위 표시(, 추가)
+export const numberWithCommas = (x: number) => {
+  return x.toLocaleString(navigator.language);
+};

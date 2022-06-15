@@ -8,7 +8,7 @@
 import { onMounted, onUnmounted, ref, shallowRef } from 'vue';
 import * as echarts from 'echarts';
 import { addDate } from '@/utils/converter';
-import { getRealTimeChartOption } from './chart-options';
+import { getRealTimeChartOption } from '@/components/dash-board/chartOptions';
 
 const myChart = shallowRef({} as echarts.EChartsType);
 const dom = shallowRef({} as HTMLDivElement);
