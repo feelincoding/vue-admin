@@ -186,9 +186,9 @@ export function getErrorStatChartOption(miCnt: number, maCnt: number, crCnt: num
       {
         type: 'category',
         data: [
-          `${miCnt !== undefined ? miCnt.toLocaleString() : 0}`,
-          `${maCnt !== undefined ? maCnt.toLocaleString() : 0}`,
-          `${crCnt !== undefined ? crCnt.toLocaleString() : 0}`,
+          `${miCnt !== undefined ? miCnt.toLocaleString() : 0} 건`,
+          `${maCnt !== undefined ? maCnt.toLocaleString() : 0} 건`,
+          `${crCnt !== undefined ? crCnt.toLocaleString() : 0} 건`,
         ],
         axisLine: { show: false },
         axisLabel: { show: true, fontSize: '13', fontWeight: 550, color: '#000' },
@@ -197,10 +197,10 @@ export function getErrorStatChartOption(miCnt: number, maCnt: number, crCnt: num
       },
     ],
     grid: {
-      top: 30,
-      left: 50,
-      bottom: 30,
-      right: 50,
+      top: '5%',
+      bottom: '5%',
+      left: '10%',
+      right: '10%',
     },
     series: [
       {
