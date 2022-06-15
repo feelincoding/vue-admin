@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted, inject } from 'vue';
+import { ref, watch, onMounted, inject } from 'vue';
 import type { Ref } from 'vue';
 import ListLayout from '@/components/layout/ListLayout.vue';
 import InputBox from '@/components/commons/search-option/InputBox.vue';
@@ -149,9 +149,8 @@ import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { convertDate, convertTime } from '@/utils/converter';
 import ServiceRepository from '@/repository/service-repository';
 
-import { useRoute } from 'vue-router';
-import router from '@/router';
-import bootstrap from 'bootstrap-vue-3';
+import { useRoute, useRouter } from 'vue-router';
+// import bootstrap from 'bootstrap-vue-3';
 import { BSpinner } from 'bootstrap-vue-3';
 import type { GateWayError } from '@/error/GateWayError';
 import ErrorCode from '@/error/ErrorCodes';
@@ -182,6 +181,7 @@ const servicePagination: Ref<Pagination> = ref({
 const deleteModal = ref(false);
 const deleteId = ref('');
 const route = useRoute();
+const router = useRouter();
 
 const getDate = (date: string) => {
   return convertDate(date);
