@@ -124,6 +124,7 @@
     "valid_check_thimeout": "1000ms ~ 30000ms 사이의 값을 입력해주세요.",
     "valid_check_method": "하나 이상의 Method를 선택해주세요.",
     "valid_check_desc": "형식에 맞게 입력 바랍니다.(최대 1000자 입력 가능)",
+    "valid_check_empty": "해당 항목은 필수 입력값입니다.",
     "server_error": "서버 통신 에러",
     "enter_search_data": "검색 데이터를 입력해주세요.",
     "confirm_api_register": "API를 등록하시겠습니까?",

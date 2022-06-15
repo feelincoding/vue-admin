@@ -13,9 +13,9 @@
         class="input-box lg"
         @focus="notice()"
       />
-      <p v-if="show && notiMessage.isCheck === false" class="red-txt noti">해당 목록은 필수 입력값입니다.</p>
-      <p v-if="check === false" class="red-txt noti">중복된 ID입니다.</p>
+      <!-- <p v-if="show && text.length === 0" class="red-txt noti">해당 목록은 필수 입력값입니다.</p> -->
       <p v-if="notiMessage.isCheck == false" class="red-txt noti">{{ notiMessage.message }}</p>
+      <p v-if="check === false" class="red-txt noti">중복된 ID입니다.</p>
     </div>
   </li>
 </template>
@@ -36,12 +36,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'input', value: string): void;
+  (e: 'update:value', value: string): void;
   (e: 'update:isvalid', value: boolean): void;
 }>();
 
 const validationCheck: ValidationCheckType = {
-  isCheck: false,
+  isCheck: true,
   message: '',
 };
 
@@ -59,12 +59,12 @@ watch(text, (val: string) => {
     notiMessage.value.message = '';
   } else if (val == '') {
     notiMessage.value.isCheck = false;
-    notiMessage.value.message = '';
+    notiMessage.value.message = t('api.valid_check_empty');
   } else {
     notiMessage.value.isCheck = false;
     notiMessage.value.message = t('api.valid_check_id');
   }
-  emit('input', val);
+  emit('update:value', val);
 });
 
 watch(
