@@ -46,8 +46,6 @@ onMounted(() => {
     tpsDetailChart.value.setOption(getTpsDetailOption(res[0]));
   });
 });
-
-let timerId = 0;
 </script>
 
 <style scoped>
