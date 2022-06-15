@@ -1,82 +1,11 @@
 import * as echarts from 'echarts';
-import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType, LastTrafficType } from '@/types/DashBoardType';
-
-export const getTotalTrafficDetailOption = (traffic: TotalTrafficStat[]) => {
-  const totalTrafficDetailOption: echarts.EChartsOption = {
-    legend: {
-      data: ['성공', '실패'],
-      textStyle: {
-        fontSize: '14',
-      },
-    },
-    tooltip: {
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross',
-        label: {
-          backgroundColor: '#6a7985',
-        },
-      },
-    },
-    dataZoom: [
-      {
-        type: 'inside',
-        throttle: 50,
-      },
-    ],
-    xAxis: [
-      {
-        type: 'category',
-        data: traffic.map((item) => item.statBaseTm.substr(11, 5)),
-      },
-    ],
-    yAxis: [
-      {
-        type: 'value',
-      },
-    ],
-    series: [
-      {
-        name: '성공',
-        type: 'bar',
-        stack: 'stack',
-        data: traffic.map((item) => {
-          return item.sucesCnt as number;
-        }),
-        seriesLayoutBy: 'row',
-        emphasis: { focus: 'series' },
-        color: '#6998FF',
-        tooltip: {
-          valueFormatter: function (value) {
-            return value + ' 건';
-          },
-        },
-        zlevel: 5,
-        z: 5,
-      },
-      {
-        name: '실패',
-        type: 'bar',
-        stack: 'stack',
-        data: traffic.map((item) => {
-          return item.failCnt as number;
-        }),
-        seriesLayoutBy: 'row',
-        emphasis: { focus: 'series' },
-        color: '#FF4E63',
-        tooltip: {
-          valueFormatter: function (value) {
-            return value + ' 건';
-          },
-        },
-        zlevel: 5,
-        z: 5,
-      },
-    ],
-  };
-  return totalTrafficDetailOption;
-};
+import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType } from '@/types/DashBoardType';
+import type {
+  TrafficService,
+  TrafficApi,
+  RealtimeServiceStatDetail,
+  RealtimeApiStatDetail,
+} from '@/types/MonitoringControlType';
 
 export function getDetailApiTrafficOption(detail: TotalTrafficStat[]) {
   const o: echarts.EChartsOption = {
@@ -304,7 +233,7 @@ export function getProgressOption() {
 }
 
 export function getTimerOption(chartCountPercentData: number, chartCountTotalData: number) {
-  const timerOption: echarts.EChartsOption = {
+  const o: echarts.EChartsOption = {
     title: {
       show: false,
     },
@@ -334,11 +263,11 @@ export function getTimerOption(chartCountPercentData: number, chartCountTotalDat
     color: ['#000000', '#D5D5D5'],
   };
 
-  return timerOption;
+  return o;
 }
 
 export function getFailProgressChartOption(miCnt: number, maCnt: number, crCnt: number) {
-  const errorStatsBarOption: echarts.EChartsOption = {
+  const o: echarts.EChartsOption = {
     backgroundColor: '#FFFFFF',
     xAxis: {
       type: 'value',
@@ -412,11 +341,11 @@ export function getFailProgressChartOption(miCnt: number, maCnt: number, crCnt: 
     ],
   };
 
-  return errorStatsBarOption;
+  return o;
 }
 
 export function getErrorDetailChartOption(detail: ErrorStatsType[]) {
-  const errorStatsDetailOption: echarts.EChartsOption = {
+  const o: echarts.EChartsOption = {
     tooltip: {
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
       trigger: 'axis',
@@ -513,11 +442,11 @@ export function getErrorDetailChartOption(detail: ErrorStatsType[]) {
     ],
   };
 
-  return errorStatsDetailOption;
+  return o;
 }
 
 export const getLastTrafficChartOption = (lastTrafficList: any) => {
-  const lastTrafficOption: echarts.EChartsOption = {
+  const o: echarts.EChartsOption = {
     legend: {
       show: true,
     },
@@ -630,11 +559,11 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
     ],
   };
 
-  return lastTrafficOption;
+  return o;
 };
 
 export const getLastResponseChartOption = (lastResponseList: any) => {
-  const option: echarts.EChartsOption = {
+  const o: echarts.EChartsOption = {
     legend: {
       show: true,
     },
@@ -734,7 +663,7 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
     ],
   };
 
-  return option;
+  return o;
 };
 
 export const getRealTimeChartOption = (
@@ -885,4 +814,165 @@ export const getRealTimeChartOption = (
     ],
   };
   return o;
+};
+
+export const get24TrafficChartOption = (type: string, trafficService: TrafficService[], trafficApi: TrafficApi[]) => {
+  let totalData = [];
+  let successData = [];
+  let failData = [];
+  let xAxisData = [];
+  if (type == 'svc') {
+    for (let index = 0; index < trafficService[0].svcTrafc.length; index++) {
+      totalData.push(trafficService[0].svcTrafc[index].totCnt);
+      successData.push(trafficService[0].svcTrafc[index].sucesCnt);
+      failData.push(trafficService[0].svcTrafc[index].failCnt);
+      xAxisData.push(trafficService[0].svcTrafc[index].statBaseTm.slice(11, 16));
+    }
+  } else if (type == 'api') {
+    for (let index = 0; index < trafficApi[0].apiTrafc.length; index++) {
+      totalData.push(trafficApi[0].apiTrafc[index].totCnt);
+      successData.push(trafficApi[0].apiTrafc[index].sucesCnt);
+      failData.push(trafficApi[0].apiTrafc[index].failCnt);
+      xAxisData.push(trafficApi[0].apiTrafc[index].statBaseTm.slice(11, 16));
+    }
+  }
+
+  let myAreaChartApiTop5AWeekTransitionSeries = [
+    {
+      name: '실패',
+      data: failData,
+    },
+    {
+      name: '성공',
+      data: successData,
+    },
+    {
+      name: '전체',
+      data: totalData,
+    },
+  ];
+
+  const o = {
+    tooltip: {
+      appendToBody: true,
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    grid: {
+      top: '10%',
+      bottom: '3%',
+      left: '3%',
+      right: '4%',
+      containLabel: true,
+    },
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: false,
+        data: xAxisData,
+      },
+    ],
+    yAxis: [
+      {
+        type: 'value',
+      },
+    ],
+    series: myAreaChartApiTop5AWeekTransitionSeries.map((item) =>
+      Object.assign(item, {
+        type: 'line',
+        stack: 'Total',
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+      })
+    ),
+  };
+  return o;
+};
+
+export const getBarOption = (
+  type: string,
+  realtimeServiceStatDetailList: RealtimeServiceStatDetail[],
+  realtimeApiStatDetailList: RealtimeApiStatDetail[]
+) => {
+  let successData = [];
+  let failData = [];
+  let yAxisData = [];
+
+  if (type == 'svc') {
+    for (let index = 0; index < realtimeServiceStatDetailList.length; index++) {
+      successData.unshift(realtimeServiceStatDetailList[index].sucesCnt);
+      failData.unshift(realtimeServiceStatDetailList[index].failCnt);
+      if (index == 0) {
+        yAxisData.unshift('Today');
+      } else {
+        yAxisData.unshift(realtimeServiceStatDetailList[index].statBaseDt.slice(5, 10));
+      }
+    }
+  } else if (type == 'api') {
+    for (let index = 0; index < realtimeApiStatDetailList.length; index++) {
+      successData.unshift(realtimeApiStatDetailList[index].sucesCnt);
+      failData.unshift(realtimeApiStatDetailList[index].failCnt);
+      if (index == 0) {
+        yAxisData.unshift('Today');
+      } else {
+        yAxisData.unshift(realtimeApiStatDetailList[index].statBaseDt.slice(5, 10));
+      }
+    }
+  }
+
+  let myBarChartApiTop5AWeekTransitionSeries = [
+    {
+      name: '성공',
+      data: successData,
+    },
+    {
+      name: '실패',
+      data: failData,
+    },
+  ];
+
+  const option = {
+    tooltip: {
+      appendToBody: true,
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow',
+      },
+    },
+    grid: {
+      top: '5%',
+      left: '3%',
+      right: '6%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'value',
+    },
+    yAxis: {
+      type: 'category',
+      data: yAxisData,
+    },
+    series: myBarChartApiTop5AWeekTransitionSeries.map((item) =>
+      Object.assign(item, {
+        type: 'bar',
+        stack: 'total',
+        label: {
+          show: true,
+          fontSize: 9,
+        },
+        emphasis: {
+          focus: 'series',
+        },
+      })
+    ),
+  };
+  return option;
 };

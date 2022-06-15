@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { onMounted, ref, shallowRef, watch, type Ref } from 'vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
-import { getTotalTrafficDetailOption, getFailProgressChartOption } from '@/components/dash-board/chart-options';
+import { getTotalTrafficDetailOption, getFailProgressChartOption } from '@/components/dash-board/chartOptions';
 import * as echarts from 'echarts';
 import DashBoardRepository from '@/repository/dash-board-repository';
 const emit = defineEmits<{

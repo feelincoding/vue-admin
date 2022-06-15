@@ -8,14 +8,14 @@
     <template v-if="!isShowProgress" v-slot:contents>
       <div class="form-wrap">
         <ul>
-          <InputGroup
+          <TextDebounceForm
             type="text"
-            v-model:value.sync="systemItem.id"
-            v-model:isValid.sync="idValid"
             :inputNm="$t('system.id')"
-            :place="$t('system.id_placeholder')"
+            :check="isDuplicatedId"
+            :placeholder="$t('system.id_placeholder')"
+            v-model:value="systemItem.id"
+            v-model:isValid="idValid"
             :disabled="true"
-            :required="true"
           />
 
           <EdptForm
@@ -89,6 +89,7 @@ import InputGroup from '@/components/system-mngt/InputGroup.vue';
 import TextAreaGroup from '@/components/system-mngt/TextAreaGroup.vue';
 import EdptForm from '@/components/system-mngt/EdptForm.vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
+import TextDebounceForm from '@/components/system-mngt/TextDebounceForm.vue';
 
 import { ref, reactive, computed, watch, onMounted, inject } from 'vue';
 import type { PropType } from 'vue';
@@ -121,6 +122,7 @@ const isShowProgress = ref(false);
 const isShowModal = ref(false);
 const isBtnDisabled = ref(false);
 
+const isDuplicatedId: Ref<boolean | null> = ref(null);
 // get system() {
 //   return this.systemModule.system;
 // }

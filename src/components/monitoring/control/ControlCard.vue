@@ -1,7 +1,7 @@
 <template>
   <li @click="cardDetail">
     <div class="card-tit">
-      <h2 class="h2-tit">{{ isSvcStatItem(item) ? item.svcId : item.sysId + '.' + item.apiId }}</h2>
+      <h3 class="h3-tit">{{ isSvcStatItem(item) ? item.svcId : item.sysId + '.' + item.apiId }}</h3>
 
       <div
         class="tip"
@@ -16,47 +16,60 @@
 
     <div class="script-wrap">
       <div class="script-cont">
-        <i><img src="@/assets/req_sm.svg" :alt="$t('control.avg_res_time')" /></i>
         <p class="text">
-          {{ $t('control.avg_res_time') }} : <span>{{ item.avgResTm }}</span
+          {{ $t('control.avg_res_time') }} : <span>{{ numberWithCommas(item.avgResTm) }}</span
           >ms
         </p>
       </div>
       <div class="script-cont">
-        <i><img src="@/assets/tps_sm.svg" :alt="$t('control.tps')" /></i>
         <p class="text">
-          {{ $t('control.tps') }} : <span>{{ item.tps }}</span>
+          {{ $t('control.tps') }} : <span>{{ numberWithCommas(item.tps) }}</span>
         </p>
       </div>
     </div>
 
-    <div class="card-chart col-2" style="width: 100%">
+    <div class="card-chart">
+      <!--  style="width: 100%" -->
       <div
         :id="'statsPie_' + (isSvcStatItem(item) ? item.svcId : item.sysId + '.' + item.apiId)"
-        class="chart-div"
+        class="chart-div flex"
       ></div>
       <dl>
-        <dt>
-          {{ $t('control.success_rate') }} : <span class="syan">{{ item.sucesRate }}%</span>
+        <dt class="syan">
+          {{ $t('control.success_rate') }} : <em>{{ item.sucesRate }}%</em>
         </dt>
         <dd>
-          {{ $t('common.total') }} : <span class="purple">{{ item.totCnt }}</span>
+          {{ $t('common.total') }} : <em>{{ numberWithCommas(item.totCnt) }}</em>
         </dd>
         <dd>
-          {{ $t('common.success_eng') }} : <span class="syan">{{ item.sucesCnt }}</span>
+          {{ $t('common.success_eng') }} : <em class="syan">{{ numberWithCommas(item.sucesCnt) }}</em>
         </dd>
         <dd>
-          {{ $t('common.fail_eng') }} : <span class="red">{{ item.failCnt }}</span>
+          {{ $t('common.fail_eng') }} : <em class="red">{{ numberWithCommas(item.failCnt) }}</em>
         </dd>
       </dl>
     </div>
 
-    <div class="card-chart">
+    <!-- <div class="card-chart">
       <h4 class="h4-tit">{{ $t('control.failure_classification') }}</h4>
       <div
         :id="'errorStateBar_' + (isSvcStatItem(item) ? item.svcId : item.sysId + '.' + item.apiId)"
         class="chart-div"
       ></div>
+    </div> -->
+    <div class="fail-group card-fail">
+      <div class="fail-list">
+        <span class="label critical">Cr</span>
+        <span class="txt">{{ numberWithCommas(props.item.crCnt) }}</span>
+      </div>
+      <div class="fail-list">
+        <span class="label major">Ma</span>
+        <span class="txt">{{ numberWithCommas(props.item.maCnt) }}</span>
+      </div>
+      <div class="fail-list">
+        <span class="label minor">Mi</span>
+        <span class="txt">{{ numberWithCommas(props.item.miCnt) }}</span>
+      </div>
     </div>
   </li>
 </template>
@@ -66,6 +79,8 @@ import * as echarts from 'echarts';
 
 import type { EChartsType } from 'echarts';
 import type { ApiStat, ServiceStat } from '@/types/MonitoringControlType';
+
+import { numberWithCommas } from '@/utils/validation';
 
 const props = defineProps<{
   item: ServiceStat | ApiStat;
@@ -103,14 +118,14 @@ onUnmounted(() => {
 
 const domInit = () => {
   setPieChart();
-  setBarChart();
+  // setBarChart();
 
   window.addEventListener('resize', () => chartResize(), { passive: true });
 };
 
 const chartResize = () => {
   myChart.value.resize();
-  myChart2.value.resize();
+  // myChart2.value.resize();
 };
 
 const domDispose = () => {
@@ -118,9 +133,9 @@ const domDispose = () => {
     myChart.value.dispose();
   }
 
-  if (myChart2 != null && myChart2 != undefined) {
-    myChart2.value.dispose();
-  }
+  // if (myChart2 != null && myChart2 != undefined) {
+  //   myChart2.value.dispose();
+  // }
 };
 
 const setPieChart = () => {
@@ -132,14 +147,14 @@ const setPieChart = () => {
   myChart.value.setOption(getPieOption());
 };
 
-const setBarChart = () => {
-  const barDom = document.getElementById(
-    'errorStateBar_' + (isSvcStatItem(props.item) ? props.item.svcId : props.item.sysId + '.' + props.item.apiId)
-  ) as HTMLDivElement;
+// const setBarChart = () => {
+//   const barDom = document.getElementById(
+//     'errorStateBar_' + (isSvcStatItem(props.item) ? props.item.svcId : props.item.sysId + '.' + props.item.apiId)
+//   ) as HTMLDivElement;
 
-  myChart2.value = echarts.init(barDom);
-  myChart2.value.setOption(getBarOption());
-};
+//   myChart2.value = echarts.init(barDom);
+//   myChart2.value.setOption(getBarOption());
+// };
 
 const getPieOption = () => {
   const option = {
@@ -165,79 +180,79 @@ const getPieOption = () => {
   return option;
 };
 
-const getBarOption = () => {
-  const option = {
-    backgroundColor: '#FFFFFF',
-    xAxis: {
-      type: 'value',
-      max: props.item.failCnt,
-      axisLine: { show: false },
-      axisLabel: { show: false },
-      axisTick: { show: false },
-      splitLine: { show: false },
-    },
-    yAxis: [
-      {
-        data: ['Minor', 'Major', 'Critical'],
-        type: 'category',
-        axisLine: { show: false },
-        axisLabel: { show: true, fontSize: '13', fontWeight: 600, color: '#000' },
-        axisTick: { show: false },
-        splitLine: { show: false },
-      },
-      {
-        type: 'category',
-        data: [props.item.miCnt + '건', props.item.maCnt + '건', props.item.crCnt + '건'],
-        axisLine: { show: false },
-        axisLabel: { show: true, fontSize: '13', fontWeight: 600, color: '#000' },
-        axisTick: { show: false },
-        splitLine: { show: false },
-      },
-    ],
-    grid: {
-      top: 10,
-      left: '21%',
-      bottom: 10,
-      right: '23%',
-    },
-    series: [
-      {
-        type: 'bar',
-        data: [
-          {
-            value: props.item.miCnt,
-            itemStyle: {
-              color: '#FFE03D',
-            },
-          },
-          {
-            value: props.item.maCnt,
-            itemStyle: {
-              color: '#FF994F',
-            },
-          },
-          {
-            value: props.item.crCnt,
-            itemStyle: {
-              color: '#FF4E63',
-            },
-          },
-        ],
-        showBackground: true,
-        backgroundStyle: {
-          color: 'rgba(180, 180, 180, 0.5)',
-          borderRadius: [100, 100, 100, 100],
-        },
-        barWidth: '40%',
-        itemStyle: {
-          borderRadius: [100, 100, 100, 100],
-        },
-      },
-    ],
-  };
+// const getBarOption = () => {
+//   const option = {
+//     backgroundColor: '#FFFFFF',
+//     xAxis: {
+//       type: 'value',
+//       max: props.item.failCnt,
+//       axisLine: { show: false },
+//       axisLabel: { show: false },
+//       axisTick: { show: false },
+//       splitLine: { show: false },
+//     },
+//     yAxis: [
+//       {
+//         data: ['Minor', 'Major', 'Critical'],
+//         type: 'category',
+//         axisLine: { show: false },
+//         axisLabel: { show: true, fontSize: '13', fontWeight: 600, color: '#000' },
+//         axisTick: { show: false },
+//         splitLine: { show: false },
+//       },
+//       {
+//         type: 'category',
+//         data: [props.item.miCnt + '건', props.item.maCnt + '건', props.item.crCnt + '건'],
+//         axisLine: { show: false },
+//         axisLabel: { show: true, fontSize: '13', fontWeight: 600, color: '#000' },
+//         axisTick: { show: false },
+//         splitLine: { show: false },
+//       },
+//     ],
+//     grid: {
+//       top: 10,
+//       left: '21%',
+//       bottom: 10,
+//       right: '23%',
+//     },
+//     series: [
+//       {
+//         type: 'bar',
+//         data: [
+//           {
+//             value: props.item.miCnt,
+//             itemStyle: {
+//               color: '#FFE03D',
+//             },
+//           },
+//           {
+//             value: props.item.maCnt,
+//             itemStyle: {
+//               color: '#FF994F',
+//             },
+//           },
+//           {
+//             value: props.item.crCnt,
+//             itemStyle: {
+//               color: '#FF4E63',
+//             },
+//           },
+//         ],
+//         showBackground: true,
+//         backgroundStyle: {
+//           color: 'rgba(180, 180, 180, 0.5)',
+//           borderRadius: [100, 100, 100, 100],
+//         },
+//         barWidth: '40%',
+//         itemStyle: {
+//           borderRadius: [100, 100, 100, 100],
+//         },
+//       },
+//     ],
+//   };
 
-  return option;
-};
+//   return option;
+// };
 
 // item 타입 체크(serviceStat이면 true, apiStat이면 false)
 const isSvcStatItem = (target: ServiceStat | ApiStat): target is ServiceStat => {
