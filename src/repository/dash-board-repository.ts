@@ -86,6 +86,7 @@ export default class DashBoardRepository {
         `/getDashboardTrafficStusDetail`,
         param
       );
+      return Promise.resolve(response.data.value);
     } catch (error: GateWayError | any) {
       return Promise.reject(error);
     }
