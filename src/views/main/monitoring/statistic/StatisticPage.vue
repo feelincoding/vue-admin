@@ -1,5 +1,5 @@
 <template>
-  <article class="contents-wrap" @click="handleOnClick">
+  <article class="body-cont" @click="handleOnClick">
     <div class="tit-wrap">
       <h1 class="h1-tit">통계</h1>
     </div>
@@ -16,7 +16,7 @@
   </article>
 </template>
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref } from 'vue';
 
 import StatisticServicePage from '@/views/main/monitoring/statistic/service/StaticticServicePage.vue';
 import StatisticApiPage from '@/views/main/monitoring/statistic/api/StatisticApiPage.vue';

@@ -3,7 +3,8 @@
     <div class="border-cont search-cont">
       <h4 class="label-tit">기간 선택</h4>
       <div class="date-wrap">
-        <div class="date-cont bg-white-date">
+        <div class="date-cont">
+          <!--  bg-white-date -->
           <Datepicker range multiCalendars locale="ko-KR" v-model="date" :format="format" :maxDate="new Date()" />
         </div>
       </div>
@@ -27,17 +28,18 @@
           <input
             id="search-focus-input"
             type="text"
-            class="input-box lg search-focus-input"
+            class="input-box lg"
             placeholder="서비스 ID 검색"
             v-model="searchText"
-          />
+          /><!-- search-focus-input -->
           <button class="mid-btn" @click="handleClickSearch">
             <i><img src="@/assets/search_ico.svg" alt="검색" /></i>Search
           </button>
         </div>
 
         <!--  multi select -->
-        <div id="search-focus-div" v-show="isFocus" class="multi-wrap search-focus-div">
+        <div id="search-focus-div" v-show="isFocus" class="multi-wrap">
+          <!-- search-focus-div -->
           <div class="select-form">
             <!--  dropdown시 block class 추가-->
             <ul>

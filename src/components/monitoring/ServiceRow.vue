@@ -1,6 +1,6 @@
 <template>
   <li>
-    <div class="list-comp list" @click="onClickRow">
+    <div class="list-comp" @click="onClickRow">
       <div class="stati-service">
         <h4 class="h4-tit">{{ svcList.svcId }}</h4>
         <div class="other-cont">
@@ -14,13 +14,13 @@
           </div>
 
           <span class="text"
-            >Total : <em class="purple">{{ svcList.totCnt }}</em></span
+            >Total : <em>{{ numberWithCommas(svcList.totCnt) }}</em></span
           >
           <span class="text"
-            >Success : <em class="syan">{{ svcList.sucesCnt }}</em></span
+            >Success : <em class="syan">{{ numberWithCommas(svcList.sucesCnt) }}</em></span
           >
           <span class="text"
-            >Fail : <em class="red">{{ svcList.failCnt }}</em></span
+            >Fail : <em class="red">{{ numberWithCommas(svcList.failCnt) }}</em></span
           >
 
           <span class="success"
@@ -48,8 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import { ref, onMounted, type Ref } from 'vue';
 import type { StatiSvcStat } from '@/types/MonitoringStatisticType';
+import { numberWithCommas } from '@/utils/validation';
 import ApiRow from './ApiRow.vue';
 const props = defineProps<{
   svcList: StatiSvcStat;

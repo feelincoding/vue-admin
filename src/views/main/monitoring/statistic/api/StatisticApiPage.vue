@@ -7,18 +7,26 @@
       tab="api"
       @search="getSearchOption"
     />
-
-    <div class="service-list" v-if="apiList != undefined && apiList.apiStat != undefined && apiList.apiStat.length > 0">
-      <ul>
-        <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
-      </ul>
-    </div>
-    <div class="service-list" v-else>
-      <div style="position: relative; text-align: center" v-if="isShowProgress">
-        <b-spinner label="Large Spinner"></b-spinner>
+    <div class="monitor-comp">
+      <div class="tb-tit">
+        <h3 class="h3-tit">API List</h3>
+        <p class="total">
+          total : <span>{{ apiList !== null ? numberWithCommas(apiList.totCnt) : 0 }}</span>
+        </p>
       </div>
-      <div style="text-align: center" v-if="!isShowProgress">
-        <p>{{ emptyMsg }}</p>
+
+      <div class="stati-list" v-if="apiList != undefined && apiList.apiStat != undefined && apiList.apiStat.length > 0">
+        <ul>
+          <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
+        </ul>
+      </div>
+      <div class="stati-list" v-else>
+        <div style="position: relative; text-align: center" v-if="isShowProgress">
+          <b-spinner label="Large Spinner"></b-spinner>
+        </div>
+        <div style="text-align: center" v-if="!isShowProgress">
+          <p>{{ emptyMsg }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -27,7 +35,8 @@
 import ErrorCode from '@/error/ErrorCodes';
 import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
 import type { ApiSearch, StatResponse } from '@/types/MonitoringStatisticType';
-import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import { numberWithCommas } from '@/utils/validation';
+import { ref, watch, onMounted, type Ref } from 'vue';
 import StatisticSelectSearch from '@/components/monitoring/StatisticSelectSearch.vue';
 import ApiRow from '@/components/monitoring/ApiRow.vue';
 const props = defineProps<{

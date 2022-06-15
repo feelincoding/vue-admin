@@ -14,13 +14,13 @@
           </div>
 
           <span class="text"
-            >Total : <em class="purple">{{ apiList.totCnt }}</em></span
+            >Total : <em>{{ numberWithCommas(apiList.totCnt) }}</em></span
           >
           <span class="text"
-            >Success : <em class="syan">{{ apiList.sucesCnt }}</em></span
+            >Success : <em class="syan">{{ numberWithCommas(apiList.sucesCnt) }}</em></span
           >
           <span class="text"
-            >Fail : <em class="red">{{ apiList.failCnt }}</em></span
+            >Fail : <em class="red">{{ numberWithCommas(apiList.failCnt) }}</em></span
           >
 
           <span class="success"
@@ -36,18 +36,18 @@
       </button>
     </div>
 
-    <div class="stati-detail" :class="{ 'list-slider': isOpen, 'list-slider-none': !isOpen }">
+    <div class="stati-detail block" :class="{ 'list-slider': isOpen, 'list-slider-none': !isOpen }">
       <div class="result-group">
         <div class="comp">
           <label class="badge syan">Success</label>
-          <span class="text">{{ apiList.sucesCnt }}</span>
+          <span class="text">{{ numberWithCommas(apiList.sucesCnt) }}</span>
         </div>
       </div>
 
       <div class="result-group">
         <div class="comp">
           <label class="badge red">Fail</label>
-          <span class="text">{{ apiList.failCnt }}</span>
+          <span class="text">{{ numberWithCommas(apiList.failCnt) }}</span>
         </div>
 
         <div class="comp">
@@ -65,7 +65,7 @@
                 ><strong>{{ err.errCd }}</strong> {{ err.errMsg }}</span
               >
               <span class="text ml10"
-                >[<strong>{{ err.totCnt }}</strong
+                >[<strong>{{ numberWithCommas(err.totCnt) }}</strong
                 >]</span
               >
             </li>
@@ -77,8 +77,9 @@
   </li>
 </template>
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import { ref, onMounted, type Ref } from 'vue';
 import type { StatiApiStat } from '@/types/MonitoringStatisticType';
+import { numberWithCommas } from '@/utils/validation';
 const props = defineProps<{
   apiList: StatiApiStat;
 }>();
