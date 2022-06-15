@@ -88,8 +88,12 @@
                 <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
               </button>
             </li>
+            <li v-for="n in 5 - apiTop5List.length">
+              <div class="no-list"></div>
+            </li>
           </ul>
         </div>
+        <!--- Service Top 5 area --->
 
         <div class="chart-wrap">
           <h3 class="h3-tit">{{ $t('dash-board.service_top5_title') }}</h3>
@@ -112,9 +116,11 @@
                 <i><img src="@/assets/more_ico.svg" :alt="$t('common.more')" /></i>
               </button>
             </li>
+            <li v-for="n in 5 - serviceTop5List.length">
+              <div class="no-list"></div>
+            </li>
           </ul>
         </div>
-        <!--- Service Top 5 area --->
       </section>
       <section class="grid-group" id="section-draggable">
         <!--- Last Traffic --->
