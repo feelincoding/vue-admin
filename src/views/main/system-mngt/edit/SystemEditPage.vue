@@ -101,6 +101,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
+import ErrorCode from '@/error/ErrorCodes';
 const toast = useToast();
 const { t } = useI18n({});
 const route = useRoute();
@@ -123,9 +124,6 @@ const isShowModal = ref(false);
 const isBtnDisabled = ref(false);
 
 const isDuplicatedId: Ref<boolean | null> = ref(null);
-// get system() {
-//   return this.systemModule.system;
-// }
 const test = () => {
   console.log('test value: ', systemItem.value);
 };
@@ -146,21 +144,9 @@ onMounted(() => {
     });
 });
 
-// @Watch('system')
-// onSystemChange() {
-//   this.systemItem = this.system as SystemResponse;
-// }
-
 const showModal = () => {
-  const val =
-    idValid.value && tkcgrNmValid.value && tkcgrPosValid.value && tkcgrEmlValid.value && edptValid.value ? true : false;
+  const val = idValid.value && edptValid.value ? true : false;
 
-  console.log('idValid: ', idValid.value);
-  console.log('tkcgrNmValid: ', tkcgrNmValid.value);
-  console.log('tkcgrPosValid: ', tkcgrPosValid.value);
-  console.log('tkcgrEmlValid: ', tkcgrEmlValid.value);
-  console.log('edptValid: ', edptValid.value);
-  console.log('val: ', val);
   if (!val) {
     modal().show(t('system.empty_check_message'));
     return;
@@ -179,12 +165,17 @@ const onSubmit = async () => {
   systemModule
     .updateSystemDetail(systemItem.value)
     .then(() => {
+      toast.success(t('system.edit_success'));
       isShowProgress.value = false;
       router.back();
     })
-    .catch(() => {
+    .catch((err) => {
       isShowProgress.value = false;
-      modal().show(t('error.server_error'));
+      if (err.getErrorCode() == ErrorCode.CANCEL_ERROR) {
+        console.log('SYSTEM API Cancel');
+      } else {
+        modal().show(t('error.server_error'));
+      }
     });
 };
 

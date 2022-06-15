@@ -233,6 +233,7 @@
     "register_success": "시스템이 등록되었습니다.",
     "modal_system_edit": "시스템 수정",
     "modal_edit_message": "시스템을 수정하시겠습니까?",
+    "edit_success": "시스템이 수정되었습니다.",
     "desc_length_check": "설명은 최대 1000자 까지 입력 가능합니다.",
     "system_delete_fail": "{system_name} 시스템은 API에 등록 되어있어 삭제가 불가능합니다."
   },
