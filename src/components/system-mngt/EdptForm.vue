@@ -78,7 +78,7 @@ const { t } = useI18n({});
 
 const props = defineProps({
   inputNm: { type: String, required: false, default: '' },
-  strArr: { type: [] as PropType<String[]>, required: false, default: [] },
+  strArr: { type: Array<String>, required: false, default: ['http::'] },
   isValid: { type: Boolean || null, required: false, default: false },
   editPage: { type: Boolean, required: false, default: false },
 });

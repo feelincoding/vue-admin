@@ -160,6 +160,7 @@ const duplicateCheckId = () => {
       .duplicateCheck(systemItem.value.id)
       .then((res) => {
         isDuplicatedId.value = res;
+        console.log('isDuplicatedId.value', isDuplicatedId.value);
       })
       .catch((error: GateWayError) => {
         if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
@@ -172,23 +173,14 @@ const duplicateCheckId = () => {
 };
 
 const showModal = () => {
-  const val =
-    idValid.value &&
-    isDuplicatedId.value &&
-    tkcgrNmValid.value &&
-    tkcgrPosValid.value &&
-    tkcgrEmlValid.value &&
-    edptValid.value &&
-    descValid.value
-      ? true
-      : false;
-  console.log('idValid: ', idValid.value);
-  console.log('tkcgrNmValid: ', tkcgrNmValid.value);
-  console.log('tkcgrPosValid: ', tkcgrPosValid.value);
-  console.log('tkcgrEmlValid: ', tkcgrEmlValid.value);
-  console.log('edptValid: ', edptValid.value);
-  console.log('val: ', val);
-  console.log('systemItem.value: ', systemItem.value);
+  const val = idValid.value && isDuplicatedId.value && edptValid.value ? true : false;
+  // console.log('idValid: ', idValid.value);
+  // console.log('tkcgrNmValid: ', tkcgrNmValid.value);
+  // console.log('tkcgrPosValid: ', tkcgrPosValid.value);
+  // console.log('tkcgrEmlValid: ', tkcgrEmlValid.value);
+  // console.log('edptValid: ', edptValid.value);
+  // console.log('val: ', val);
+  // console.log('systemItem.value: ', systemItem.value);
   if (!val) {
     modal().show(t('system.empty_check_message'));
     return;
