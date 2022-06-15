@@ -14,13 +14,13 @@
           </div>
 
           <span class="text"
-            >{{ $t('common.total') }} : <em>{{ item.totCnt }}</em></span
+            >{{ $t('common.total') }} : <em>{{ numberWithCommas(item.totCnt) }}</em></span
           >
           <span class="text"
-            >{{ $t('common.success_eng') }} : <em class="syan">{{ item.sucesCnt }}</em></span
+            >{{ $t('common.success_eng') }} : <em class="syan">{{ numberWithCommas(item.sucesCnt) }}</em></span
           >
           <span class="text"
-            >{{ $t('common.fail_eng') }} : <em class="red">{{ item.failCnt }}</em></span
+            >{{ $t('common.fail_eng') }} : <em class="red">{{ numberWithCommas(item.failCnt) }}</em></span
           >
 
           <span class="success"
@@ -40,14 +40,14 @@
       <div class="result-group">
         <div class="comp">
           <label class="badge syan">{{ $t('common.success_eng') }}</label>
-          <span class="text">{{ item.sucesCnt }}</span>
+          <span class="text">{{ numberWithCommas(item.sucesCnt) }}</span>
         </div>
       </div>
 
       <div class="result-group">
         <div class="comp">
           <label class="badge red">{{ $t('common.fail_eng') }}</label>
-          <span class="text">{{ item.failCnt }}</span>
+          <span class="text">{{ numberWithCommas(item.failCnt) }}</span>
         </div>
 
         <div class="comp" v-if="errorCheck">
@@ -65,7 +65,7 @@
                 ><strong>{{ api.errCd }}</strong> {{ api.errMsg }}</span
               >
               <span class="text ml10"
-                >[<strong>{{ api.totCnt }}</strong
+                >[<strong>{{ numberWithCommas(api.totCnt) }}</strong
                 >]</span
               >
             </li>
@@ -79,6 +79,8 @@
 import { ref, type Ref } from 'vue';
 
 import type { StatiApiStat } from '@/types/MonitoringStatisticType';
+
+import { numberWithCommas } from '@/utils/validation';
 
 import dropUp from '@/assets/dropup_ico.svg';
 import dropDown from '@/assets/dropdown_ico.svg';
