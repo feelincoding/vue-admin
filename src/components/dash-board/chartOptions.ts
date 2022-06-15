@@ -232,6 +232,8 @@ export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) =>
             return value + ' 건';
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '실패',
@@ -248,6 +250,8 @@ export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) =>
             return value + ' 건';
           },
         },
+        zlevel: 5,
+        z: 5,
       },
     ],
   };
@@ -493,6 +497,8 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
         },
         data: lastTrafficList.map((item: { todayCnt: any }) => item.todayCnt),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전일',
@@ -506,6 +512,8 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
         },
         data: lastTrafficList.map((item: { ystdayCnt: any }) => item.ystdayCnt),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전주',
@@ -521,6 +529,8 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
           return item.lstWkCnt;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
     ],
   };
@@ -595,6 +605,8 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
           return item.todayAvgResTm as number;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전일',
@@ -610,6 +622,8 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
           return item.ystdayAvgResTm;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전주',
@@ -625,6 +639,8 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
           return item.lstWkAvgResTm;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
     ],
   };
@@ -694,6 +710,8 @@ export const getRealTimeChartOption = (
             return 'KTDS : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'KAKAO',
@@ -707,6 +725,8 @@ export const getRealTimeChartOption = (
             return 'KAKAO : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'NAVER',
@@ -720,6 +740,8 @@ export const getRealTimeChartOption = (
             return 'NAVER : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'CUPANG',
@@ -734,6 +756,8 @@ export const getRealTimeChartOption = (
             return 'CUPANG : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'GOOGLE',
@@ -748,6 +772,8 @@ export const getRealTimeChartOption = (
             return 'GOOGLE : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'FACEBOOK',
@@ -762,6 +788,8 @@ export const getRealTimeChartOption = (
             return 'FACEBOOK : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'INSTAGRAM',
@@ -776,6 +804,8 @@ export const getRealTimeChartOption = (
             return 'INSTAGRAM : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
     ],
   };
@@ -856,6 +886,8 @@ export const get24TrafficChartOption = (type: string, trafficService: TrafficSer
         emphasis: {
           focus: 'series',
         },
+        zlevel: 5,
+        z: 5,
       })
     ),
   };
@@ -937,6 +969,8 @@ export const getBarOption = (
         emphasis: {
           focus: 'series',
         },
+        zlevel: 5,
+        z: 5,
       })
     ),
   };
