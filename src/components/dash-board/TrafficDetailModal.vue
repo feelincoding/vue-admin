@@ -1,21 +1,48 @@
 <template>
-  <ModalLayout size="xl"
-    ><template v-slot:modalHeader
-      ><h2 class="h2-tit">Total Traffic Detail</h2>
-      <button @click="$emit('close')">
-        <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
-      </button>
-    </template>
-    <template v-slot:modalContainer
-      ><div class="error-stat-detail-chart" id="errorStatDetail"></div>
-      <div class="total-traffic-detail-chart" id="totalTrafficDetail"></div>
-    </template>
-    <template v-slot:modalFooter
-      ><button class="lg-btn purple-btn" @click="$emit('close')">
-        {{ $t('common.ok') }}
-      </button>
-    </template>
-  </ModalLayout>
+  <div>
+    <ModalLayout size="xl"
+      ><template v-slot:modalHeader
+        ><h2 class="h2-tit">Total Traffic Detail</h2>
+        <button @click="$emit('close')">
+          <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
+        </button>
+      </template>
+      <template v-slot:modalContainer
+        ><div class="error-stat-detail-chart" id="errorStatDetail"></div>
+        <div class="total-traffic-detail-chart" id="totalTrafficDetail"></div>
+      </template>
+      <template v-slot:modalFooter
+        ><button class="lg-btn purple-btn" @click="$emit('close')">
+          {{ $t('common.ok') }}
+        </button>
+      </template>
+    </ModalLayout>
+    <ModalLayout size="lg" v-if="apiDetailModal">
+      <template v-slot:modalHeader
+        ><h2 class="h2-tit">Request API List</h2>
+        <button @click="hideModal()">
+          <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i></button
+      ></template>
+      <template v-slot:modalContainer
+        ><div class="request-api-detail-list" v-if="!isShowProgress">
+          <div class="service-list">
+            <ul>
+              <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
+            </ul>
+          </div>
+        </div>
+        <div class="service-list">
+          <div style="position: relative; text-align: center" v-if="isShowProgress">
+            <b-spinner label="Large Spinner"></b-spinner>
+          </div></div
+      ></template>
+      <template v-slot:modalFooter
+        ><button class="lg-btn purple-btn" @click="hideModal()">
+          {{ $t('common.ok') }}
+        </button></template
+      >
+    </ModalLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,13 +51,21 @@ import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { getTotalTrafficDetailChartOption, getErrorStatChartOption } from '@/components/dash-board/chartOptions';
 import * as echarts from 'echarts';
 import DashBoardRepository from '@/repository/dash-board-repository';
+import ApiRow from '@/components/monitoring/ApiRow.vue';
+import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
+import { disableScrolling } from '@/utils/screen';
+import type { StatResponse } from '@/types/MonitoringStatisticType';
+import ErrorCode from '@/error/ErrorCodes';
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
-
+const statRepository = new MonitoringStatisticRepository();
 const dashBoardRepository = new DashBoardRepository();
 const totalTrafficDetailChart = shallowRef({} as echarts.EChartsType);
 const errorStatDetailChart = shallowRef({} as echarts.EChartsType);
+const apiDetailModal = ref(false);
+const apiList: Ref<StatResponse | null> = ref(null);
+const isShowProgress = ref(false);
 
 onMounted(() => {
   Promise.all([
@@ -61,7 +96,6 @@ onMounted(() => {
         }
         timerId = setTimeout(async () => {
           const dimension: number = xAxisInfo.value;
-          console.log(dimension);
           errorStatDetailChart.value.setOption(
             getErrorStatChartOption(res[1][dimension].miCnt, res[1][dimension].maCnt, res[1][dimension].crCnt)
           );
@@ -72,10 +106,35 @@ onMounted(() => {
       errorStatDetailChart.value.setOption(getErrorStatChartOption(res[2].miCnt, res[2].maCnt, res[2].crCnt));
       clearTimeout(timerId);
     });
+    totalTrafficDetailChart.value.on('click', function (params) {
+      const tm = res[0][params.dataIndex].statBaseTm;
+      const searchForm = {
+        statEndTm: tm.substring(0, 10) + ' ' + tm.substring(11, 16),
+        statStTm: tm.substring(0, 10) + ' ' + tm.substring(11, 16),
+      };
+      statRepository
+        .getApiList(searchForm)
+        .then((res) => {
+          apiList.value = res;
+          isShowProgress.value = false;
+          apiDetailModal.value = true;
+        })
+        .catch((err) => {
+          if (err.getErrorCode() == ErrorCode.CANCEL_ERROR) {
+          } else {
+            isShowProgress.value = false;
+            // this.$modal.show(`${this.$t('error.server_error')}`);
+          }
+        });
+    });
   });
 });
 
 let timerId = 0;
+
+const hideModal = () => {
+  apiDetailModal.value = false;
+};
 </script>
 
 <style scoped>
@@ -86,5 +145,11 @@ let timerId = 0;
 .error-stat-detail-chart {
   width: 100%;
   height: 30%;
+}
+.request-api-detail-list {
+  position: relative;
+  margin: 10px 0px;
+  height: 100%;
+  overflow-y: auto;
 }
 </style>
