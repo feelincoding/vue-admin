@@ -77,7 +77,7 @@ const emit = defineEmits<{
 }>();
 
 const validationCheck: ValidationCheckType = {
-  isCheck: false,
+  isCheck: null,
   message: '',
 };
 

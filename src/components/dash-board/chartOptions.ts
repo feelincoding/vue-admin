@@ -7,6 +7,83 @@ import type {
   RealtimeApiStatDetail,
 } from '@/types/MonitoringControlType';
 
+export const getTotalTrafficDetailOption = (traffic: TotalTrafficStat[]) => {
+  const totalTrafficDetailOption: echarts.EChartsOption = {
+    legend: {
+      data: ['성공', '실패'],
+      textStyle: {
+        fontSize: '14',
+      },
+    },
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    xAxis: [
+      {
+        type: 'category',
+        data: traffic.map((item) => item.statBaseTm.substr(11, 5)),
+      },
+    ],
+    yAxis: [
+      {
+        type: 'value',
+      },
+    ],
+    series: [
+      {
+        name: '성공',
+        type: 'bar',
+        stack: 'stack',
+        data: traffic.map((item) => {
+          return item.sucesCnt as number;
+        }),
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' },
+        color: '#6998FF',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 건';
+          },
+        },
+        zlevel: 5,
+        z: 5,
+      },
+      {
+        name: '실패',
+        type: 'bar',
+        stack: 'stack',
+        data: traffic.map((item) => {
+          return item.failCnt as number;
+        }),
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' },
+        color: '#FF4E63',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 건';
+          },
+        },
+        zlevel: 5,
+        z: 5,
+      },
+    ],
+  };
+  return totalTrafficDetailOption;
+};
+
 export function getDetailApiTrafficOption(detail: TotalTrafficStat[]) {
   const o: echarts.EChartsOption = {
     color: '#FFBF00',
