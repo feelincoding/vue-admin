@@ -6,7 +6,7 @@
         <div class="pop-header">
           <slot name="modalHeader"></slot>
         </div>
-        <div class="pop-container">
+        <div class="pop-container" :class="{ 'overflow-y': overflowY }">
           <slot name="modalContainer"></slot>
         </div>
         <div class="pop-footer">
@@ -52,6 +52,7 @@ const props = defineProps<{
   errorTitle?: string;
   errorDesc?: string;
   size?: string;
+  overflowY?: boolean;
 }>();
 
 const l = ref(false);

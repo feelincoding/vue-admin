@@ -14,7 +14,7 @@
           </div>
 
           <span class="text"
-            >{{ $t('common.total') }} : <em class="purple">{{ item.totCnt }}</em></span
+            >{{ $t('common.total') }} : <em>{{ item.totCnt }}</em></span
           >
           <span class="text"
             >{{ $t('common.success_eng') }} : <em class="syan">{{ item.sucesCnt }}</em></span
