@@ -16,6 +16,7 @@
       />
       <p v-if="emptyChk && text == ''" class="red-txt noti">{{ $t('service.empty_check') }}</p>
       <p v-if="check == false" class="red-txt noti">{{ $t('service.duplicate_check_id') }}</p>
+      <p v-if="notiMessage.valid === false && notiMessage.msg !== ''" class="red-txt noti">{{ notiMessage.msg }}</p>
     </div>
   </li>
 </template>
