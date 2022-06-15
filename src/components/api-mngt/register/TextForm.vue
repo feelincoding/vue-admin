@@ -82,7 +82,7 @@ onMounted(() => {
 });
 
 const emit = defineEmits<{
-  (e: 'input', value: string): void;
+  (e: 'update:value', value: string): void;
   (e: 'update:isvalid', value: boolean): void;
 }>();
 
@@ -91,7 +91,7 @@ watch(text, (val: string) => {
     notiMessage.value.isCheck = true;
     notiMessage.value.message = '';
 
-    emit('input', val);
+    emit('update:value', val);
   } else if (val == '') {
     notiMessage.value.isCheck = false;
     notiMessage.value.message = '';
@@ -107,7 +107,7 @@ watch(num, (val: number) => {
   if (val >= 1000 && val <= 30000) {
     notiMessage.value.isCheck = true;
     notiMessage.value.message = '';
-    emit('input', val.toString());
+    emit('update:value', val.toString());
   } else {
     notiMessage.value.isCheck = false;
     notiMessage.value.message = t('api.valid_check_thimeout');
@@ -128,8 +128,7 @@ watch(longText, (val: string) => {
 });
 
 const handleOnChange = (event: any) => {
-  console.log(event.target.value);
-  emit('input', event.target.value);
+  emit('update:value', event.target.value);
 };
 
 const notice = () => {
