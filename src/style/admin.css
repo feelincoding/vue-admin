@@ -454,8 +454,8 @@
 /***   popup   ***/
 .pop-wrap{z-index:5; border: 1px #ddd solid; border-radius:20px; background: #fff; padding: 15px 15px; margin: 0 auto; box-shadow: 1px 1px 5px #ccc; }
 
-.xl-pop{width:1320px !important;}
-.xl-pop .pop-container{height: 686px; margin: 0px 0px;}
+.xl-pop{width:1200px !important;}
+.xl-pop .pop-container{height: 500px; margin: 0px 0px;}
 
 .lg-pop{width:800px !important;}
 .lg-pop .pop-container{height: 540px;}
