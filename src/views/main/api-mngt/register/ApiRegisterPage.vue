@@ -7,7 +7,7 @@
     :isShowProgress="!showPage"
   >
     <template v-slot:contents>
-      <div v-if="showPage">
+      <div v-if="showPage" class="form-wrap">
         <ul>
           <SelectForm
             :groupNm="$t('api.sysId')"

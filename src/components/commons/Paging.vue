@@ -57,7 +57,7 @@ const isShowPrevBtn = computed((): boolean => {
 });
 
 const isShowNextBtn = computed((): boolean => {
-  const rule = props.pagingOption.currentPage == props.pagingOption.totalPage - 1;
+  const rule = props.pagingOption.currentPage == props.pagingOption.totalPage - 1 || props.pagingOption.totalPage === 0;
   return !rule;
 });
 
