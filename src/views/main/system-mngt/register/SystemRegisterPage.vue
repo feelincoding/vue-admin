@@ -31,7 +31,12 @@
             v-model:strArr.sync="systemItem.edpt"
             v-model:isValid.sync="edptValid"
           />
+        </ul>
+      </div>
 
+      <div class="form-wrap option-wrap">
+        <h3 class="h3-tit">선택 입력 항목</h3>
+        <ul>
           <InputGroup
             type="text"
             v-model:value.sync="systemItem.tkcgrNm"
