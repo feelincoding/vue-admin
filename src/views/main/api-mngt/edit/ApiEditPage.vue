@@ -10,73 +10,75 @@
     <!-- for progress -->
     <template v-slot:contents v-if="!isShowProgress">
       <!-- 레이아웃을 제외한 실제 컨텐츠 부분을 넣어주세요 -->
-      <ul>
-        <TextForm
-          :groupNm="$t('api.sysId')"
-          type="text"
-          :required="true"
-          v-model="requestBody.sysId"
-          :disabled="true"
-        />
-        <TextForm :groupNm="$t('api.apiId')" type="text" :required="true" v-model="requestBody.id" :disabled="true" />
-        <TextForm
-          :groupNm="$t('api.interfaceNumber')"
-          type="text"
-          :required="true"
-          :disabled="true"
-          v-model="requestBody.ifNo"
-        />
+      <div class="form-wrap">
+        <ul>
+          <TextForm
+            :groupNm="$t('api.sysId')"
+            type="text"
+            :required="true"
+            v-model="requestBody.sysId"
+            :disabled="true"
+          />
+          <TextForm :groupNm="$t('api.apiId')" type="text" :required="true" v-model="requestBody.id" :disabled="true" />
+          <TextForm
+            :groupNm="$t('api.interfaceNumber')"
+            type="text"
+            :required="true"
+            :disabled="true"
+            v-model="requestBody.ifNo"
+          />
 
-        <MethodForm groupNm="Method" v-model:value="requestBody.meth" v-model:isvalid="methodValid" />
-        <UriForm
-          groupNm="URI"
-          :uriIn="requestBody.uriIn"
-          v-model:value="requestBody.uriOut"
-          v-model:isvalid="uriValid"
-        />
-        <EndPointGroup groupNm="End-point" :edptList="edptList" />
+          <MethodForm groupNm="Method" v-model:value="requestBody.meth" v-model:isvalid="methodValid" />
+          <UriForm
+            groupNm="URI"
+            :uriIn="requestBody.uriIn"
+            v-model:value="requestBody.uriOut"
+            v-model:isvalid="uriValid"
+          />
+          <EndPointGroup groupNm="End-point" :edptList="edptList" />
 
-        <HandlerGroupForm
-          :groupNm="$t('api.resHndlrGrp')"
-          :reqHandlerGroupList="reqHandlerGroupList"
-          :resHandlerGroupList="resHandlerGroupList"
-          :resHandlerGroupId="requestBody.resHndlrGrpId"
-          :reqHandlerGroupId="requestBody.reqHndlrGrpId"
-          @reqInput="
-            (msg) => {
-              requestBody.reqHndlrGrpId = msg;
-            }
-          "
-          @resInput="
-            (msg) => {
-              requestBody.resHndlrGrpId = msg;
-            }
-          "
-        />
-        <TextForm
-          :groupNm="$t('api.timeOutMS')"
-          type="number"
-          :required="true"
-          v-model="requestBody.timeOut"
-          :isvalid.sync="timeoutValid"
-        />
-        <TextForm
-          :groupNm="$t('api.apiDescription')"
-          type="textarea"
-          v-model="requestBody.desc"
-          :isvalid.sync="descValid"
-        />
-        <ModalLayout size="s" v-if="showModal">
-          <template v-slot:modalHeader><h1 class="h1-tit">API 수정</h1> </template>
-          <template v-slot:modalContainer>
-            <p class="text">API를 수정하시겠습니까?</p>
-          </template>
-          <template v-slot:modalFooter>
-            <button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button>
-            <button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
-          </template>
-        </ModalLayout>
-      </ul>
+          <HandlerGroupForm
+            :groupNm="$t('api.resHndlrGrp')"
+            :reqHandlerGroupList="reqHandlerGroupList"
+            :resHandlerGroupList="resHandlerGroupList"
+            :resHandlerGroupId="requestBody.resHndlrGrpId"
+            :reqHandlerGroupId="requestBody.reqHndlrGrpId"
+            @reqInput="
+              (msg) => {
+                requestBody.reqHndlrGrpId = msg;
+              }
+            "
+            @resInput="
+              (msg) => {
+                requestBody.resHndlrGrpId = msg;
+              }
+            "
+          />
+          <TextForm
+            :groupNm="$t('api.timeOutMS')"
+            type="number"
+            :required="true"
+            v-model="requestBody.timeOut"
+            :isvalid.sync="timeoutValid"
+          />
+          <TextForm
+            :groupNm="$t('api.apiDescription')"
+            type="textarea"
+            v-model="requestBody.desc"
+            :isvalid.sync="descValid"
+          />
+          <ModalLayout size="s" v-if="showModal">
+            <template v-slot:modalHeader><h1 class="h1-tit">API 수정</h1> </template>
+            <template v-slot:modalContainer>
+              <p class="text">API를 수정하시겠습니까?</p>
+            </template>
+            <template v-slot:modalFooter>
+              <button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button>
+              <button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
+            </template>
+          </ModalLayout>
+        </ul>
+      </div>
     </template>
     <!-- for progress -->
     <template v-slot:buttons v-if="!isShowProgress">
