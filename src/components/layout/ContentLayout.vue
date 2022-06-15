@@ -9,8 +9,15 @@
       </div>
     </div>
     <section class="contents-wrap box">
-      <div class="box-tit" v-if="$route.path.includes('register') || $route.path.includes('edit')">
+      <div
+        class="box-tit"
+        v-if="$route.path.includes('register') || $route.path.includes('edit')"
+        v-show="!props.isShowProgress"
+      >
         <em class="script">필수 입력사항 입니다.</em>
+      </div>
+      <div v-show="props.isShowProgress" style="width: 100%; margin-top: 300px; text-align: center">
+        <b-spinner style="width: 2.5rem; height: 2.5rem" label="Large Spinner"></b-spinner>
       </div>
       <slot name="contents"></slot>
     </section>
@@ -19,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { BSpinner } from 'bootstrap-vue-3';
 
 const props = defineProps<{
   title?: string | null;

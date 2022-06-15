@@ -26,7 +26,11 @@
           :required="true"
           @input="duplicateCheckId"
         /> -->
-          <EdptForm :inputNm="$t('system.edpt')" v-model:strArr.sync="systemItem.edpt" v-model:isValid.sync="edptValid" />
+          <EdptForm
+            :inputNm="$t('system.edpt')"
+            v-model:strArr.sync="systemItem.edpt"
+            v-model:isValid.sync="edptValid"
+          />
 
           <InputGroup
             type="text"
@@ -103,6 +107,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
+import ErrorCode from '@/error/ErrorCodes';
+import type { GateWayError } from '@/error/GateWayError';
 const toast = useToast();
 const { t } = useI18n({});
 const route = useRoute();
@@ -145,13 +151,25 @@ const duplicateCheckId = () => {
     clearTimeout(timerId.value);
   }
   timerId.value = setTimeout(async () => {
-    isDuplicatedId.value = await systemModule.duplicateCheck(systemItem.value.id);
+    await systemModule
+      .duplicateCheck(systemItem.value.id)
+      .then((res) => {
+        isDuplicatedId.value = res;
+      })
+      .catch((error: GateWayError) => {
+        if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
+          console.log('SYSTEM API Cancel');
+        } else {
+          toast.error(t('error.duplicate_check_error'));
+        }
+      });
   }, 1000);
 };
 
 const showModal = () => {
   const val =
     idValid.value &&
+    isDuplicatedId.value &&
     tkcgrNmValid.value &&
     tkcgrPosValid.value &&
     tkcgrEmlValid.value &&
@@ -185,11 +203,16 @@ const onSubmit = async () => {
     .registerSystem(systemItem.value)
     .then(() => {
       isShowProgress.value = false;
+      toast.success(t('system.register_success'));
       router.push({ name: 'system' });
     })
-    .catch(() => {
+    .catch((err) => {
       isShowProgress.value = false;
-      modal().show(t('error.server_error'));
+      if (err.getErrorCode() == ErrorCode.CANCEL_ERROR) {
+        console.log('SYSTEM API Cancel');
+      } else {
+        modal().show(t('error.server_error'));
+      }
     });
 };
 </script>

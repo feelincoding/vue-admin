@@ -102,31 +102,7 @@
         "
         class="red-txt noti"
       >
-        {{ $t('service.empty_check') }}
-      </p>
-      <p
-        v-else-if="
-          (showSec && sec == '') ||
-          (showMin && min == '') ||
-          (showHr && hour == '') ||
-          (showDay && day == '') ||
-          (showMon && month == '')
-        "
-        class="red-txt noti"
-      >
-        {{ $t('service.empty_check') }}
-      </p>
-      <p
-        v-else-if="
-          (showSec && sec == 0) ||
-          (showMin && min == 0) ||
-          (showHr && hour == 0) ||
-          (showDay && day == 0) ||
-          (showMon && month == 0)
-        "
-        class="red-txt noti"
-      >
-        1 이상의 값을 입력해주세요.
+        {{ $t('service.empty_check') }} 1 이상의 숫자만 입력해주세요.
       </p>
     </div>
   </li>
@@ -136,16 +112,16 @@ import { computed, onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 const props = defineProps<{
   inputNm: string;
-  secVal: Number | null;
-  minVal: Number | null;
-  hourVal: Number | null;
-  dayVal: Number | null;
-  monthVal: Number | null;
-  onSec: Boolean;
-  onMin: Boolean;
-  onHr: Boolean;
-  onDay: Boolean;
-  onMon: Boolean;
+  secVal: number | null;
+  minVal: number | null;
+  hourVal: number | null;
+  dayVal: number | null;
+  monthVal: number | null;
+  onSec: boolean;
+  onMin: boolean;
+  onHr: boolean;
+  onDay: boolean;
+  onMon: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -184,81 +160,81 @@ watch(showMon, (val) => {
   emit('update:onMon', val);
 });
 
-const sec: Ref<number | string | null> = computed({
+const sec: Ref<number | null> = computed({
   get: () => {
     if (props.secVal != null) {
       showSec.value = true;
     }
     return props.secVal as number | null;
   },
-  set: (val: number | string | null) => {
-    if (val == '') {
+  set: (val: number | null) => {
+    if (val == 0) {
       emit('update:secVal', null);
-    } else if (typeof val !== 'string') {
+    } else {
       emit('update:secVal', val);
     }
   },
 });
 
-const min: Ref<number | string | null> = computed({
+const min: Ref<number | null> = computed({
   get: () => {
     if (props.minVal != null) {
       showMin.value = true;
     }
     return props.minVal as number | null;
   },
-  set: (val: number | string | null) => {
-    if (val == '') {
+  set: (val: number | null) => {
+    if (val == 0) {
       emit('update:minVal', null);
-    } else if (typeof val !== 'string') {
+    } else {
       emit('update:minVal', val);
     }
   },
 });
 
-const hour: Ref<number | string | null> = computed({
+const hour: Ref<number | null> = computed({
   get: () => {
     if (props.hourVal != null) {
       showHr.value = true;
     }
     return props.hourVal as number | null;
   },
-  set: (val: number | string | null) => {
-    if (val == '') {
+  set: (val: number | null) => {
+    if (val == 0) {
       emit('update:hourVal', null);
-    } else if (typeof val !== 'string') {
+    } else {
       emit('update:hourVal', val);
     }
   },
 });
 
-const day: Ref<number | string | null> = computed({
+const day: Ref<number | null> = computed({
   get: () => {
     if (props.dayVal != null) {
       showDay.value = true;
     }
     return props.dayVal as number | null;
   },
-  set: (val: number | string | null) => {
-    if (val == '') {
+  set: (val: number | null) => {
+    if (val == 0) {
       emit('update:dayVal', null);
-    } else if (typeof val !== 'string') {
+    } else {
       emit('update:dayVal', val);
     }
   },
 });
 
-const month: Ref<number | string | null> = computed({
+const month: Ref<number | null> = computed({
   get: () => {
     if (props.monthVal != null) {
       showMon.value = true;
     }
     return props.monthVal as number | null;
   },
-  set: (val: number | string | null) => {
-    if (val == '') {
+  set: (val: number | null) => {
+    if (val == 0) {
       emit('update:monthVal', null);
-    } else if (typeof val !== 'string') {
+    } else {
       emit('update:monthVal', val);
     }
   },

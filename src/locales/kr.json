@@ -229,6 +229,7 @@
     "modal_delete_message": "시스템을 삭제하시겠습니까?",
     "modal_system_register": "시스템 등록",
     "modal_register_message": "시스템을 등록하시겠습니까?",
+    "register_success": "시스템이 등록되었습니다.",
     "modal_system_edit": "시스템 수정",
     "modal_edit_message": "시스템을 수정하시겠습니까?",
     "desc_length_check": "설명은 최대 1000자 까지 입력 가능합니다.",
@@ -286,7 +287,8 @@
   },
   "error": {
     "invalid_input": "형식에 맞지 않는 항목이 존재합니다.",
-    "server_error": "서버 오류입니다."
+    "server_error": "서버 오류입니다.",
+    "duplicate_check_error": "중복 체크를 실패하였습니다."
   },
   "dash_board": {
     "pause_time": "정지 시간 : "

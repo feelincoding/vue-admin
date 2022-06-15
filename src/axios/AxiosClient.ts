@@ -37,7 +37,7 @@ export class AxiosClient {
         return response.data;
       }
     } catch (error: Error | any) {
-      console.log('post error', error);
+      console.log('get error', error);
       if (!error.response) {
         throw new GateWayError(ErrorCode.NETWORK_ERROR);
       } else {
