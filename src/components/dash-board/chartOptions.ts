@@ -1,4 +1,4 @@
-import type * as echarts from 'echarts';
+import * as echarts from 'echarts';
 import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType } from '@/types/DashBoardType';
 import type {
   TrafficService,
@@ -6,6 +6,181 @@ import type {
   RealtimeServiceStatDetail,
   RealtimeApiStatDetail,
 } from '@/types/MonitoringControlType';
+
+export function getAvgDetailOption(detail: ApiResponseStatus[]) {
+  detail.forEach((item) => {
+    // console.log(item.statBaseTm.substr(11, 10));
+    console.log();
+  });
+
+  const avgDetailOption: echarts.EChartsOption = {
+    color: '#FFBF00',
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    grid: {
+      top: '5%',
+      left: '2%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: detail.map((item) => item.statBaseTm.substr(11, 5)),
+      axisLine: { show: true },
+      axisLabel: {
+        show: true,
+        showMaxLabel: true,
+      },
+    },
+
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        type: 'line',
+        stack: 'Total',
+        smooth: true,
+        lineStyle: {
+          width: 0,
+        },
+        showSymbol: false,
+        label: {
+          show: true,
+          position: 'top',
+        },
+        areaStyle: {
+          opacity: 0.8,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: '#6998FF',
+            },
+            {
+              offset: 1,
+              color: '#FF4E63',
+            },
+          ]),
+        },
+        emphasis: {
+          focus: 'series',
+        },
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' ms';
+          },
+        },
+        data: detail.map((item) => {
+          return item.avgResTm as number;
+        }),
+        zlevel: 5,
+        z: 5,
+      },
+    ],
+  };
+  return avgDetailOption;
+}
+
+export function getTpsDetailOption(detail: ApiResponseStatus[]) {
+  const tpsDetailOption: echarts.EChartsOption = {
+    color: '#FFBF00',
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    grid: {
+      top: '5%',
+      left: '2%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: detail.map((item) => item.statBaseTm.substr(11, 5)),
+      axisLine: { show: true },
+      axisLabel: {
+        show: true,
+        showMaxLabel: true,
+      },
+    },
+
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        type: 'line',
+        stack: 'Total',
+        smooth: true,
+        lineStyle: {
+          width: 0,
+        },
+        showSymbol: false,
+        label: {
+          show: true,
+          position: 'top',
+        },
+        areaStyle: {
+          opacity: 0.8,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: '#6998FF',
+            },
+            {
+              offset: 1,
+              color: '#FF4E63',
+            },
+          ]),
+        },
+        emphasis: {
+          focus: 'series',
+        },
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 건';
+          },
+        },
+        data: detail.map((item) => {
+          return item.tps as number;
+        }),
+        zlevel: 5,
+        z: 5,
+      },
+    ],
+  };
+  return tpsDetailOption;
+}
 
 export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) => {
   const totalTrafficDetailOption: echarts.EChartsOption = {
@@ -31,12 +206,11 @@ export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) =>
         throttle: 50,
       },
     ],
-    xAxis: [
-      {
-        type: 'category',
-        data: traffic.map((item) => item.statBaseTm.substr(11, 5)),
-      },
-    ],
+    xAxis: {
+      type: 'category',
+      data: traffic.map((item) => item.statBaseTm.substr(11, 5)),
+    },
+
     yAxis: [
       {
         type: 'value',

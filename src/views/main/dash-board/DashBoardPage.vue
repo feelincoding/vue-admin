@@ -356,7 +356,7 @@ watch(lastResponseList, () => {
 });
 
 const getRealTimeSectionHeight = () => {
-  return window.screen.availHeight - 663;
+  return window.screen.availHeight - 770;
 };
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
