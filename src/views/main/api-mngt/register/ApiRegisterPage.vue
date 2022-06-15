@@ -225,7 +225,7 @@ watch(
 );
 
 const duplicateCheckId = () => {
-  isDuplicatedId.value = false;
+  isDuplicatedId.value = null;
 
   if (timerId !== -1) {
     clearTimeout(timerId);
