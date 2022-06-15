@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, type Ref } from 'vue';
+import { onMounted, ref, shallowRef, watch, type Ref } from 'vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { getTotalTrafficDetailOption, getFailProgressChartOption } from '@/components/dash-board/chart-options';
 import * as echarts from 'echarts';
@@ -29,20 +29,18 @@ const emit = defineEmits<{
 }>();
 
 const dashBoardRepository = new DashBoardRepository();
-const showModal = ref(false);
-
-const totalTrafficDetailChart = ref({} as echarts.EChartsType);
-const errorStatDetailChart = ref({} as echarts.EChartsType);
+const totalTrafficDetailChart = shallowRef({} as echarts.EChartsType);
+const errorStatDetailChart = shallowRef({} as echarts.EChartsType);
 
 onMounted(() => {
   Promise.all([
     dashBoardRepository.getTotalAPITrafficDetail({
-      statBaseTm: '2022-06-15 09:40',
+      statBaseTm: '2022-06-15 13:38',
       statBaseUnit: 'MI',
       statPerd: 1440,
     }),
     dashBoardRepository.getErrorStatsDetail({
-      statBaseTm: '2022-06-15 09:40',
+      statBaseTm: '2022-06-15 13:38',
       statBaseUnit: 'MI',
       statPerd: 1440,
     }),
@@ -62,19 +60,11 @@ onMounted(() => {
           clearTimeout(timerId);
         }
         timerId = setTimeout(async () => {
-          const dimension = xAxisInfo.value + 1;
-          totalTrafficDetailChart.value.setOption({
-            series: {
-              id: 'bar',
-              label: {
-                formatter: '{b}: {d}건',
-              },
-              encode: {
-                value: dimension,
-                tooltip: dimension,
-              },
-            },
-          });
+          const dimension: number = xAxisInfo.value;
+          console.log(dimension - 1);
+          errorStatDetailChart.value.setOption(
+            getFailProgressChartOption(res[1][dimension].miCnt, res[1][dimension].maCnt, res[1][dimension].crCnt)
+          );
         }, 200);
       }
     });
