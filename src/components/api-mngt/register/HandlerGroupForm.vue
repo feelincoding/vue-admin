@@ -1,70 +1,58 @@
 <template>
-  <div>
-    <li>
-      <label class="label point">{{ $t('api.reqHndlrGrp') }}</label>
-      <div class="form-cont">
-        <!--  multi select -->
-        <div class="multi-wrap">
-          <div ref="selectRow" class="select-row inside-click req-class" @click="requestHandleOnClickGroup">
-            {{ props.reqHandlerGroupId ? props.reqHandlerGroupId : chooseReqHandlerGroup }}
-          </div>
-          <!--  dropdown시 active class 추가-->
-          <div ref="selectFrom" class="select-form inside-click" :class="{ none: !isSelectOpenRequest }">
-            <!--  dropdown시 block class 추가-->
-            <ul class="inside-click">
-              <li class="inside-click" v-for="(handlerGroup, index) in props.reqHandlerGroupList" :key="index">
-                <span
-                  class="inside-click"
-                  @click="[handleSelectReqHandlerGroup(handlerGroup.id), (chooseReqHandlerGroup = handlerGroup.id)]"
-                  >{{ handlerGroup.id }}</span
-                >
-                <p ref="multiBtn" class="multi-btn inside-click" @click="showReqModalMethod(handlerGroup.id)"></p>
-              </li>
-              <HandlerModal
-                :handlerGroup="sendHandlerGroup"
-                v-if="showReqModal"
-                @close="showReqModal = false"
-                size="l"
-              />
-            </ul>
-          </div>
+  <li>
+    <label class="label point">{{ $t('api.reqHndlrGrp') }}</label>
+    <div class="form-cont">
+      <!--  multi select -->
+      <div class="multi-wrap">
+        <div ref="selectRow" class="select-row inside-click req-class" @click="requestHandleOnClickGroup">
+          {{ props.reqHandlerGroupId ? props.reqHandlerGroupId : chooseReqHandlerGroup }}
         </div>
-        <!--  // multi select -->
-      </div>
-    </li>
-    <li>
-      <label class="label point">{{ $t('api.resHndlrGrp') }}</label>
-      <div class="form-cont">
-        <!--  multi select -->
-        <div class="multi-wrap">
-          <div ref="selectRow" class="select-row inside-click res-class" @click="responseHandleOnClickGroup">
-            {{ resHandlerGroupId ? resHandlerGroupId : chooseResHandlerGroup }}
-          </div>
-          <!--  dropdown시 active class 추가-->
-          <div ref="selectFrom" class="select-form inside-click" :class="{ none: !isSelectOpenResponse }">
-            <!--  dropdown시 block class 추가-->
-            <ul class="inside-click">
-              <li class="inside-click" v-for="(handlerGroup, index) in resHandlerGroupList" :key="index">
-                <span
-                  class="inside-click"
-                  @click="[handleSelectResHandlerGroup(handlerGroup.id), (chooseResHandlerGroup = handlerGroup.id)]"
-                  >{{ handlerGroup.id }}</span
-                >
-                <p ref="multiBtn" class="multi-btn inside-click" @click="showResModalMethod(handlerGroup.id)"></p>
-              </li>
-              <HandlerModal
-                :handlerGroup="sendHandlerGroup"
-                v-if="showResModal"
-                @close="showResModal = false"
-                size="m"
-              />
-            </ul>
-          </div>
+        <!--  dropdown시 active class 추가-->
+        <div ref="selectFrom" class="select-form inside-click" :class="{ none: !isSelectOpenRequest }">
+          <!--  dropdown시 block class 추가-->
+          <ul class="inside-click">
+            <li class="inside-click" v-for="(handlerGroup, index) in props.reqHandlerGroupList" :key="index">
+              <span
+                class="inside-click"
+                @click="[handleSelectReqHandlerGroup(handlerGroup.id), (chooseReqHandlerGroup = handlerGroup.id)]"
+                >{{ handlerGroup.id }}</span
+              >
+              <p ref="multiBtn" class="multi-btn inside-click" @click="showReqModalMethod(handlerGroup.id)"></p>
+            </li>
+            <HandlerModal :handlerGroup="sendHandlerGroup" v-if="showReqModal" @close="showReqModal = false" size="l" />
+          </ul>
         </div>
-        <!--  // multi select -->
       </div>
-    </li>
-  </div>
+      <!--  // multi select -->
+    </div>
+  </li>
+  <li>
+    <label class="label point">{{ $t('api.resHndlrGrp') }}</label>
+    <div class="form-cont">
+      <!--  multi select -->
+      <div class="multi-wrap">
+        <div ref="selectRow" class="select-row inside-click res-class" @click="responseHandleOnClickGroup">
+          {{ resHandlerGroupId ? resHandlerGroupId : chooseResHandlerGroup }}
+        </div>
+        <!--  dropdown시 active class 추가-->
+        <div ref="selectFrom" class="select-form inside-click" :class="{ none: !isSelectOpenResponse }">
+          <!--  dropdown시 block class 추가-->
+          <ul class="inside-click">
+            <li class="inside-click" v-for="(handlerGroup, index) in resHandlerGroupList" :key="index">
+              <span
+                class="inside-click"
+                @click="[handleSelectResHandlerGroup(handlerGroup.id), (chooseResHandlerGroup = handlerGroup.id)]"
+                >{{ handlerGroup.id }}</span
+              >
+              <p ref="multiBtn" class="multi-btn inside-click" @click="showResModalMethod(handlerGroup.id)"></p>
+            </li>
+            <HandlerModal :handlerGroup="sendHandlerGroup" v-if="showResModal" @close="showResModal = false" size="m" />
+          </ul>
+        </div>
+      </div>
+      <!--  // multi select -->
+    </div>
+  </li>
 </template>
 <script setup lang="ts">
 import type { HandlerGroupDetail } from '@/types/HandlerType';
