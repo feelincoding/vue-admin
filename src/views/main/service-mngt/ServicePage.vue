@@ -115,7 +115,7 @@
           <Paging :pagingOption="servicePagination" :isListEmpty="isListEmpty" @onChangedPage:page="onChangedPage" />
         </template>
       </ListForm>
-      <ModalLayout size="s" v-if="modal">
+      <ModalLayout size="s" v-if="deleteModal">
         <template v-slot:modalHeader
           ><h1 class="h1-tit">{{ $t('service.delete') }}</h1>
         </template>
@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, computed, watch, onMounted, inject } from 'vue';
 import type { Ref } from 'vue';
 import ListLayout from '@/components/layout/ListLayout.vue';
 import InputBox from '@/components/commons/search-option/InputBox.vue';
@@ -157,7 +157,9 @@ import type { GateWayError } from '@/error/GateWayError';
 import ErrorCode from '@/error/ErrorCodes';
 import { useToast } from 'vue-toastification';
 import { useI18n } from 'vue-i18n';
+import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 
+const modal = inject(modalInjectionKey) as ModalFunction;
 const { t } = useI18n();
 const toast = useToast();
 const serviceRepository = new ServiceRepository();
@@ -166,8 +168,18 @@ const isShowProgress = ref(true);
 const isRegisterProgress = ref(false);
 const isListEmpty = ref(false);
 const serviceList: Ref<ServiceResponse[]> = ref([]);
-const servicePagination: Ref<Pagination> = ref({} as Pagination);
-const modal = ref(false);
+const servicePagination: Ref<Pagination> = ref({
+  page: 0,
+  size: 0,
+  totalElements: 0,
+  totalPage: 0,
+  currentElements: 0,
+  currentPage: 0,
+  orderBy: '',
+  sortBy: '',
+  limit: 0,
+});
+const deleteModal = ref(false);
 const deleteId = ref('');
 const route = useRoute();
 
@@ -203,8 +215,6 @@ onMounted(() => {
 const _getServiceList = (param: SearchCondition) => {
   isShowProgress.value = true;
   serviceList.value = [];
-  servicePagination.value = {} as Pagination;
-
   serviceRepository
     .getServiceList(param)
     .then((res) => {
@@ -216,6 +226,7 @@ const _getServiceList = (param: SearchCondition) => {
       if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
       } else {
         isShowProgress.value = false;
+        modal().show(t('error.server_error'));
       }
     });
 };
@@ -268,10 +279,10 @@ const getIdx = (index: number): number => {
 
 const modalShow = (id: string) => {
   deleteId.value = id;
-  modal.value = true;
+  deleteModal.value = true;
 };
 const modalHide = () => {
-  modal.value = false;
+  deleteModal.value = false;
 };
 
 const deleteService = (serviceId: string) => {
@@ -280,7 +291,7 @@ const deleteService = (serviceId: string) => {
     .deleteService(serviceId)
     .then(() => {
       _getServiceList(searchData.value);
-      modal.value = false;
+      deleteModal.value = false;
       isRegisterProgress.value = false;
       toast.success(t('common.delete_success'), {
         toastClassName: ['toast-success-custom-class'],
