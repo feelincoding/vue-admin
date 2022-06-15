@@ -134,7 +134,14 @@ let initSystemIdEdptList: SystemIdEdpt[] = [
     edpt: [],
   },
 ];
-let sendHandlerGroup: Ref<HandlerGroupDetail[]> = ref([
+let reqHandlerGroup: Ref<HandlerGroupDetail[]> = ref([
+  {
+    id: '',
+    hndlr: [],
+    desc: '',
+  },
+]);
+let resHandlerGroup: Ref<HandlerGroupDetail[]> = ref([
   {
     id: '',
     hndlr: [],
@@ -143,8 +150,8 @@ let sendHandlerGroup: Ref<HandlerGroupDetail[]> = ref([
 ]);
 
 const systemIdEdptList: Ref<SystemIdEdpt[]> = ref(initSystemIdEdptList);
-const reqHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(sendHandlerGroup);
-const resHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(sendHandlerGroup);
+const reqHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(reqHandlerGroup);
+const resHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(resHandlerGroup);
 
 const showPage = ref(false);
 const idValid = ref(false);
