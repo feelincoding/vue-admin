@@ -165,7 +165,7 @@ import MainFooter from '@/components/layout/footer/MainFooter.vue';
 
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
 
-import DashBoardRepository from '@/repository/dash-board-repository';
+import DashBoardRepository from '@/repository/DashBoardRepository';
 import { convertBaseTime } from '@/utils/converter';
 import ProgressBar from '@/components/commons/ProgressBar.vue';
 import ErrorWrapper from '@/components/dash-board/ErrorWrapper.vue';

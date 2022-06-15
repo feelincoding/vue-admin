@@ -23,8 +23,8 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
 import TrafficSelectSearch from '@/components/monitoring/traffic/TrafficSelectSearch.vue';
-import MonitoringTrafficRepository from '@/repository/monitoring-traffic-repository';
-import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
+import MonitoringTrafficRepository from '@/repository/MonitoringTrafficRepository';
+import MonitoringStatisticRepository from '@/repository/MonitoringStatisticRepository';
 import type { RequestTrafficAPIParams, TrafficApi } from '@/types/MonitoringTrafficType';
 import type { ApiSearch } from '@/types/MonitoringStatisticType';
 import TrafficAPIChart from '@/components/monitoring/traffic/TrafficAPIChart.vue';

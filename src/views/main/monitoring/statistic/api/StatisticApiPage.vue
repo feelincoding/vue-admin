@@ -33,7 +33,7 @@
 </template>
 <script setup lang="ts">
 import ErrorCode from '@/error/ErrorCodes';
-import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
+import MonitoringStatisticRepository from '@/repository/MonitoringStatisticRepository';
 import type { ApiSearch, StatResponse } from '@/types/MonitoringStatisticType';
 import { numberWithCommas } from '@/utils/validation';
 import { ref, watch, onMounted, type Ref } from 'vue';

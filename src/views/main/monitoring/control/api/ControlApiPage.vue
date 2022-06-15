@@ -51,7 +51,7 @@ import CardSort from '@/components/monitoring/control/CardSort.vue';
 import ControlCard from '@/components/monitoring/control/ControlCard.vue';
 import ApiServiceDetailModal from '@/components/commons/modal/ApiServiceDetailModal.vue';
 
-import MonitoringControlRepository from '@/repository/monitoring-control-repository';
+import MonitoringControlRepository from '@/repository/MonitoringControlRepository';
 import ControlSort from '@/components/monitoring/control/controlSort';
 
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';

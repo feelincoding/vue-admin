@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import type { SystemResponse } from '@/types/SystemType';
-import SystemModule from '@/repository/system-repository';
+import SystemModule from '@/repository/SystemRepository';
 
 import ContentLayout from '@/components/layout/ContentLayout.vue';
 import InfoGroup from '@/components/system-mngt/detail/InfoGroup.vue';

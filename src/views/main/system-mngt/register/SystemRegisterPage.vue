@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import SystemModule from '@/repository/system-repository';
+import SystemModule from '@/repository/SystemRepository';
 import ContentLayout from '@/components/layout/ContentLayout.vue';
 import InputGroup from '@/components/system-mngt/InputGroup.vue';
 import TextAreaGroup from '@/components/system-mngt/TextAreaGroup.vue';

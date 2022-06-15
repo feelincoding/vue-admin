@@ -147,7 +147,7 @@ import type { Pagination } from '@/types/GateWayResponse';
 import Paging from '@/components/commons/Paging.vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { convertDate, convertTime } from '@/utils/converter';
-import ServiceRepository from '@/repository/service-repository';
+import ServiceRepository from '@/repository/ServiceRespository';
 
 import { useRoute, useRouter } from 'vue-router';
 // import bootstrap from 'bootstrap-vue-3';

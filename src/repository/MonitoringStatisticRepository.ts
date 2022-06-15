@@ -8,7 +8,6 @@ export default class MonitoringStatisticRepository {
     const response = await AxiosClient.getInstance()
       .get<GateWayResponse<StatResponse>>(`/stat/services`, param)
       .then((res) => {
-        console.log('getServiceList response', res.data.value);
         return res.data.value;
       })
       .catch((err) => {
@@ -22,7 +21,6 @@ export default class MonitoringStatisticRepository {
     const response = await AxiosClient.getInstance()
       .get<GateWayResponse<StatResponse>>(`/stat/apis`, param)
       .then((res) => {
-        console.log('getApiList response', res.data.value);
         return res.data.value;
       })
       .catch((err) => {
@@ -37,7 +35,6 @@ export default class MonitoringStatisticRepository {
         keyword: param ? param : '',
       })
       .then((res) => {
-        console.log('getSearchSvcList response', res.data.value);
         return res.data.value;
       })
       .catch((err) => {

@@ -56,8 +56,8 @@ import { disableScrolling, enableScrolling } from '@/utils/screen';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import ApiServiceDetailModalList from '@/components/commons/modal/ApiServiceDetailModalList.vue';
 
-import MonitoringControlRepository from '@/repository/monitoring-control-repository';
-import MonitoringStatisticReoisitory from '@/repository/monitoring-statistic-repository';
+import MonitoringControlRepository from '@/repository/MonitoringControlRepository';
+import MonitoringStatisticReoisitory from '@/repository/MonitoringStatisticRepository';
 
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';

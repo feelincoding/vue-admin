@@ -100,7 +100,7 @@ import ApiAuthVueModal from '@/components/service-mngt/ApiAuthVueModal.vue';
 import ApiAuthGroup from '@/components/service-mngt/ApiAuthGroup.vue';
 import { convertDate } from '@/utils/converter';
 import type { ServiceResponse } from '@/types/ServiceType';
-import ServiceRepository from '@/repository/service-repository';
+import ServiceRepository from '@/repository/ServiceRespository';
 
 import { useRoute } from 'vue-router';
 import router from '@/router';

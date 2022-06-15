@@ -58,7 +58,7 @@ import ControlCard from '@/components/monitoring/control/ControlCard.vue';
 import ApiServiceDetailModal from '@/components/commons/modal/ApiServiceDetailModal.vue';
 
 import ControlSort from '@/components/monitoring/control/controlSort';
-import MonitoringControlRepository from '@/repository/monitoring-control-repository';
+import MonitoringControlRepository from '@/repository/MonitoringControlRepository';
 
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';

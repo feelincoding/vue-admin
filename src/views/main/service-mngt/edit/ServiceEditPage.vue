@@ -148,7 +148,7 @@ import TextDebounceForm from '@/components/service-mngt/TextDebounceForm.vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import ApiAuthModal from '@/components/service-mngt/ApiAuthModal.vue';
 import ApiAuthReqGroup from '@/components/service-mngt/ApiAuthReqGroup.vue';
-import ServiceRepository from '@/repository/service-repository';
+import ServiceRepository from '@/repository/ServiceRespository';
 import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 
 import { useRoute } from 'vue-router';

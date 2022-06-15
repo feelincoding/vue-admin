@@ -23,7 +23,7 @@ import { onMounted, shallowRef } from 'vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { getAvgDetailOption, getTpsDetailOption } from '@/components/dash-board/chartOptions';
 import * as echarts from 'echarts';
-import DashBoardRepository from '@/repository/dash-board-repository';
+import DashBoardRepository from '@/repository/DashBoardRepository';
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();

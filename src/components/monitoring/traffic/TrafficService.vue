@@ -23,8 +23,8 @@
 import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
 import TrafficSelectSearch from '@/components/monitoring/traffic/TrafficSelectSearch.vue';
 import TrafficServiceChart from '@/components/monitoring/traffic/TrafficServiceChart.vue';
-import MonitoringTrafficRepository from '@/repository/monitoring-traffic-repository';
-import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
+import MonitoringTrafficRepository from '@/repository/MonitoringTrafficRepository';
+import MonitoringStatisticRepository from '@/repository/MonitoringStatisticRepository';
 import type { RequestTrafficServiceParams, TrafficService } from '@/types/MonitoringTrafficType';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({});

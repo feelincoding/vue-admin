@@ -35,7 +35,7 @@
 </template>
 <script setup lang="ts">
 import ErrorCode from '@/error/ErrorCodes';
-import MonitoringStatisticRepository from '@/repository/monitoring-statistic-repository';
+import MonitoringStatisticRepository from '@/repository/MonitoringStatisticRepository';
 import { numberWithCommas } from '@/utils/validation';
 import type { StatResponse } from '@/types/MonitoringStatisticType';
 import { ref, watch, onMounted, type Ref } from 'vue';
