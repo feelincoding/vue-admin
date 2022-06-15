@@ -16,16 +16,22 @@
             :groupNm="$t('api.sysId')"
             type="text"
             :required="true"
-            v-model="requestBody.sysId"
+            v-model:value="requestBody.sysId"
             :disabled="true"
           />
-          <TextForm :groupNm="$t('api.apiId')" type="text" :required="true" v-model="requestBody.id" :disabled="true" />
+          <TextForm
+            :groupNm="$t('api.apiId')"
+            type="text"
+            :required="true"
+            v-model:value="requestBody.id"
+            :disabled="true"
+          />
           <TextForm
             :groupNm="$t('api.interfaceNumber')"
             type="text"
             :required="true"
             :disabled="true"
-            v-model="requestBody.ifNo"
+            v-model:value="requestBody.ifNo"
           />
 
           <MethodForm groupNm="Method" v-model:value="requestBody.meth" v-model:isvalid="methodValid" />
@@ -58,13 +64,13 @@
             :groupNm="$t('api.timeOutMS')"
             type="number"
             :required="true"
-            v-model="requestBody.timeOut"
+            v-model:value="requestBody.timeOut"
             :isvalid.sync="timeoutValid"
           />
           <TextForm
             :groupNm="$t('api.apiDescription')"
             type="textarea"
-            v-model="requestBody.desc"
+            v-model:value="requestBody.desc"
             :isvalid.sync="descValid"
           />
           <ModalLayout size="s" v-if="showModal">

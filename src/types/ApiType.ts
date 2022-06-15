@@ -22,7 +22,7 @@ export interface ApiDetailResponse {
   reqHndlrGrpId: string;
   resHndlrGrpId: string;
   timeOut: number;
-  desc: string | null;
+  desc: string;
   cretDt: string;
   cretId: string | null;
   updDt: string;
@@ -39,7 +39,7 @@ export interface ApiCreateRequestBody {
   reqHndlrGrpId: string;
   resHndlrGrpId: string;
   timeOut: number;
-  desc: string | null;
+  desc: string;
 }
 
 export interface ApiUpdateRequestBody {
@@ -52,7 +52,7 @@ export interface ApiUpdateRequestBody {
   reqHndlrGrpId: string;
   resHndlrGrpId: string;
   timeOut: number;
-  desc: string | null;
+  desc: string;
 }
 
 export interface RequsetPagenation {
