@@ -1,5 +1,5 @@
 <template>
-  <ModalLayout size="lg">
+  <ModalLayout size="lg" :overflowY="true">
     <div class="text-center" v-if="isShowProgress">
       <b-spinner label="Large Spinner"></b-spinner>
     </div>
