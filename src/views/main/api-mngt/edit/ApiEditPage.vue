@@ -65,13 +65,13 @@
             type="number"
             :required="true"
             v-model:value="requestBody.timeOut"
-            :isvalid.sync="timeoutValid"
+            v-model:isvalid="timeoutValid"
           />
           <TextForm
             :groupNm="$t('api.apiDescription')"
             type="textarea"
             v-model:value="requestBody.desc"
-            :isvalid.sync="descValid"
+            v-model:isvalid="descValid"
           />
           <ModalLayout size="s" v-if="showModal">
             <template v-slot:modalHeader><h1 class="h1-tit">API 수정</h1> </template>

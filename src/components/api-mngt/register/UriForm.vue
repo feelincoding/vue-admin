@@ -12,7 +12,7 @@
           type="text"
           :value="value"
           class="input-box uri-input"
-          placeholder="자동생성/변경불가"
+          placeholder="자동생성/변경가능"
           :disabled="!isEdit"
           @input="handleChangeUri"
         />
@@ -34,7 +34,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'input', value: string): void;
+  (e: 'update:value', value: string): void;
   (e: 'update:isvalid', value: boolean): void;
 }>();
 
@@ -45,7 +45,7 @@ const handleClickEdit = () => {
 };
 
 const handleChangeUri = (event: any) => {
-  emit('input', event.target.value);
+  emit('update:value', event.target.value);
   emit('update:isvalid', Boolean(event.target.value));
 };
 </script>
