@@ -1,4 +1,4 @@
-import type * as echarts from 'echarts';
+import * as echarts from 'echarts';
 import type { TotalTrafficStat, ApiResponseStatus, ErrorStatsType } from '@/types/DashBoardType';
 import type {
   TrafficService,
@@ -6,6 +6,181 @@ import type {
   RealtimeServiceStatDetail,
   RealtimeApiStatDetail,
 } from '@/types/MonitoringControlType';
+
+export function getAvgDetailOption(detail: ApiResponseStatus[]) {
+  detail.forEach((item) => {
+    // console.log(item.statBaseTm.substr(11, 10));
+    console.log();
+  });
+
+  const avgDetailOption: echarts.EChartsOption = {
+    color: '#FFBF00',
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    grid: {
+      top: '5%',
+      left: '2%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: detail.map((item) => item.statBaseTm.substr(11, 5)),
+      axisLine: { show: true },
+      axisLabel: {
+        show: true,
+        showMaxLabel: true,
+      },
+    },
+
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        type: 'line',
+        stack: 'Total',
+        smooth: true,
+        lineStyle: {
+          width: 0,
+        },
+        showSymbol: false,
+        label: {
+          show: true,
+          position: 'top',
+        },
+        areaStyle: {
+          opacity: 0.8,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: '#6998FF',
+            },
+            {
+              offset: 1,
+              color: '#FF4E63',
+            },
+          ]),
+        },
+        emphasis: {
+          focus: 'series',
+        },
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' ms';
+          },
+        },
+        data: detail.map((item) => {
+          return item.avgResTm as number;
+        }),
+        zlevel: 5,
+        z: 5,
+      },
+    ],
+  };
+  return avgDetailOption;
+}
+
+export function getTpsDetailOption(detail: ApiResponseStatus[]) {
+  const tpsDetailOption: echarts.EChartsOption = {
+    color: '#FFBF00',
+    tooltip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    grid: {
+      top: '5%',
+      left: '2%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        throttle: 50,
+      },
+    ],
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: detail.map((item) => item.statBaseTm.substr(11, 5)),
+      axisLine: { show: true },
+      axisLabel: {
+        show: true,
+        showMaxLabel: true,
+      },
+    },
+
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        type: 'line',
+        stack: 'Total',
+        smooth: true,
+        lineStyle: {
+          width: 0,
+        },
+        showSymbol: false,
+        label: {
+          show: true,
+          position: 'top',
+        },
+        areaStyle: {
+          opacity: 0.8,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: '#6998FF',
+            },
+            {
+              offset: 1,
+              color: '#FF4E63',
+            },
+          ]),
+        },
+        emphasis: {
+          focus: 'series',
+        },
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 건';
+          },
+        },
+        data: detail.map((item) => {
+          return item.tps as number;
+        }),
+        zlevel: 5,
+        z: 5,
+      },
+    ],
+  };
+  return tpsDetailOption;
+}
 
 export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) => {
   const totalTrafficDetailOption: echarts.EChartsOption = {
@@ -31,12 +206,11 @@ export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) =>
         throttle: 50,
       },
     ],
-    xAxis: [
-      {
-        type: 'category',
-        data: traffic.map((item) => item.statBaseTm.substr(11, 5)),
-      },
-    ],
+    xAxis: {
+      type: 'category',
+      data: traffic.map((item) => item.statBaseTm.substr(11, 5)),
+    },
+
     yAxis: [
       {
         type: 'value',
@@ -323,6 +497,8 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
         },
         data: lastTrafficList.map((item: { todayCnt: any }) => item.todayCnt),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전일',
@@ -336,6 +512,8 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
         },
         data: lastTrafficList.map((item: { ystdayCnt: any }) => item.ystdayCnt),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전주',
@@ -351,6 +529,8 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
           return item.lstWkCnt;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
     ],
   };
@@ -425,6 +605,8 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
           return item.todayAvgResTm as number;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전일',
@@ -440,6 +622,8 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
           return item.ystdayAvgResTm;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
       {
         name: '전주',
@@ -455,6 +639,8 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
           return item.lstWkAvgResTm;
         }),
         smooth: true,
+        zlevel: 5,
+        z: 5,
       },
     ],
   };
@@ -524,6 +710,8 @@ export const getRealTimeChartOption = (
             return 'KTDS : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'KAKAO',
@@ -537,6 +725,8 @@ export const getRealTimeChartOption = (
             return 'KAKAO : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'NAVER',
@@ -550,6 +740,8 @@ export const getRealTimeChartOption = (
             return 'NAVER : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'CUPANG',
@@ -564,6 +756,8 @@ export const getRealTimeChartOption = (
             return 'CUPANG : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'GOOGLE',
@@ -578,6 +772,8 @@ export const getRealTimeChartOption = (
             return 'GOOGLE : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'FACEBOOK',
@@ -592,6 +788,8 @@ export const getRealTimeChartOption = (
             return 'FACEBOOK : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
       {
         name: 'INSTAGRAM',
@@ -606,6 +804,8 @@ export const getRealTimeChartOption = (
             return 'INSTAGRAM : ' + params.value.toFixed(0);
           },
         },
+        zlevel: 5,
+        z: 5,
       },
     ],
   };
@@ -686,6 +886,8 @@ export const get24TrafficChartOption = (type: string, trafficService: TrafficSer
         emphasis: {
           focus: 'series',
         },
+        zlevel: 5,
+        z: 5,
       })
     ),
   };
@@ -767,6 +969,8 @@ export const getBarOption = (
         emphasis: {
           focus: 'series',
         },
+        zlevel: 5,
+        z: 5,
       })
     ),
   };

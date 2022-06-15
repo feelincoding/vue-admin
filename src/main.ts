@@ -4,25 +4,25 @@ import i18n from '@/plugins/Locale';
 
 import App from './App.vue';
 import router from './router';
+import '@/style/dash-board.css';
+import '@/style/bootstrap.css';
+import '@/style/bootstrap-vue-3.css';
+
 import '@/style/reset.css';
 import '@/style/common.css';
 import '@/style/admin.css';
-import '@/style/dash-board.css';
+
+// import Datepicker
+import Datepicker from '@vuepic/vue-datepicker';
+import '@/style/vuepic-main.css';
 
 // Optional, since every component import their Bootstrap functionality
 // the following line is not necessary
 // import 'bootstrap'
 import BootstrapVue3 from 'bootstrap-vue-3';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
+
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
-
-// import Datepicker
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-
-// import VueGridLayout
 
 const app = createApp(App);
 

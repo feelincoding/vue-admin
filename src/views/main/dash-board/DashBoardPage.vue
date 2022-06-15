@@ -231,34 +231,34 @@ onMounted(() => {
     addData();
   }
 
-  realTimeChart.value.setOption(
-    getRealTimeChartOption(
-      date.value,
-      data1.value,
-      data2.value,
-      data3.value,
-      data4.value,
-      data5.value,
-      data6.value,
-      data7.value
-    )
-  );
+  // realTimeChart.value.setOption(
+  //   getRealTimeChartOption(
+  //     date.value,
+  //     data1.value,
+  //     data2.value,
+  //     data3.value,
+  //     data4.value,
+  //     data5.value,
+  //     data6.value,
+  //     data7.value
+  //   )
+  // );
 
-  setInterval(() => {
-    addData();
-    realTimeChart.value.setOption(
-      getRealTimeChartOption(
-        date.value,
-        data1.value,
-        data2.value,
-        data3.value,
-        data4.value,
-        data5.value,
-        data6.value,
-        data7.value
-      )
-    );
-  }, 300);
+  // setInterval(() => {
+  //   addData();
+  //   realTimeChart.value.setOption(
+  //     getRealTimeChartOption(
+  //       date.value,
+  //       data1.value,
+  //       data2.value,
+  //       data3.value,
+  //       data4.value,
+  //       data5.value,
+  //       data6.value,
+  //       data7.value
+  //     )
+  //   );
+  // }, 300);
 });
 
 const requestAllApi = () => {
@@ -338,14 +338,14 @@ const realTimeChart = shallowRef({} as echarts.EChartsType);
 const initCharts = () => {
   lastTrafficChart.value = echarts.init(document.getElementById('lastTraffic') as HTMLDivElement);
   lastResponseChart.value = echarts.init(document.getElementById('lastResponse') as HTMLDivElement);
-  realTimeChart.value = echarts.init(document.getElementById('real-time-traffic') as HTMLDivElement);
+  // realTimeChart.value = echarts.init(document.getElementById('real-time-traffic') as HTMLDivElement);
 };
 
 const chartResize = () => {
   observeSize();
   lastTrafficChart.value.resize();
   lastResponseChart.value.resize();
-  realTimeChart.value.resize();
+  // realTimeChart.value.resize();
 };
 
 watch(lastTrafficList, () => {
@@ -356,7 +356,7 @@ watch(lastResponseList, () => {
 });
 
 const getRealTimeSectionHeight = () => {
-  return window.screen.availHeight - 663;
+  return window.screen.availHeight - 770;
 };
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
@@ -426,7 +426,7 @@ watch(calcedWidth, () => {
   console.log('resize!!');
   lastTrafficChart.value.resize();
   lastResponseChart.value.resize();
-  realTimeChart.value.resize();
+  // realTimeChart.value.resize();
 });
 </script>
 <style>
