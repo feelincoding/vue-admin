@@ -1,4 +1,4 @@
 export type ValidationCheckType = {
-  isCheck: boolean;
+  isCheck: boolean | null;
   message: string;
 };
