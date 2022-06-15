@@ -7,7 +7,7 @@
 <script setup lang="ts"></script>
 <style scoped>
 .error-wrapper {
-  z-index: 10;
+  z-index: 100;
   position: absolute;
   left: 0;
   top: 0;
