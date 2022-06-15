@@ -17,31 +17,39 @@
         </button>
       </template>
     </ModalLayout>
-    <ModalLayout size="lg" v-if="apiDetailModal">
-      <template v-slot:modalHeader
-        ><h2 class="h2-tit">Request API List</h2>
-        <button @click="hideModal()">
-          <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i></button
-      ></template>
-      <template v-slot:modalContainer
-        ><div class="request-api-detail-list" v-if="!isShowProgress">
-          <div class="service-list">
-            <ul>
-              <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
-            </ul>
+
+    <transition v-if="apiDetailModal" id="app" class="body-wrap" name="modal">
+      <div class="modal-overlay">
+        <!------- handler pop -------->
+        <div class="pop-wrap mid-pop">
+          <div class="pop-header">
+            <h2 class="h2-tit">API 권한설정 List</h2>
+            <button @click="hideModal">
+              <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
+            </button>
+          </div>
+          <div class="pop-container">
+            <p class="total">total : <span>Request API List</span></p>
+            <div class="request-api-detail-list" v-if="!isShowProgress">
+              <div class="service-list">
+                <ul>
+                  <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
+                </ul>
+              </div>
+            </div>
+            <div class="service-list">
+              <div style="position: relative; text-align: center" v-if="isShowProgress">
+                <b-spinner label="Large Spinner"></b-spinner>
+              </div>
+            </div>
+          </div>
+          <div class="pop-footer">
+            <button class="lg-btn purple-btn" @click="hideModal">확인</button>
           </div>
         </div>
-        <div class="service-list">
-          <div style="position: relative; text-align: center" v-if="isShowProgress">
-            <b-spinner label="Large Spinner"></b-spinner>
-          </div></div
-      ></template>
-      <template v-slot:modalFooter
-        ><button class="lg-btn purple-btn" @click="hideModal()">
-          {{ $t('common.ok') }}
-        </button></template
-      >
-    </ModalLayout>
+        <!------- handler pop -------->
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -64,7 +72,16 @@ const dashBoardRepository = new DashBoardRepository();
 const totalTrafficDetailChart = shallowRef({} as echarts.EChartsType);
 const errorStatDetailChart = shallowRef({} as echarts.EChartsType);
 const apiDetailModal = ref(false);
-const apiList: Ref<StatResponse | null> = ref(null);
+const apiList: Ref<StatResponse> = ref({
+  totCnt: 0,
+  sucesCnt: 0,
+  failCnt: 0,
+  sucesRate: 0,
+  trafcStTm: '',
+  trafcEndTm: '',
+  svcStat: [],
+  apiStat: [],
+});
 const isShowProgress = ref(false);
 
 onMounted(() => {
