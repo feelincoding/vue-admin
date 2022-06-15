@@ -63,7 +63,7 @@
           <TextForm
             :groupNm="$t('api.apiDescription')"
             type="textarea"
-            v-model="requestBody.desc"
+            v-model:value="requestBody.desc"
             :isvalid.sync="descValid"
           />
         </ul>

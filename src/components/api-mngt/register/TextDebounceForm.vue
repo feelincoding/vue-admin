@@ -50,7 +50,7 @@ const text = ref('');
 const show = ref(false);
 
 watch(notiMessage, () => {
-  emit('update:isvalid', notiMessage.value.isCheck);
+  emit('update:isvalid', Boolean(notiMessage.value.isCheck));
 });
 
 watch(text, (val: string) => {

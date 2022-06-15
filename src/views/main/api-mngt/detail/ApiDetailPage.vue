@@ -8,37 +8,39 @@
   >
     <template v-slot:contents v-if="!isShowProgress && apiDetail">
       <!-- 레이아웃을 제외한 실제 컨텐츠 부분을 넣어주세요 -->
-      <ul>
-        <InfoGroup :inputNm="$t('api.sysId')" :value="apiDetail.sysId" />
-        <InfoGroup :inputNm="$t('api.apiId')" :value="apiDetail.id" />
-        <InfoGroup :inputNm="$t('api.interface') + ' ' + $t('api.number')" :value="apiDetail.ifNo" />
-        <MethodGroup :inputNm="$t('api.method')" :methods="apiDetail.meth" />
-        <URIGroup :inputNm="$t('api.uri')" :uriSer="apiDetail.uriIn" :uriSys="apiDetail.uriOut" />
-        <EndPointGroup groupNm="End-point" :edptList="edptList" />
+      <div class="form-wrap">
+        <ul>
+          <InfoGroup :inputNm="$t('api.sysId')" :value="apiDetail.sysId" />
+          <InfoGroup :inputNm="$t('api.apiId')" :value="apiDetail.id" />
+          <InfoGroup :inputNm="$t('api.interface') + ' ' + $t('api.number')" :value="apiDetail.ifNo" />
+          <MethodGroup :inputNm="$t('api.method')" :methods="apiDetail.meth" />
+          <URIGroup :inputNm="$t('api.uri')" :uriSer="apiDetail.uriIn" :uriSys="apiDetail.uriOut" />
+          <EndPointGroup groupNm="End-point" :edptList="edptList" />
 
-        <InfoGroup
-          :inputNm="$t('api.request') + ' ' + $t('api.handler') + ' ' + $t('api.group')"
-          :value="apiDetail.reqHndlrGrpId"
-        />
-        <InfoGroup
-          :inputNm="$t('api.response') + ' ' + $t('api.handler') + ' ' + $t('api.group')"
-          :value="apiDetail.resHndlrGrpId"
-        />
-        <InfoGroup :inputNm="$t('api.timeOutMS')" :value="'' + apiDetail.timeOut" />
-        <InfoGroup :inputNm="$t('api.api') + ' ' + $t('api.description')" :value="apiDetail.desc" />
-        <ModalLayout size="s" v-if="showModal">
-          <template v-slot:modalHeader
-            ><h1 class="h1-tit">{{ $t('api.delete_modal_title') }}</h1>
-          </template>
-          <template v-slot:modalContainer>
-            <p class="text">{{ $t('api.delete_api', { apiName: deleteMsg }) }}</p>
-          </template>
-          <template v-slot:modalFooter
-            ><button class="lg-btn purple-btn" @click="deleteApi">{{ $t('common.ok') }}</button
-            ><button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
-          </template>
-        </ModalLayout>
-      </ul>
+          <InfoGroup
+            :inputNm="$t('api.request') + ' ' + $t('api.handler') + ' ' + $t('api.group')"
+            :value="apiDetail.reqHndlrGrpId"
+          />
+          <InfoGroup
+            :inputNm="$t('api.response') + ' ' + $t('api.handler') + ' ' + $t('api.group')"
+            :value="apiDetail.resHndlrGrpId"
+          />
+          <InfoGroup :inputNm="$t('api.timeOutMS')" :value="'' + apiDetail.timeOut" />
+          <InfoGroup :inputNm="$t('api.api') + ' ' + $t('api.description')" :value="apiDetail.desc" />
+          <ModalLayout size="s" v-if="showModal">
+            <template v-slot:modalHeader
+              ><h1 class="h1-tit">{{ $t('api.delete_modal_title') }}</h1>
+            </template>
+            <template v-slot:modalContainer>
+              <p class="text">{{ $t('api.delete_api', { apiName: deleteMsg }) }}</p>
+            </template>
+            <template v-slot:modalFooter
+              ><button class="lg-btn purple-btn" @click="deleteApi">{{ $t('common.ok') }}</button
+              ><button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
+            </template>
+          </ModalLayout>
+        </ul>
+      </div>
     </template>
 
     <template v-slot:buttons v-if="!isShowProgress">

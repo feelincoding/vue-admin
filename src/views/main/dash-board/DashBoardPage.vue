@@ -38,7 +38,7 @@
           </div>
         </div>
 
-        <div class="avg-group">
+        <div class="avg-group" @click="avgModal = true">
           <div class="tps-chart">
             <div class="ico-wrap">
               <i><img src="@/assets/req_ico.svg" alt="평균 응답시간" /></i>
@@ -137,15 +137,17 @@
         </div>
       </section>
     </draggable>
-    <Top5Modal
+    <ApiServiceDetailModal
       v-if="isShowModal"
       @close="isShowModal = false"
       :msgId="msgId"
       :msgType="msgType"
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
-    ></Top5Modal>
+    ></ApiServiceDetailModal>
     <TrafficDetailModal v-if="trafficModal" @close="trafficModal = false"></TrafficDetailModal>
+    <AvgDetailModal v-if="avgModal" @close="avgModal = false"></AvgDetailModal>
+
     <MainFooter></MainFooter>
   </article>
 </template>
@@ -154,9 +156,11 @@ import { onMounted, ref, shallowRef, watch } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
-import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
-import Top5Modal from '@/components/dash-board/Top5Modal.vue';
+import ApiServiceDetailModal from '@/components/commons/modal/ApiServiceDetailModal.vue';
+
 import TrafficDetailModal from '@/components/dash-board/TrafficDetailModal.vue';
+import AvgDetailModal from '@/components/dash-board/AvgDetailModal.vue';
+
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
@@ -196,6 +200,7 @@ import { addDate } from '@/utils/converter';
 
 const isLoadData = ref(false);
 const trafficModal = ref(false);
+const avgModal = ref(false);
 
 const totalTraffic: Ref<TotalTrafficStat> = ref({} as TotalTrafficStat);
 const apiResponseStatus: Ref<ApiResponseStatus> = ref({} as ApiResponseStatus);

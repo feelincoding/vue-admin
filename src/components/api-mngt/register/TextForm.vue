@@ -1,7 +1,7 @@
 <template>
   <li>
     <label for="" class="label" :class="{ point: required }">{{ groupNm }}</label>
-    <div v-if="type == 'text'" class="form-cont">
+    <div v-if="type === 'text'" class="form-cont">
       <input v-if="disabled" type="text" :value="value" class="input-box lg" disabled :placeholder="placeholder" />
       <input
         v-if="!disabled"
@@ -12,11 +12,11 @@
         :placeholder="placeholder"
         @focus="notice()"
       />
-      <p v-if="show && notiMessage.isCheck == null" class="red-txt noti">해당 목록은 필수 입력값입니다.</p>
-      <p v-if="notiMessage.isCheck == false" class="red-txt noti">{{ notiMessage.message }}</p>
+      <p v-if="show && notiMessage.isCheck === null" class="red-txt noti">해당 목록은 필수 입력값입니다.</p>
+      <p v-if="notiMessage.isCheck === false" class="red-txt noti">{{ notiMessage.message }}</p>
     </div>
 
-    <div v-if="type == 'number'" class="form-cont">
+    <div v-if="type === 'number'" class="form-cont">
       <input
         v-if="disabled"
         type="number"
@@ -34,12 +34,12 @@
         v-model="num"
         :placeholder="placeholder"
       />
-      <p v-if="notiMessage.isCheck == false" class="red-txt noti">{{ notiMessage.message }}</p>
+      <p v-if="notiMessage.isCheck === false" class="red-txt noti">{{ notiMessage.message }}</p>
     </div>
 
-    <div v-if="type == 'textarea'" class="form-cont">
-      <textarea class="textarea" @input="handleOnChange" v-model="longText" :placeholder="placeholder" />
-      <p v-if="notiMessage.isCheck == false" class="red-txt noti">{{ notiMessage.message }}</p>
+    <div v-if="type === 'textarea'" class="form-cont">
+      <textarea class="textarea" @input="handleOnChange" v-model="longText" :placeholder="placeholder"></textarea>
+      <p v-if="notiMessage.isCheck === false" class="red-txt noti">{{ notiMessage.message }}</p>
     </div>
   </li>
 </template>
@@ -55,13 +55,13 @@ const props = defineProps({
   groupNm: { type: String, required: true },
   required: { type: Boolean, required: false, default: false },
   disabled: { type: Boolean, required: false, default: false },
-  value: { type: Number, required: false, default: 0 },
+  value: { type: [String, Number], required: true },
   placeholder: { type: String, required: false, default: '' },
   isvalid: { type: Boolean, required: false, default: false },
 });
 
 const validationCheck: ValidationCheckType = {
-  isCheck: false,
+  isCheck: null,
   message: '',
 };
 
