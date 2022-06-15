@@ -23,13 +23,15 @@
         <!------- handler pop -------->
         <div class="pop-wrap mid-pop">
           <div class="pop-header">
-            <h2 class="h2-tit">API 권한설정 List</h2>
+            <h2 class="h2-tit">Request API List</h2>
             <button @click="hideModal">
               <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
             </button>
           </div>
           <div class="pop-container">
-            <p class="total">total : <span>Request API List</span></p>
+            <p class="total">
+              요청된 API 수 : <span>{{ apiList.apiStat?.length }}</span>
+            </p>
             <div class="request-api-detail-list" v-if="!isShowProgress">
               <div class="service-list">
                 <ul>
