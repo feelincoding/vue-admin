@@ -21,7 +21,7 @@
         </div>
         <div class="stati-list">
           <ul v-if="msgType == 'svc' && serviceList.svcStat !== undefined">
-            <Top5ModalList
+            <ApiServiceDetailModalList
               v-for="(item, index) in serviceList.svcStat[0].apiStat"
               :key="index"
               :kind="'svc'"
@@ -29,7 +29,7 @@
             />
           </ul>
           <ul v-else-if="msgType == 'api' && apiList.apiStat !== undefined">
-            <Top5ModalList :kind="'api'" :item="apiList.apiStat[0]" />
+            <ApiServiceDetailModalList :kind="'api'" :item="apiList.apiStat[0]" />
           </ul>
         </div>
       </div>
@@ -54,7 +54,7 @@ import type {
 import { disableScrolling, enableScrolling } from '@/utils/screen';
 
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
-import Top5ModalList from '@/components/dash-board/Top5ModalList.vue';
+import ApiServiceDetailModalList from '@/components/commons/modal/ApiServiceDetailModalList.vue';
 
 import MonitoringControlRepository from '@/repository/monitoring-control-repository';
 import MonitoringStatisticReoisitory from '@/repository/monitoring-statistic-repository';
@@ -130,33 +130,32 @@ onUnmounted(() => {
 
 const requestAllApi = () => {
   disableScrolling();
-
   isShowProgress.value = true;
   const timeArr = getTimeArr(props.msgEndTime, props.msgTimeInterval);
   // service 조회
   if (props.msgType === 'svc') {
-    // 1. 오른쪽 그래프
-    const promise1 = controlRepository.getRealtimeServiceStatDetailList({
-      svcId: props.msgId,
-      statBaseTm: timeArr[0],
-      statPerd: props.msgTimeInterval,
-      dayTrafcComprCnt: 7,
-    });
-    // 2. 왼쪽 그래프
-    const promise2 = controlRepository.getTrafficService({
-      svcId: props.msgId,
-      statBaseUnit: 'MI',
-      statStTm: timeArr[1],
-      statEndTm: timeArr[0],
-    });
-
-    // 3. 리스트(api별)
-    const promise3 = statisticRepository.getServiceList({
-      svcId: props.msgId,
-      statStTm: timeArr[1],
-      statEndTm: timeArr[0],
-    });
-    Promise.all([promise1, promise2, promise3])
+    Promise.all([
+      // 1. 오른쪽 그래프
+      controlRepository.getRealtimeServiceStatDetailList({
+        svcId: props.msgId,
+        statBaseTm: timeArr[0],
+        statPerd: props.msgTimeInterval,
+        dayTrafcComprCnt: 7,
+      }),
+      // 2. 왼쪽 그래프
+      controlRepository.getTrafficService({
+        svcId: props.msgId,
+        statBaseUnit: 'MI',
+        statStTm: timeArr[1],
+        statEndTm: timeArr[0],
+      }),
+      // 3. 리스트(api별)
+      statisticRepository.getServiceList({
+        svcId: props.msgId,
+        statStTm: timeArr[1],
+        statEndTm: timeArr[0],
+      }),
+    ])
       .then((res) => {
         realtimeServiceStatDetailList.value = res[0];
         trafficService.value = res[1];
@@ -178,29 +177,29 @@ const requestAllApi = () => {
 
     //api 조회
   } else if (props.msgType === 'api') {
-    // 1. 오른쪽 그래프
-    const promise1 = controlRepository.getRealtimeApiStatDetailList({
-      sysId: props.msgId.split('.')[0],
-      apiId: props.msgId.split('.')[1],
-      statBaseTm: timeArr[0],
-      statPerd: props.msgTimeInterval,
-      dayTrafcComprCnt: 7,
-    });
-    // 2. 왼쪽 그래프
-    const promise2 = controlRepository.getTrafficApi({
-      apiId: props.msgId,
-      statBaseUnit: 'MI',
-      statStTm: timeArr[1],
-      statEndTm: timeArr[0],
-    });
-    // 3. 리스트(api 한 개)
-    const promise3 = statisticRepository.getApiList({
-      apiId: props.msgId,
-      statStTm: timeArr[1],
-      statEndTm: timeArr[0],
-    });
-
-    Promise.all([promise1, promise2, promise3])
+    Promise.all([
+      // 1. 오른쪽 그래프
+      controlRepository.getRealtimeApiStatDetailList({
+        sysId: props.msgId.split('.')[0],
+        apiId: props.msgId.split('.')[1],
+        statBaseTm: timeArr[0],
+        statPerd: props.msgTimeInterval,
+        dayTrafcComprCnt: 7,
+      }),
+      // 2. 왼쪽 그래프
+      controlRepository.getTrafficApi({
+        apiId: props.msgId,
+        statBaseUnit: 'MI',
+        statStTm: timeArr[1],
+        statEndTm: timeArr[0],
+      }),
+      // 3. 리스트(api 한 개)
+      statisticRepository.getApiList({
+        apiId: props.msgId,
+        statStTm: timeArr[1],
+        statEndTm: timeArr[0],
+      }),
+    ])
       .then((res) => {
         realtimeApiStatDetailList.value = res[0];
         trafficApi.value = res[1];

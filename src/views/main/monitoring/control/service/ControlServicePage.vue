@@ -27,7 +27,7 @@
         </ul>
       </div>
     </div>
-    <ApiDetailModal
+    <ApiServiceDetailModal
       v-if="showApiDetailModal"
       @close="closeModal"
       :apiDetailData="apiDetailData"
@@ -35,7 +35,7 @@
       :msgType="apiDetailProps.msgType"
       :msgEndTime="apiDetailProps.msgEndTime"
       :msgTimeInterval="apiDetailProps.msgTimeInterval"
-    ></ApiDetailModal>
+    ></ApiServiceDetailModal>
   </div>
 </template>
 
@@ -55,7 +55,7 @@ import type { GateWayError } from '@/error/GateWayError';
 import TimeGroup from '@/components/monitoring/control/TimeGroup.vue';
 import CardSort from '@/components/monitoring/control/CardSort.vue';
 import ControlCard from '@/components/monitoring/control/ControlCard.vue';
-import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
+import ApiServiceDetailModal from '@/components/commons/modal/ApiServiceDetailModal.vue';
 
 import ControlSort from '@/components/monitoring/control/controlSort';
 import MonitoringControlRepository from '@/repository/monitoring-control-repository';

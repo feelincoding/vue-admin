@@ -137,14 +137,14 @@
         </div>
       </section>
     </draggable>
-    <Top5Modal
+    <ApiServiceDetailModal
       v-if="isShowModal"
       @close="isShowModal = false"
       :msgId="msgId"
       :msgType="msgType"
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
-    ></Top5Modal>
+    ></ApiServiceDetailModal>
     <TrafficDetailModal v-if="trafficModal" @close="trafficModal = false"></TrafficDetailModal>
     <MainFooter></MainFooter>
   </article>
@@ -154,8 +154,8 @@ import { onMounted, ref, shallowRef, watch } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
-import ApiDetailModal from '@/components/monitoring/control/ApiDetailModal.vue';
-import Top5Modal from '@/components/dash-board/Top5Modal.vue';
+import ApiServiceDetailModal from '@/components/commons/modal/ApiServiceDetailModal.vue';
+
 import TrafficDetailModal from '@/components/dash-board/TrafficDetailModal.vue';
 import MainFooter from '@/components/layout/footer/MainFooter.vue';
 
