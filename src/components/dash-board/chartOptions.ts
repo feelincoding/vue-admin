@@ -58,8 +58,6 @@ export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) =>
             return value + ' 건';
           },
         },
-        zlevel: 5,
-        z: 5,
       },
       {
         name: '실패',
@@ -76,8 +74,6 @@ export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) =>
             return value + ' 건';
           },
         },
-        zlevel: 5,
-        z: 5,
       },
     ],
   };
