@@ -1,6 +1,6 @@
 <template>
   <li>
-    <label for="" class="label">{{ inputNm }}</label>
+    <label for="" class="label">{{ inputNm }} :</label>
     <div class="form-cont">
       <textarea class="textarea" v-model="v"></textarea>
       <p v-if="notiMessage.isValid == false" class="red-txt noti">{{ notiMessage.message }}</p>
