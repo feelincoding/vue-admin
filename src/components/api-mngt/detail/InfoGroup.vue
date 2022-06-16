@@ -2,7 +2,7 @@
   <li>
     <label class="label">{{ props.inputNm }}</label>
     <div class="form-cont">
-      <p>{{ props.value }}</p>
+      <p class="black-txt">{{ props.value }}</p>
     </div>
   </li>
 </template>

@@ -67,23 +67,30 @@
             v-model:value="requestBody.timeOut"
             v-model:isvalid="timeoutValid"
           />
-          <TextForm
-            :groupNm="$t('api.apiDescription')"
-            type="textarea"
-            v-model:value="requestBody.desc"
-            v-model:isvalid="descValid"
-          />
-          <ModalLayout size="s" v-if="showModal">
-            <template v-slot:modalHeader><h1 class="h1-tit">API 수정</h1> </template>
-            <template v-slot:modalContainer>
-              <p class="text">API를 수정하시겠습니까?</p>
-            </template>
-            <template v-slot:modalFooter>
-              <button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button>
-              <button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
-            </template>
-          </ModalLayout>
         </ul>
+
+        <div class="form-wrap option-wrap">
+          <h3 class="h3-tit">선택 입력 항목 :</h3>
+          <ul>
+            <TextForm
+              :groupNm="$t('api.apiDescription')"
+              type="textarea"
+              v-model:value="requestBody.desc"
+              v-model:isvalid="descValid"
+            />
+          </ul>
+        </div>
+
+        <ModalLayout size="s" v-if="showModal">
+          <template v-slot:modalHeader><h1 class="h1-tit">API 수정</h1> </template>
+          <template v-slot:modalContainer>
+            <p class="text">API를 수정하시겠습니까?</p>
+          </template>
+          <template v-slot:modalFooter>
+            <button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button>
+            <button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
+          </template>
+        </ModalLayout>
       </div>
     </template>
     <!-- for progress -->

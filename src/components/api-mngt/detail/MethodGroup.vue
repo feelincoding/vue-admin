@@ -2,7 +2,7 @@
   <li>
     <label class="label">{{ props.inputNm }}</label>
     <div class="form-cont">
-      <div class="form-group">
+      <div class="badge-group">
         <span
           v-for="(item, index) in props.methods"
           :key="index"
