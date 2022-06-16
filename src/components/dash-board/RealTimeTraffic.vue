@@ -1,7 +1,7 @@
 <template>
-  <div class="chart-wrap" style="height: 100%" id="chart-container">
+  <div class="chart-wrap" style="height: 100%" id="chart-container" ref="realTimeRef">
     <h3 class="h3-tit">실시간 Traffic</h3>
-    <div class="chart-group" id="real-time-traffic" :style="{ height: `${containerHeight}px` }" ref="realTimeRef"></div>
+    <div class="chart-group" id="real-time-traffic" :style="{ height: `${containerHeight}px` }"></div>
   </div>
 </template>
 <script setup lang="ts">
@@ -9,7 +9,9 @@ import { onMounted, onUnmounted, ref, shallowRef, watch } from 'vue';
 import * as echarts from 'echarts';
 import { addDate } from '@/utils/converter';
 import { getRealTimeChartOption } from '@/components/dash-board/chartOptions';
-
+const props = defineProps<{
+  containerHeight: number;
+}>();
 const myChart = shallowRef({} as echarts.EChartsType);
 const dom = shallowRef({} as HTMLDivElement);
 const dom2 = shallowRef({} as HTMLDivElement);
@@ -26,28 +28,21 @@ const containerHeight = ref(0);
 const chartResize = () => {
   myChart.value.resize();
 };
-const calcedWidth = ref(0);
-const calcedheight = ref(0);
-const realTimeRef = ref<HTMLDivElement | null>(null);
-const observeSize = () => {
-  const ro = new ResizeObserver((entries) => {
-    entries.forEach((entry) => {
-      const { width, height } = entry.contentRect;
-      calcedWidth.value = width;
-      calcedheight.value = height;
-    });
-  });
-  ro.observe(realTimeRef.value as HTMLDivElement);
-};
-watch(calcedheight, () => {
-  chartResize();
-});
+
+watch(
+  () => props.containerHeight,
+  (val) => {
+    containerHeight.value = val - 29;
+    setTimeout(() => {
+      chartResize();
+    }, 0);
+  }
+);
 
 onMounted(() => {
   window.addEventListener('resize', () => chartResize(), { passive: true });
   dom.value = document.getElementById('real-time-traffic') as HTMLDivElement;
   dom2.value = document.getElementById('chart-container') as HTMLDivElement;
-  containerHeight.value = dom2.value.clientHeight - 29;
   myChart.value = echarts.init(dom.value);
   for (var i = 1; i < 30; i++) {
     addData();
@@ -65,7 +60,7 @@ onMounted(() => {
       data7.value
     )
   );
-  observeSize();
+
   setInterval(() => {
     addData();
     myChart.value.setOption(
