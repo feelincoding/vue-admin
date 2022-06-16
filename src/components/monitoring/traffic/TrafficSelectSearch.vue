@@ -292,7 +292,7 @@ onMounted(() => {
 });
 
 watch(month, () => {
-  if (month.value[0] === null || month.value[1] === null) {
+  if (!month?.value?.[0] || month.value[1] === null) {
     return;
   }
   if (!checkMaxMonth()) {
@@ -302,7 +302,7 @@ watch(month, () => {
 });
 
 watch(date, () => {
-  if (date.value[0] === null || date.value[1] === null) {
+  if (!date?.value?.[0] || date.value[1] === null) {
     return;
   }
   if (!checkMaxDate()) {
@@ -351,6 +351,10 @@ function checkMaxDate() {
 
 function handleClickSearch() {
   if (selectedUnit.value === 'MM') {
+    if (!month.value) {
+      modal().show('시작 시간과 종료 시간을 선택해주세요.');
+      return;
+    }
     const start = new Date(month.value[0].year, month.value[0].month);
     const end = new Date(month.value[1].year, month.value[1].month);
 
@@ -372,6 +376,10 @@ function handleClickSearch() {
       emit('search', param);
     }
   } else {
+    if (!date.value) {
+      modal().show('시작 시간과 종료 시간을 선택해주세요.');
+      return;
+    }
     if (props.tab === 'service') {
       const param: RequestTrafficServiceParams = {
         svcId: selectedServices.value,

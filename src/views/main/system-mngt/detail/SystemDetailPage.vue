@@ -138,5 +138,3 @@ const closeModal = () => {
   isShowModal.value = false;
 };
 </script>
-
-<style scoped></style>

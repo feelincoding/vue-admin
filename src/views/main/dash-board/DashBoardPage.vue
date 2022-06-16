@@ -145,8 +145,16 @@
       :msgEndTime="msgEndTime"
       :msgTimeInterval="gseTimeInterval"
     ></ApiServiceDetailModal>
-    <TrafficDetailModal v-if="trafficModal" @close="trafficModal = false"></TrafficDetailModal>
-    <AvgDetailModal v-if="avgModal" @close="avgModal = false"></AvgDetailModal>
+    <TrafficDetailModal
+      v-if="trafficModal"
+      @close="trafficModal = false"
+      v-model:baseTime="totalTrafficBaseTime"
+    ></TrafficDetailModal>
+    <AvgDetailModal
+      v-if="avgModal"
+      @close="avgModal = false"
+      v-model:baseTime="apiResponseStatusBaseTime"
+    ></AvgDetailModal>
 
     <MainFooter></MainFooter>
   </article>
@@ -203,8 +211,11 @@ const trafficModal = ref(false);
 const avgModal = ref(false);
 
 const totalTraffic: Ref<TotalTrafficStat> = ref({} as TotalTrafficStat);
+const totalTrafficBaseTime: Ref<string> = ref('');
 const apiResponseStatus: Ref<ApiResponseStatus> = ref({} as ApiResponseStatus);
+const apiResponseStatusBaseTime: Ref<string> = ref('');
 const errorStats: Ref<ErrorStatsType> = ref({} as ErrorStatsType);
+
 const realTimeApiStat: Ref<RealTimeApiStat> = ref({} as RealTimeApiStat);
 const apiTop5List: Ref<ApiStat[]> = ref([]);
 const realTimeServiceStat: Ref<RealTimeServiceStat> = ref({} as RealTimeServiceStat);
@@ -226,39 +237,6 @@ onMounted(() => {
   requestAllApi();
   initCharts();
   window.addEventListener('resize', () => chartResize(), { passive: true });
-
-  for (var i = 1; i < 30; i++) {
-    addData();
-  }
-
-  // realTimeChart.value.setOption(
-  //   getRealTimeChartOption(
-  //     date.value,
-  //     data1.value,
-  //     data2.value,
-  //     data3.value,
-  //     data4.value,
-  //     data5.value,
-  //     data6.value,
-  //     data7.value
-  //   )
-  // );
-
-  // setInterval(() => {
-  //   addData();
-  //   realTimeChart.value.setOption(
-  //     getRealTimeChartOption(
-  //       date.value,
-  //       data1.value,
-  //       data2.value,
-  //       data3.value,
-  //       data4.value,
-  //       data5.value,
-  //       data6.value,
-  //       data7.value
-  //     )
-  //   );
-  // }, 300);
 });
 
 const requestAllApi = () => {
@@ -280,7 +258,7 @@ const requestAllApi = () => {
         if (index == 0) {
           totalTraffic.value = result.value as TotalTrafficStat;
           isTotalAPITrafficCommError.value = false;
-          // TOTAL_DETAIL_TRAFFIC_PARAM.statBaseTm = convertBaseTime(totalTraffic.value.statBaseTm);
+          totalTrafficBaseTime.value = convertBaseTime(totalTraffic.value.statBaseTm);
         } else if (index == 1) {
           errorStats.value = result.value as ErrorStatsType;
           isErrorStatCommError.value = false;
@@ -288,7 +266,7 @@ const requestAllApi = () => {
         } else if (index == 2) {
           apiResponseStatus.value = result.value as ApiResponseStatus;
           isApiResponseStusCommError.value = false;
-          // API_RESPONSE_DETAIL_PARAM.statBaseTm = convertBaseTime(apiResponseStatus.value.statBaseTm);
+          apiResponseStatusBaseTime.value = convertBaseTime(apiResponseStatus.value.statBaseTm);
         } else if (index == 3) {
           realTimeApiStat.value = result.value as RealTimeApiStat;
           apiTop5List.value = realTimeApiStat.value.apiStat
@@ -429,18 +407,3 @@ watch(calcedWidth, () => {
   // realTimeChart.value.resize();
 });
 </script>
-<style>
-.flip-list-move {
-  transition: transform 0.5s;
-}
-.no-move {
-  transition: transform 0s;
-}
-.ghost {
-  opacity: 0.5;
-  background: #c8ebfb;
-}
-#section-draggable {
-  cursor: move;
-}
-</style>

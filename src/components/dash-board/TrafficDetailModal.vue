@@ -28,6 +28,9 @@
             </div>
             <div class="pop-container">
               <p class="total">
+                TimePoint : <span>{{ TimePoint.substring(0, 10) }} {{ TimePoint.substring(11, 16) }}</span>
+              </p>
+              <p class="total">
                 요청된 API 수 : <span>{{ apiList.apiStat?.length }}</span>
               </p>
               <div class="request-api-detail-list" v-if="!isShowProgress">
@@ -67,6 +70,10 @@ import MonitoringStatisticRepository from '@/repository/MonitoringStatisticRepos
 import { disableScrolling } from '@/utils/screen';
 import type { StatResponse } from '@/types/MonitoringStatisticType';
 import ErrorCode from '@/error/ErrorCodes';
+const props = defineProps({
+  baseTime: { type: String, required: true, default: '' },
+});
+
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
@@ -86,16 +93,16 @@ const apiList: Ref<StatResponse> = ref({
   apiStat: [],
 });
 const isShowProgress = ref(false);
-
+const TimePoint = ref('');
 onMounted(() => {
   Promise.all([
     dashBoardRepository.getTotalAPITrafficDetail({
-      statBaseTm: '2022-06-15 13:38',
+      statBaseTm: props.baseTime,
       statBaseUnit: 'MI',
       statPerd: 1440,
     }),
     dashBoardRepository.getErrorStatsDetail({
-      statBaseTm: '2022-06-15 13:38',
+      statBaseTm: props.baseTime,
       statBaseUnit: 'MI',
       statPerd: 1440,
     }),
@@ -127,14 +134,15 @@ onMounted(() => {
       clearTimeout(timerId);
     });
     totalTrafficDetailChart.value.on('click', function (params) {
-      const tm = res[0][params.dataIndex].statBaseTm;
+      TimePoint.value = res[0][params.dataIndex].statBaseTm;
       const searchForm = {
-        statEndTm: tm.substring(0, 10) + ' ' + tm.substring(11, 16),
-        statStTm: tm.substring(0, 10) + ' ' + tm.substring(11, 16),
+        statEndTm: TimePoint.value.substring(0, 10) + ' ' + TimePoint.value.substring(11, 16),
+        statStTm: TimePoint.value.substring(0, 10) + ' ' + TimePoint.value.substring(11, 16),
       };
       statRepository
         .getApiList(searchForm)
         .then((res) => {
+          observeSize();
           apiList.value = res;
           isShowProgress.value = false;
           apiDetailModal.value = true;
@@ -147,7 +155,6 @@ onMounted(() => {
           }
         });
     });
-    observeSize();
   });
 });
 
@@ -177,38 +184,3 @@ watch(chartBoxWidth, () => {
   errorStatDetailChart.value.resize();
 });
 </script>
-
-<style scoped>
-.total-traffic-detail-chart {
-  width: 100%;
-  height: 70%;
-}
-.error-stat-detail-chart {
-  width: 100%;
-  height: 30%;
-}
-.request-api-detail-list {
-  position: relative;
-  margin: 10px 0px;
-  height: 100%;
-  overflow-y: auto;
-}
-
-.before-chart-width {
-  width: 100%;
-  transition: all 0.3s;
-}
-
-.after-chart-width {
-  width: 50%;
-  transition: all 0.3s;
-}
-
-.request-api-list-pop {
-  width: 100%;
-  padding: 15px 15px;
-  margin: 0 auto;
-  margin-bottom: 30px;
-  border-left: 1px #ddd solid;
-}
-</style>

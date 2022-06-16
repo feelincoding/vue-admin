@@ -80,5 +80,3 @@ const onChangedPage = (page: number) => {
 //   this.$emit('onChangedPage:page', page);
 // }
 </script>
-
-<style scoped></style>

@@ -73,20 +73,3 @@ function onClickRow() {
   isOpen.value = !isOpen.value;
 }
 </script>
-<style scoped>
-.list {
-  background-color: white;
-  height: auto;
-}
-.list-slider {
-  transform-origin: top;
-  height: fit-content;
-  transform: scaleY(100%);
-  transition: all 0.3s ease-out;
-}
-.list-slider-none {
-  transform-origin: top;
-  height: 0;
-  transform: scaleY(0%);
-}
-</style>

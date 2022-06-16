@@ -48,5 +48,3 @@ let currentPageName = ref(route.name);
 
 provide(modalInjectionKey, updateScore);
 </script>
-
-<style scoped></style>

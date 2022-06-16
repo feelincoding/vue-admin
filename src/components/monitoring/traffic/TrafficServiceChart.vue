@@ -160,8 +160,3 @@ watch(
   }
 );
 </script>
-<style scoped>
-.chart-group-height {
-  height: 340px;
-}
-</style>

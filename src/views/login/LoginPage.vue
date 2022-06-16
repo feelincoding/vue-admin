@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h1>My Page</h1>
+    <h1>this is LoginPage!!</h1>
   </div>
 </template>
 
 <script setup lang="ts"></script>
+
+<style scoped></style>

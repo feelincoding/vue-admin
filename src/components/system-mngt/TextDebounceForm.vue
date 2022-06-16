@@ -74,4 +74,3 @@ const notice = () => {
   emptyChk.value = true;
 };
 </script>
-<style lang=""></style>
