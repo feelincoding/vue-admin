@@ -4,7 +4,6 @@ import i18n from '@/plugins/Locale';
 
 import App from './App.vue';
 import router from './router';
-import '@/style/dash-board.css';
 import '@/style/bootstrap.css';
 import '@/style/bootstrap-vue-3.css';
 
