@@ -105,7 +105,7 @@
           <p class="text">{{ currId }} &nbsp; {{ $t('system.modal_delete_message') }}</p>
         </template>
         <template v-slot:modalFooter>
-          <button class="purple-btn lg-btn" @click="deleteSystem" :disabled="isDisabled">
+          <button class="purple-btn lg-btn" @click="deleteSystem()" :disabled="isDisabled">
             {{ $t('common.ok') }}<b-spinner variant="light" v-if="isDisabled" small></b-spinner>
           </button>
           <button class="lg-btn white-btn" @click="closeModal" :disabled="isDisabled">
@@ -262,10 +262,11 @@ const deleteSystem = async () => {
     })
     .catch((error: GateWayError | any) => {
       if (error.getErrorCode() == ErrorCode.SYSTEM_DELETE_FAILED) {
-        toast.error(t('system.system_delete_fail', { system_name: currId }));
+        toast.error(t('system.system_delete_fail', { system_name: currId.value }));
       }
       isDisabled.value = false;
     });
+  isShowModal.value = false;
 };
 
 // click event 함수
