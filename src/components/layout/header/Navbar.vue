@@ -1,7 +1,9 @@
 <template>
   <aside id="side">
     <div class="logo">
-      <a href="javascript:void(0)"><img src="@/assets/logo.svg" alt="API G/W Admin logo" /></a>
+      <router-link :to="`${dashBoardPath}`" @click="changeNavState('dashboardState')"
+        ><img src="@/assets/logo.svg" alt="API G/W Admin logo"
+      /></router-link>
     </div>
 
     <div class="member-wrap">
