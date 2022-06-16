@@ -60,13 +60,18 @@
             v-model:value="requestBody.timeOut"
             v-model:isvalid="timeoutValid"
           />
-          <TextForm
-            :groupNm="$t('api.apiDescription')"
-            type="textarea"
-            v-model:value="requestBody.desc"
-            v-model:isvalid="descValid"
-          />
         </ul>
+        <div class="form-wrap option-wrap">
+          <h3 class="h3-tit">선택 입력 항목</h3>
+          <ul>
+            <TextForm
+              :groupNm="$t('api.apiDescription')"
+              type="textarea"
+              v-model:value="requestBody.desc"
+              v-model:isvalid="descValid"
+            />
+          </ul>
+        </div>
         <ModalLayout size="s" v-if="isShowModal">
           <template v-slot:modalHeader
             ><h1 class="h1-tit">{{ $t('api.apiRegister') }}</h1>
