@@ -28,6 +28,9 @@
             </div>
             <div class="pop-container">
               <p class="total">
+                TimePoint : <span>{{ TimePoint.substring(0, 10) }} {{ TimePoint.substring(11, 16) }}</span>
+              </p>
+              <p class="total">
                 요청된 API 수 : <span>{{ apiList.apiStat?.length }}</span>
               </p>
               <div class="request-api-detail-list" v-if="!isShowProgress">
@@ -90,7 +93,7 @@ const apiList: Ref<StatResponse> = ref({
   apiStat: [],
 });
 const isShowProgress = ref(false);
-
+const TimePoint = ref('');
 onMounted(() => {
   Promise.all([
     dashBoardRepository.getTotalAPITrafficDetail({
@@ -131,10 +134,10 @@ onMounted(() => {
       clearTimeout(timerId);
     });
     totalTrafficDetailChart.value.on('click', function (params) {
-      const tm = res[0][params.dataIndex].statBaseTm;
+      TimePoint.value = res[0][params.dataIndex].statBaseTm;
       const searchForm = {
-        statEndTm: tm.substring(0, 10) + ' ' + tm.substring(11, 16),
-        statStTm: tm.substring(0, 10) + ' ' + tm.substring(11, 16),
+        statEndTm: TimePoint.value.substring(0, 10) + ' ' + TimePoint.value.substring(11, 16),
+        statStTm: TimePoint.value.substring(0, 10) + ' ' + TimePoint.value.substring(11, 16),
       };
       statRepository
         .getApiList(searchForm)
