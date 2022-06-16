@@ -334,7 +334,7 @@ watch(lastResponseList, () => {
 });
 
 const getRealTimeSectionHeight = () => {
-  return window.screen.availHeight - 770;
+  return window.innerHeight - 768.5;
 };
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
@@ -401,7 +401,6 @@ const observeSize = () => {
   ro.observe(dashboardRef.value as HTMLDivElement);
 };
 watch(calcedWidth, () => {
-  console.log('resize!!');
   lastTrafficChart.value.resize();
   lastResponseChart.value.resize();
   // realTimeChart.value.resize();
