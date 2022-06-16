@@ -34,7 +34,8 @@
             on: navState.showMonitoring || $route.path.includes('monitoring'),
           }"
         >
-          <a href="javascript:void(0)" @click="changeShowMonitoring()">Monitoring 관리</a>
+          <a href="javascript:void(0)" @mouseenter="changeShowMonitoring()">Monitoring 관리</a>
+          <!-- <a href="javascript:void(0)" @click="changeShowMonitoring()">Monitoring 관리</a> -->
           <Transition name="fade" appear>
             <div class="depth-menu" v-show="navState.showMonitoring || $route.path.includes('monitoring')">
               <ul>
