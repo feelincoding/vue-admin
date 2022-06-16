@@ -226,7 +226,6 @@ onMounted(() => {
 });
 // 날짜 선택시 이벤트
 function handleClickSearch() {
-  console.log(date.value[0].toISOString().slice(0, 19));
   if (!date.value) {
     modal().show('시작 시간과 종료 시간을 선택해주세요.');
     return;

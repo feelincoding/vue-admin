@@ -45,6 +45,7 @@ export function getAvgDetailOption(detail: ApiResponseStatus[]) {
       axisLine: { show: true },
       axisLabel: {
         show: true,
+        interval: 89,
         showMaxLabel: true,
       },
     },
@@ -130,6 +131,7 @@ export function getTpsDetailOption(detail: ApiResponseStatus[]) {
       axisLine: { show: true },
       axisLabel: {
         show: true,
+        interval: 89,
         showMaxLabel: true,
       },
     },

@@ -97,12 +97,12 @@ const TimePoint = ref('');
 onMounted(() => {
   Promise.all([
     dashBoardRepository.getTotalAPITrafficDetail({
-      statBaseTm: '2022-06-15 13:38',
+      statBaseTm: props.baseTime,
       statBaseUnit: 'MI',
       statPerd: 1440,
     }),
     dashBoardRepository.getErrorStatsDetail({
-      statBaseTm: '2022-06-15 13:38',
+      statBaseTm: props.baseTime,
       statBaseUnit: 'MI',
       statPerd: 1440,
     }),

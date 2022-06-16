@@ -24,6 +24,10 @@ import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import { getAvgDetailOption, getTpsDetailOption } from '@/components/dash-board/chartOptions';
 import * as echarts from 'echarts';
 import DashBoardRepository from '@/repository/DashBoardRepository';
+const props = defineProps({
+  baseTime: { type: String, required: true, default: '' },
+});
+
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
@@ -35,7 +39,7 @@ const tpsDetailChart = shallowRef({} as echarts.EChartsType);
 onMounted(() => {
   Promise.all([
     dashBoardRepository.getApiResponseStatusDetail({
-      statBaseTm: '2022-06-15 13:38',
+      statBaseTm: props.baseTime,
       statBaseUnit: 'MI',
       statPerd: 1440,
     }),
