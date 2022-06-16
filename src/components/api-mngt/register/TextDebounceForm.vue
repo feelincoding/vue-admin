@@ -12,6 +12,7 @@
         }"
         class="input-box lg"
         @focus="notice()"
+        :disabled="props.isDisabled"
       />
       <!-- <p v-if="show && text.length === 0" class="red-txt noti">해당 목록은 필수 입력값입니다.</p> -->
       <p v-if="notiMessage.isCheck == false" class="red-txt noti">{{ notiMessage.message }}</p>
@@ -33,6 +34,7 @@ const props = defineProps<{
   placeholder: string;
   value: string;
   isvalid: boolean;
+  isDisabled: boolean;
 }>();
 
 const emit = defineEmits<{

@@ -12,7 +12,7 @@
           type="text"
           :value="value"
           class="input-box uri-input"
-          placeholder="자동생성/변경가능"
+          placeholder="자동생성/수정가능"
           :disabled="!isEdit"
           @input="handleChangeUri"
         />

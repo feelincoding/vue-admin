@@ -43,8 +43,9 @@
 <script setup lang="ts">
 import type { ApiDetailResponse } from '@/types/ApiType';
 import type { Pagination } from '@/types/GateWayResponse';
-import router from '@/router';
 import { convertDate, convertTime } from '@/utils/converter';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const props = defineProps<{
   apiData: ApiDetailResponse;

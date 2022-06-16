@@ -13,21 +13,21 @@
       <div class="form-wrap">
         <ul>
           <TextForm
-            :groupNm="$t('api.sysId')"
+            :groupNm="$t('api.sysId') + ' :'"
             type="text"
             :required="true"
             v-model:value="requestBody.sysId"
             :disabled="true"
           />
           <TextForm
-            :groupNm="$t('api.apiId')"
+            :groupNm="$t('api.apiId') + ' :'"
             type="text"
             :required="true"
             v-model:value="requestBody.id"
             :disabled="true"
           />
           <TextForm
-            :groupNm="$t('api.interfaceNumber')"
+            :groupNm="$t('api.interfaceNumber') + ' :'"
             type="text"
             :required="true"
             :disabled="true"
@@ -36,15 +36,15 @@
 
           <MethodForm groupNm="Method" v-model:value="requestBody.meth" v-model:isvalid="methodValid" />
           <UriForm
-            groupNm="URI"
+            groupNm="URI :"
             :uriIn="requestBody.uriIn"
             v-model:value="requestBody.uriOut"
             v-model:isvalid="uriValid"
           />
-          <EndPointGroup groupNm="End-point" :edptList="edptList" />
+          <EndPointGroup groupNm="End-point :" :edptList="edptList" />
 
           <HandlerGroupForm
-            :groupNm="$t('api.resHndlrGrp')"
+            :groupNm="$t('api.resHndlrGrp') + ' :'"
             :reqHandlerGroupList="reqHandlerGroupList"
             :resHandlerGroupList="resHandlerGroupList"
             :resHandlerGroupId="requestBody.resHndlrGrpId"
@@ -61,7 +61,7 @@
             "
           />
           <TextForm
-            :groupNm="$t('api.timeOutMS')"
+            :groupNm="$t('api.timeOutMS') + ' :'"
             type="number"
             :required="true"
             v-model:value="requestBody.timeOut"
@@ -73,7 +73,7 @@
           <h3 class="h3-tit">선택 입력 항목 :</h3>
           <ul>
             <TextForm
-              :groupNm="$t('api.apiDescription')"
+              :groupNm="$t('api.apiDescription') + ' :'"
               type="textarea"
               v-model:value="requestBody.desc"
               v-model:isvalid="descValid"
@@ -126,13 +126,13 @@ import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import axios from 'axios';
 import HandlerRepository from '@/repository/HandlerRepository';
 import { inject, onMounted, ref, watch, type Ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
-import router from '@/router';
 
 const { t } = useI18n({});
 const route = useRoute();
+const router = useRouter();
 const modal = inject(modalInjectionKey) as ModalFunction;
 let apiRepository = new ApiRepository();
 let systemRepository = new SystemRepository();

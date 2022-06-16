@@ -22,6 +22,7 @@
             v-model:isvalid="idValid"
             v-model:value="requestBody.id"
             @input="duplicateCheckId"
+            v-model:isDisabled="textDebounceFormDisabled"
           />
 
           <MethodForm groupNm="Method" v-model:value="requestBody.meth" v-model:isvalid="methodValid" />
@@ -124,8 +125,9 @@ import HandlerModule from '@/repository/HandlerRepository';
 import { inject, onMounted, ref, watch, type Ref } from 'vue';
 import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
 let systemModule = new SystemModule();
 let apiModule = new ApiModule();
 let handlerModule = new HandlerModule();
@@ -139,24 +141,10 @@ let initSystemIdEdptList: SystemIdEdpt[] = [
     edpt: [],
   },
 ];
-let reqHandlerGroup: Ref<HandlerGroupDetail[]> = ref([
-  {
-    id: '',
-    hndlr: [],
-    desc: '',
-  },
-]);
-let resHandlerGroup: Ref<HandlerGroupDetail[]> = ref([
-  {
-    id: '',
-    hndlr: [],
-    desc: '',
-  },
-]);
 
 const systemIdEdptList: Ref<SystemIdEdpt[]> = ref(initSystemIdEdptList);
-const reqHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(reqHandlerGroup);
-const resHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(resHandlerGroup);
+const reqHandlerGroupList: Ref<HandlerGroupDetail[]> = ref([]);
+const resHandlerGroupList: Ref<HandlerGroupDetail[]> = ref([]);
 
 const showPage = ref(false);
 const idValid = ref(false);
@@ -210,7 +198,7 @@ onMounted(() => {
       console.log(error);
     });
 });
-
+const textDebounceFormDisabled = ref(true);
 watch(
   () => requestBody.value.sysId,
   (val: string) => {
@@ -220,6 +208,11 @@ watch(
     requestBody.value.uriIn = '';
     requestBody.value.uriOut = '';
     idValid.value = false;
+    if (val === '') {
+      textDebounceFormDisabled.value = true;
+    } else {
+      textDebounceFormDisabled.value = false;
+    }
   }
 );
 

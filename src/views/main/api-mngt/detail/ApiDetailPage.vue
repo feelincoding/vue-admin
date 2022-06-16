@@ -10,23 +10,23 @@
       <!-- 레이아웃을 제외한 실제 컨텐츠 부분을 넣어주세요 -->
       <div class="form-wrap">
         <ul>
-          <InfoGroup :inputNm="$t('api.sysId')" :value="apiDetail.sysId" />
-          <InfoGroup :inputNm="$t('api.apiId')" :value="apiDetail.id" />
-          <InfoGroup :inputNm="$t('api.interface') + ' ' + $t('api.number')" :value="apiDetail.ifNo" />
-          <MethodGroup :inputNm="$t('api.method')" :methods="apiDetail.meth" />
-          <URIGroup :inputNm="$t('api.uri')" :uriSer="apiDetail.uriIn" :uriSys="apiDetail.uriOut" />
-          <EndPointGroup groupNm="End-point" :edptList="edptList" />
+          <InfoGroup :inputNm="$t('api.sysId') + ' :'" :value="apiDetail.sysId" />
+          <InfoGroup :inputNm="$t('api.apiId') + ' :'" :value="apiDetail.id" />
+          <InfoGroup :inputNm="$t('api.interface') + ' ' + $t('api.number') + ' :'" :value="apiDetail.ifNo" />
+          <MethodGroup :inputNm="$t('api.method') + ' :'" :methods="apiDetail.meth" />
+          <URIGroup :inputNm="$t('api.uri') + ' :'" :uriSer="apiDetail.uriIn" :uriSys="apiDetail.uriOut" />
+          <EndPointGroup groupNm="End-point :" :edptList="edptList" />
 
           <InfoGroup
-            :inputNm="$t('api.request') + ' ' + $t('api.handler') + ' ' + $t('api.group')"
+            :inputNm="$t('api.request') + ' ' + $t('api.handler') + ' ' + $t('api.group') + ' :'"
             :value="apiDetail.reqHndlrGrpId"
           />
           <InfoGroup
-            :inputNm="$t('api.response') + ' ' + $t('api.handler') + ' ' + $t('api.group')"
+            :inputNm="$t('api.response') + ' ' + $t('api.handler') + ' ' + $t('api.group') + ' :'"
             :value="apiDetail.resHndlrGrpId"
           />
-          <InfoGroup :inputNm="$t('api.timeOutMS')" :value="'' + apiDetail.timeOut" />
-          <InfoGroup :inputNm="$t('api.api') + ' ' + $t('api.description')" :value="apiDetail.desc" />
+          <InfoGroup :inputNm="$t('api.timeOutMS') + ' :'" :value="'' + apiDetail.timeOut" />
+          <InfoGroup :inputNm="$t('api.api') + ' ' + $t('api.description') + ' :'" :value="apiDetail.desc" />
           <ModalLayout size="s" v-if="showModal">
             <template v-slot:modalHeader
               ><h1 class="h1-tit">{{ $t('api.delete_modal_title') }}</h1>
@@ -74,8 +74,7 @@ import type { ApiDetailResponse } from '@/types/ApiType';
 import ApiModule from '@/repository/ApiRepository';
 import SystemModule from '@/repository/SystemRepository';
 import { type Ref, ref, onMounted, inject, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
 import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
@@ -83,6 +82,7 @@ import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 
 const { t } = useI18n({});
 const route = useRoute();
+const router = useRouter();
 const toast = useToast();
 
 let apiModule = new ApiModule();
