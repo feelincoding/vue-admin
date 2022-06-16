@@ -82,4 +82,3 @@ const notice = () => {
   show.value = true;
 };
 </script>
-<style lang=""></style>

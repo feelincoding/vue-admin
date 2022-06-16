@@ -239,4 +239,3 @@ function handleClickSearch() {
   }
 }
 </script>
-<style></style>

@@ -6,8 +6,8 @@
         'label point': required === true,
         label: required === false,
       }"
-      >{{ inputNm }} : </label
-    >
+      >{{ inputNm }} :
+    </label>
     <div class="form-cont">
       <input
         :type="type"
@@ -127,5 +127,3 @@ const emptyChkFunc = () => {
   }
 };
 </script>
-
-<style scoped></style>
