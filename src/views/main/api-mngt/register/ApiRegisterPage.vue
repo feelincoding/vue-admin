@@ -10,12 +10,12 @@
       <div v-if="showPage" class="form-wrap">
         <ul>
           <SelectForm
-            :groupNm="$t('api.sysId')"
+            :groupNm="$t('api.sysId') + ' :'"
             :optionList="systemIdEdptList.map((item) => item.id)"
             v-model:input="requestBody.sysId"
           />
           <TextDebounceForm
-            inputNm="API ID"
+            inputNm="API ID :"
             :check="isDuplicatedId"
             :placeholder="$t('api.idEx')"
             type="text"
@@ -26,7 +26,7 @@
 
           <MethodForm groupNm="Method" v-model:value="requestBody.meth" v-model:isvalid="methodValid" />
           <UriForm
-            groupNm="URI"
+            groupNm="URI :"
             :uriIn="requestBody.uriIn"
             v-model:value="requestBody.uriOut"
             v-model:isvalid="uriValid"
@@ -36,7 +36,7 @@
             :groupNm="$t('api.systemInterlockInformation')"
             :optionList="edptList"
           /> -->
-          <EndPointGroup groupNm="End-point" :edptList="edptList" />
+          <EndPointGroup groupNm="End-point :" :edptList="edptList" />
           <HandlerGroupForm
             :reqHandlerGroupList="reqHandlerGroupList"
             :resHandlerGroupList="resHandlerGroupList"
@@ -54,7 +54,7 @@
             "
           />
           <TextForm
-            :groupNm="$t('api.timeOutMS')"
+            :groupNm="$t('api.timeOutMS') + ' :'"
             type="number"
             :required="true"
             v-model:value="requestBody.timeOut"
@@ -65,7 +65,7 @@
           <h3 class="h3-tit">선택 입력 항목</h3>
           <ul>
             <TextForm
-              :groupNm="$t('api.apiDescription')"
+              :groupNm="$t('api.apiDescription') + ' :'"
               type="textarea"
               v-model:value="requestBody.desc"
               v-model:isvalid="descValid"
