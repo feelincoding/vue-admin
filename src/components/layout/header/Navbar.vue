@@ -1,7 +1,9 @@
 <template>
   <aside id="side">
     <div class="logo">
-      <a href="javascript:void(0)"><img src="@/assets/logo.svg" alt="API G/W Admin logo" /></a>
+      <router-link :to="`${dashBoardPath}`" @click="changeNavState('dashboardState')"
+        ><img src="@/assets/logo.svg" alt="API G/W Admin logo"
+      /></router-link>
     </div>
 
     <div class="member-wrap">
@@ -124,13 +126,3 @@ const servicePath = SERVICE;
 const monitoringPath = MONITORING;
 const managementPath = MANAGEMENT;
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-</style>

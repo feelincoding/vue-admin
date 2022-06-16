@@ -29,5 +29,3 @@ const props = defineProps({
   // isShowProgress: { type: Boolean || undefined, required: true },
 });
 </script>
-
-<style scoped></style>

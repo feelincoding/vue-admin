@@ -22,7 +22,7 @@
       <template v-slot:list-form>
         <ListForm title="API List" :total="pagination.totalElements">
           <template v-slot:list-btn-area>
-            <button class="mid-btn" @click="$router.push({ name: 'api-register' })">
+            <button class="green-btn mid-btn" @click="$router.push({ name: 'api-register' })">
               <i><img src="@/assets/check_ico.svg" :alt="$t('common.register')" /></i>{{ $t('common.register') }}
             </button>
           </template>
@@ -37,13 +37,13 @@
                 </caption>
                 <colgroup>
                   <col width="6%" />
+                  <col width="14%" />
+                  <col width="15%" />
                   <col width="13%" />
-                  <col width="13%" />
-                  <col width="16%" />
                   <col width="*" />
-                  <col width="9%" />
-                  <col width="13%" />
-                  <col width="10%" />
+                  <col width="8%" />
+                  <col width="14%" />
+                  <col width="6%" />
                 </colgroup>
                 <thead>
                   <tr>
@@ -272,5 +272,3 @@ const getList = () => {
   });
 };
 </script>
-
-<style scoped></style>

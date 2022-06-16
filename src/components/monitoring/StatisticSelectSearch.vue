@@ -5,7 +5,7 @@
       <div class="date-wrap">
         <div class="date-cont">
           <!--  bg-white-date -->
-          <Datepicker range multiCalendars locale="ko-KR" v-model="date" :format="format" :maxDate="new Date()" />
+          <Datepicker range multiCalendars locale="ko-KR" v-model="date" :format="dateFormat" :maxDate="new Date()" />
         </div>
       </div>
     </div>
@@ -121,17 +121,19 @@
   </div>
 </template>
 <script setup lang="ts">
+import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import type { ApiSearch } from '@/types/MonitoringStatisticType';
-import { ref, reactive, computed, watch, onMounted, type Ref } from 'vue';
+import { format } from 'date-fns';
+import { ref, reactive, computed, watch, onMounted, type Ref, inject } from 'vue';
+const modal = inject(modalInjectionKey)!!;
+const emit = defineEmits<{
+  (e: 'search', value: any): void;
+}>();
 const props = defineProps<{
   isFocus: boolean;
   propServiceList: string[] | null;
   tab: string;
   propApiList: ApiSearch[] | null;
-}>();
-
-const emit = defineEmits<{
-  (e: 'search', value: any): void;
 }>();
 
 let searchText = ref('');
@@ -209,10 +211,12 @@ function unselectAPI(event: any) {
 // 시작,종료 날짜값 선언
 const date: Ref<Date[]> = ref([]);
 // 화면에 표시될 날짜 포멧 설정
-const format = (dates: Date[]) => {
-  return `${dates[0].toISOString().slice(0, 10)} ${dates[0].toTimeString().slice(0, 5)} ~ ${dates[1]
-    .toISOString()
-    .slice(0, 10)} ${dates[1].toTimeString().slice(0, 5)}`;
+const dateFormat = (dates: Date[]) => {
+  if (date.value[1] === null) {
+    date.value[1] = date.value[0];
+  }
+
+  return format(date.value[0], 'yyyy-MM-dd HH:mm') + ' ~ ' + format(date.value[1], 'yyyy-MM-dd HH:mm');
 };
 //초기 날짜 설정
 onMounted(() => {
@@ -223,20 +227,22 @@ onMounted(() => {
 // 날짜 선택시 이벤트
 function handleClickSearch() {
   console.log(date.value[0].toISOString().slice(0, 19));
-
+  if (!date.value) {
+    modal().show('시작 시간과 종료 시간을 선택해주세요.');
+    return;
+  }
   if (props.tab === 'service') {
     emit('search', {
       svcId: selectedServices.value,
-      statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
-      statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
+      statStTm: format(date.value[0], 'yyyy-MM-dd HH:mm'),
+      statEndTm: format(date.value[1], 'yyyy-MM-dd HH:mm'),
     });
   } else {
     emit('search', {
       apiId: selectedAPI.value,
-      statStTm: `${date.value[0].toISOString().slice(0, 10)} ${date.value[0].toTimeString().slice(0, 5)}`,
-      statEndTm: `${date.value[1].toISOString().slice(0, 10)} ${date.value[1].toTimeString().slice(0, 5)}`,
+      statStTm: format(date.value[0], 'yyyy-MM-dd HH:mm'),
+      statEndTm: format(date.value[1], 'yyyy-MM-dd HH:mm'),
     });
   }
 }
 </script>
-<style></style>

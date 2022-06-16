@@ -47,14 +47,3 @@ onMounted(() => {
   });
 });
 </script>
-
-<style scoped>
-.avg-detail-chart {
-  width: 100%;
-  height: 50%;
-}
-.tps-detail-chart {
-  width: 100%;
-  height: 50%;
-}
-</style>

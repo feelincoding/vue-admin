@@ -10,6 +10,7 @@ import '@/style/bootstrap-vue-3.css';
 import '@/style/reset.css';
 import '@/style/common.css';
 import '@/style/admin.css';
+import '@/style/added-class.css';
 
 // import Datepicker
 import Datepicker from '@vuepic/vue-datepicker';

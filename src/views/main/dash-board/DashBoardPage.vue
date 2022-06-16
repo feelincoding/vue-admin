@@ -404,18 +404,3 @@ watch(calcedWidth, () => {
   // realTimeChart.value.resize();
 });
 </script>
-<style>
-.flip-list-move {
-  transition: transform 0.5s;
-}
-.no-move {
-  transition: transform 0s;
-}
-.ghost {
-  opacity: 0.5;
-  background: #c8ebfb;
-}
-#section-draggable {
-  cursor: move;
-}
-</style>

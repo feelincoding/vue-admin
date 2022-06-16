@@ -82,9 +82,3 @@ const addData = () => {
   data7.value.push(Math.random() * (30 - 20) + data7.value[data7.value.length - 1]);
 };
 </script>
-<style scoped>
-.realtime-modal {
-  width: 100%;
-  height: 100%;
-}
-</style>

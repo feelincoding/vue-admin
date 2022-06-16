@@ -99,32 +99,3 @@ onUnmounted(() => {
   enableScrolling();
 });
 </script>
-
-<style scoped>
-.modal-enter,
-.modal-leave-to,
-.alertLayout-enter,
-.alertLayout-leave-to {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-.modal-enter-active,
-.modal-leave-active,
-.alertLayout-enter-active,
-.alertLayout-leave-active {
-  transition: opacity 0.3s;
-}
-
-.modal-overlay {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  z-index: 30;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-}
-</style>

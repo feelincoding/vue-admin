@@ -1,0 +1,232 @@
+.large {
+  width: 600px;
+}
+
+/* ProgressBar */
+.progress {
+  transition: width 0.6s ease;
+}
+
+/* AvgDetailModal */
+.avg-detail-chart {
+  width: 100%;
+  height: 50%;
+}
+.tps-detail-chart {
+  width: 100%;
+  height: 50%;
+}
+
+/***   popup   ***/
+.modal-enter,
+.modal-leave-to,
+.alertLayout-enter,
+.alertLayout-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.modal-enter-active,
+.modal-leave-active,
+.alertLayout-enter-active,
+.alertLayout-leave-active {
+  transition: opacity 0.3s;
+}
+
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ModalLayout */
+.modal-enter,
+.modal-leave-to,
+.alertLayout-enter,
+.alertLayout-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.modal-enter-active,
+.modal-leave-active,
+.alertLayout-enter-active,
+.alertLayout-leave-active {
+  transition: opacity 0.3s;
+}
+
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* errorWrapper */
+.error-wrapper {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.error-wrapper-background {
+  background: #c0c0c0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  border-radius: 5px;
+}
+#error-wrapper-icon {
+  width: 100%;
+  height: 100%;
+  transform: scale(0.8);
+}
+
+/* RealTimeTraffic */
+.realtime-modal {
+  width: 100%;
+  height: 100%;
+}
+
+/* TimeCheck */
+.cicle-timer {
+  margin-bottom: 4px;
+  background-color: #f3f3f3;
+  width: 24px;
+  height: 24px;
+}
+
+/* TrafficDetailModal */
+.total-traffic-detail-chart {
+  width: 100%;
+  height: 70%;
+}
+.error-stat-detail-chart {
+  width: 100%;
+  height: 30%;
+}
+.request-api-detail-list {
+  position: relative;
+  margin: 10px 0px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.before-chart-width {
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.after-chart-width {
+  width: 50%;
+  transition: all 0.3s;
+}
+
+.request-api-list-pop {
+  width: 100%;
+  padding: 15px 15px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  border-left: 1px #ddd solid;
+}
+
+/* Navbar */
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+/* ServiceRow */
+.list {
+  background-color: white;
+  height: auto;
+}
+.list-slider {
+  transform-origin: top;
+  height: fit-content;
+  transform: scaleY(100%);
+  transition: all 0.3s ease-out;
+}
+.list-slider-none {
+  transform-origin: top;
+  height: 0;
+  transform: scaleY(0%);
+}
+
+/* ApiRow */
+.list-slider {
+  transform-origin: top;
+  height: fit-content;
+  transform: scaleY(100%);
+  transition: all 0.3s ease-out;
+}
+.list-slider-none {
+  transform-origin: top;
+  height: 0;
+  transform: scaleY(0%);
+  padding: 0 30px;
+}
+
+/* TimeGroup */
+.cicle-timer {
+  margin-bottom: 4px;
+  background-color: #f3f3f3;
+  width: 24px;
+  height: 24px;
+}
+
+/* TrafficServiceChart */
+.chart-group-height {
+  height: 340px;
+}
+
+/* TrafficAPIChart */
+.chart-group-height {
+  height: 340px;
+}
+
+/* TrafficDetailModal */
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* DashBoardPage */
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+#section-draggable {
+  cursor: move;
+}
