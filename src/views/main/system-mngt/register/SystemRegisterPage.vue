@@ -169,7 +169,14 @@ const showModal = () => {
   // console.log('tkcgrPosValid: ', tkcgrPosValid.value);
   // console.log('tkcgrEmlValid: ', tkcgrEmlValid.value);
   // console.log('systemItem.value: ', systemItem.value);
-  if (!val) {
+  // console.log('descValid : ', descValid.value);
+  if (
+    !val ||
+    (systemItem.value.tkcgrNm !== null && !tkcgrNmValid.value) ||
+    (systemItem.value.tkcgrPos !== null && !tkcgrPosValid.value) ||
+    (systemItem.value.tkcgrEml !== null && !tkcgrEmlValid.value) ||
+    (systemItem.value.desc !== null && !descValid.value)
+  ) {
     modal().show(t('system.empty_check_message'));
     return;
   } else {
@@ -197,6 +204,7 @@ const onSubmit = async () => {
         console.log('SYSTEM API Cancel');
       } else {
         modal().show(t('error.server_error'));
+        isBtnDisabled.value = false;
       }
     });
 };
