@@ -150,7 +150,11 @@
       @close="trafficModal = false"
       v-model:baseTime="totalTrafficBaseTime"
     ></TrafficDetailModal>
-    <AvgDetailModal v-if="avgModal" @close="avgModal = false"></AvgDetailModal>
+    <AvgDetailModal
+      v-if="avgModal"
+      @close="avgModal = false"
+      v-model:baseTime="apiResponseStatusBaseTime"
+    ></AvgDetailModal>
 
     <MainFooter></MainFooter>
   </article>
@@ -211,7 +215,6 @@ const totalTrafficBaseTime: Ref<string> = ref('');
 const apiResponseStatus: Ref<ApiResponseStatus> = ref({} as ApiResponseStatus);
 const apiResponseStatusBaseTime: Ref<string> = ref('');
 const errorStats: Ref<ErrorStatsType> = ref({} as ErrorStatsType);
-const errorStatsBaseTime: Ref<string> = ref('');
 
 const realTimeApiStat: Ref<RealTimeApiStat> = ref({} as RealTimeApiStat);
 const apiTop5List: Ref<ApiStat[]> = ref([]);
