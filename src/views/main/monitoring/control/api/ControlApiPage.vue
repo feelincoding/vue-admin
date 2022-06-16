@@ -158,5 +158,3 @@ const closeModal = () => {
   showApiDetailModal.value = false;
 };
 </script>
-
-<style scoped></style>

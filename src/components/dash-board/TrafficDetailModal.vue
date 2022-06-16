@@ -177,38 +177,3 @@ watch(chartBoxWidth, () => {
   errorStatDetailChart.value.resize();
 });
 </script>
-
-<style scoped>
-.total-traffic-detail-chart {
-  width: 100%;
-  height: 70%;
-}
-.error-stat-detail-chart {
-  width: 100%;
-  height: 30%;
-}
-.request-api-detail-list {
-  position: relative;
-  margin: 10px 0px;
-  height: 100%;
-  overflow-y: auto;
-}
-
-.before-chart-width {
-  width: 100%;
-  transition: all 0.3s;
-}
-
-.after-chart-width {
-  width: 50%;
-  transition: all 0.3s;
-}
-
-.request-api-list-pop {
-  width: 100%;
-  padding: 15px 15px;
-  margin: 0 auto;
-  margin-bottom: 30px;
-  border-left: 1px #ddd solid;
-}
-</style>

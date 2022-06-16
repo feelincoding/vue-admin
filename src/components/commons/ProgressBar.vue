@@ -32,8 +32,3 @@ onMounted(() => {
   progressBar.value = props.listItem as ApiStat;
 });
 </script>
-<style>
-.progress {
-  transition: width 0.6s ease;
-}
-</style>

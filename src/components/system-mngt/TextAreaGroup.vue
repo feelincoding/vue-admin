@@ -49,5 +49,3 @@ const v = computed({
   },
 });
 </script>
-
-<style scoped></style>

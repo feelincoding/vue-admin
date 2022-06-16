@@ -27,5 +27,3 @@ import ControlApiPage from '@/views/main/monitoring/control/api/ControlApiPage.v
 
 let selectedTab = ref('service');
 </script>
-
-<style scoped></style>

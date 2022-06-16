@@ -11,4 +11,3 @@ defineProps<{
   title: string;
 }>();
 </script>
-<style scoped></style>

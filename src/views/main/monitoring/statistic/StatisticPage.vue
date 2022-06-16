@@ -32,4 +32,3 @@ const handleOnClick = (event: any) => {
   }
 };
 </script>
-<style lang=""></style>

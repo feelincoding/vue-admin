@@ -305,5 +305,3 @@ const deleteService = (serviceId: string) => {
     });
 };
 </script>
-
-<style scoped></style>
