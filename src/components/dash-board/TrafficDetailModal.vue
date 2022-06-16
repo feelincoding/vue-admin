@@ -66,6 +66,10 @@ import MonitoringStatisticRepository from '@/repository/MonitoringStatisticRepos
 import { disableScrolling } from '@/utils/screen';
 import type { StatResponse } from '@/types/MonitoringStatisticType';
 import ErrorCode from '@/error/ErrorCodes';
+const props = defineProps({
+  baseTime: { type: String, required: true, default: '' },
+});
+
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
