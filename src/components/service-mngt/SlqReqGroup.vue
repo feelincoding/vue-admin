@@ -68,27 +68,72 @@
       <div class="sla-group">
         <div class="sla-form" v-if="showMon">
           <label class="label">Month : </label>
-          <input type="number" id="" class="input-box" placeholder="입력해주세요" v-model="month" min="1" step="1" />
+          <input
+            type="number"
+            id=""
+            class="input-box"
+            placeholder="입력해주세요"
+            v-model="month"
+            min="1"
+            step="1"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+          />
           <span>건</span>
         </div>
         <div class="sla-form" v-if="showDay">
           <label class="label">Day : </label>
-          <input type="number" id="" class="input-box" placeholder="입력해주세요" v-model="day" min="1" step="1" />
+          <input
+            type="number"
+            id=""
+            class="input-box"
+            placeholder="입력해주세요"
+            v-model="day"
+            min="1"
+            step="1"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+          />
           <span>건</span>
         </div>
         <div class="sla-form" v-if="showHr">
           <label class="label">Hour : </label>
-          <input type="number" id="" class="input-box" placeholder="입력해주세요" v-model="hour" min="1" step="1" />
+          <input
+            type="number"
+            id=""
+            class="input-box"
+            placeholder="입력해주세요"
+            v-model="hour"
+            min="1"
+            step="1"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+          />
           <span>건</span>
         </div>
         <div class="sla-form" v-if="showMin">
           <label class="label">Min : </label>
-          <input type="number" id="" class="input-box" placeholder="입력해주세요" v-model="min" min="1" step="1" />
+          <input
+            type="number"
+            id=""
+            class="input-box"
+            placeholder="입력해주세요"
+            v-model="min"
+            min="1"
+            step="1"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+          />
           <span>건</span>
         </div>
         <div class="sla-form" v-if="showSec">
           <label class="label">Sec : </label>
-          <input type="number" id="" class="input-box" placeholder="입력해주세요" v-model="sec" min="1" step="1" />
+          <input
+            type="number"
+            id=""
+            class="input-box"
+            placeholder="입력해주세요"
+            v-model="sec"
+            min="1"
+            step="1"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+          />
           <span>건</span>
         </div>
       </div>
@@ -165,7 +210,7 @@ const sec: Ref<number | null> = computed({
     if (props.secVal != null) {
       showSec.value = true;
     }
-    return props.secVal as number | null;
+    return props.secVal;
   },
   set: (val: number | null) => {
     if (val == 0) {
@@ -181,7 +226,7 @@ const min: Ref<number | null> = computed({
     if (props.minVal != null) {
       showMin.value = true;
     }
-    return props.minVal as number | null;
+    return props.minVal;
   },
   set: (val: number | null) => {
     if (val == 0) {
@@ -197,7 +242,7 @@ const hour: Ref<number | null> = computed({
     if (props.hourVal != null) {
       showHr.value = true;
     }
-    return props.hourVal as number | null;
+    return props.hourVal;
   },
   set: (val: number | null) => {
     if (val == 0) {
@@ -213,7 +258,7 @@ const day: Ref<number | null> = computed({
     if (props.dayVal != null) {
       showDay.value = true;
     }
-    return props.dayVal as number | null;
+    return props.dayVal;
   },
   set: (val: number | null) => {
     if (val == 0) {
@@ -229,7 +274,7 @@ const month: Ref<number | null> = computed({
     if (props.monthVal != null) {
       showMon.value = true;
     }
-    return props.monthVal as number | null;
+    return props.monthVal;
   },
   set: (val: number | null) => {
     if (val == 0) {
