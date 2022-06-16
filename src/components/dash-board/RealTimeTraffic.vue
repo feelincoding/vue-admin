@@ -47,7 +47,7 @@ onMounted(() => {
   window.addEventListener('resize', () => chartResize(), { passive: true });
   dom.value = document.getElementById('real-time-traffic') as HTMLDivElement;
   dom2.value = document.getElementById('chart-container') as HTMLDivElement;
-  containerHeight.value = dom2.value.clientHeight - 24;
+  containerHeight.value = dom2.value.clientHeight - 29;
   myChart.value = echarts.init(dom.value);
   for (var i = 1; i < 30; i++) {
     addData();
