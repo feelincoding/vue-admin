@@ -7,36 +7,36 @@ const router = createRouter({
     {
       path: '/',
       name: 'index',
+      redirect: '/dashboard', // 임시로 dashboard로 이동(나중에는 Login으로 이동해야함)
       component: () => import('@/views/main/MainPage.vue'),
     },
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   component: () => import('@/views/login/LoginPage.vue'),
-    // },
-    // {
-    //   path: '/signUp',
-    //   name: 'signUp',
-    //   redirect: '/signUp/stipulation',
-    //   component: () => import('@/views/login/sign-up/SignUpPage.vue'),
-    //   children: [
-    //     {
-    //       path: '/signUp/stipulation',
-    //       name: 'signUpStipulation',
-    //       component: () => import('@/views/login/sign-up/stipulation/SignUpStipulationPage.vue'),
-    //     },
-    //     {
-    //       path: '/signUp/register',
-    //       name: 'signUpRegister',
-    //       component: () => import('@/views/login/sign-up/register/SignUpRegisterPage.vue'),
-    //     },
-    //     {
-    //       path: '/signUp/complete',
-    //       name: 'signUpComplete',
-    //       component: () => import('@/views/login/sign-up/complete/SignUpCompletePage.vue'),
-    //     },
-    //   ],
-    // },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login/LoginPage.vue'),
+    },
+    {
+      path: '/signUp',
+      name: 'signUp',
+      component: () => import('@/views/login/sign-up/SignUpPage.vue'),
+      // children: [
+      //   {
+      //     path: '/signUp/stipulation',
+      //     name: 'signUpStipulation',
+      //     component: () => import('@/views/login/sign-up/stipulation/SignUpStipulationPage.vue'),
+      //   },
+      //   {
+      //     path: '/signUp/register',
+      //     name: 'signUpRegister',
+      //     component: () => import('@/views/login/sign-up/register/SignUpRegisterPage.vue'),
+      //   },
+      //   {
+      //     path: '/signUp/complete',
+      //     name: 'signUpComplete',
+      //     component: () => import('@/views/login/sign-up/complete/SignUpCompletePage.vue'),
+      //   },
+      // ],
+    },
     {
       path: '/main',
       name: 'main',
