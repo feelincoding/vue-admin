@@ -119,14 +119,26 @@ onMounted(() => {
     },
     { passive: true }
   );
+  document.addEventListener('keyup', (evt) => {
+    keyupHandler(evt);
+  });
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', () => {
     resizeChart();
   });
+  document.removeEventListener('keyup', (evt) => {
+    keyupHandler(evt);
+  });
   enableScrolling();
 });
+
+const keyupHandler = (evt: KeyboardEvent) => {
+  if (evt.key === 'Escape') {
+    emit('close');
+  }
+};
 
 const requestAllApi = () => {
   disableScrolling();

@@ -11,11 +11,11 @@ export const ERROR_STATS_PARAM: ErrorStatsRequest = {
 };
 
 export const API_RESPONSE_PARAM: ApiResponseRequest = {
-  statPerd: 1440,
+  statPerd: 2880,
 };
 
 export const REAL_TIME_PARAM: RealTimeRequest = {
-  statPerd: 1440,
+  statPerd: 2880,
   sortBase: 'totCnt',
 };
 
