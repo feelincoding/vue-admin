@@ -443,7 +443,7 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: lastTrafficList.map((item: { statBaseTm: string | any[] }) => item.statBaseTm.slice(11, 16)),
+      data: lastTrafficList.map((item: any) => item.statBaseTm.slice(11, 16)),
       splitLine: {
         show: false,
       },
@@ -497,10 +497,10 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
             return value + ' 건';
           },
         },
-        data: lastTrafficList.map((item: { todayCnt: any }) => item.todayCnt),
+        data: lastTrafficList
+          .filter((item: any) => new Date(item.statBaseTm) <= new Date())
+          .map((item: any) => item.todayCnt),
         smooth: true,
-        zlevel: 5,
-        z: 5,
       },
       {
         name: '전일',
@@ -512,10 +512,8 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
             return value + ' 건';
           },
         },
-        data: lastTrafficList.map((item: { ystdayCnt: any }) => item.ystdayCnt),
+        data: lastTrafficList.map((item: any) => item.ystdayCnt),
         smooth: true,
-        zlevel: 5,
-        z: 5,
       },
       {
         name: '전주',
@@ -527,12 +525,10 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
             return value + ' 건';
           },
         },
-        data: lastTrafficList.map((item: { lstWkCnt: any }) => {
+        data: lastTrafficList.map((item: any) => {
           return item.lstWkCnt;
         }),
         smooth: true,
-        zlevel: 5,
-        z: 5,
       },
     ],
   };
@@ -542,6 +538,9 @@ export const getLastTrafficChartOption = (lastTrafficList: any) => {
 
 export const getLastResponseChartOption = (lastResponseList: any) => {
   const o: echarts.EChartsOption = {
+    // legend: {
+    //   data: ['today, lastDay, lastWeek'],
+    // },
     legend: {
       show: true,
     },
@@ -565,7 +564,7 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
     xAxis: {
       type: 'category',
       boundaryGap: true,
-      data: lastResponseList.map((item: { statBaseTm: string | any[] }) => item.statBaseTm.slice(11, 16)),
+      data: lastResponseList.map((item: any) => item.statBaseTm.slice(11, 16)),
       splitLine: {
         show: false,
       },
@@ -603,12 +602,11 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
             return value + ' ms';
           },
         },
-        data: lastResponseList.map((item: { todayAvgResTm: number }) => {
-          return item.todayAvgResTm as number;
-        }),
+        data: lastResponseList
+          .filter((item: any) => new Date(item.statBaseTm) <= new Date())
+          .map((item: any) => item.todayAvgResTm),
+
         smooth: true,
-        zlevel: 5,
-        z: 5,
       },
       {
         name: '전일',
@@ -620,12 +618,10 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
             return value + ' ms';
           },
         },
-        data: lastResponseList.map((item: { ystdayAvgResTm: any }) => {
+        data: lastResponseList.map((item: any) => {
           return item.ystdayAvgResTm;
         }),
         smooth: true,
-        zlevel: 5,
-        z: 5,
       },
       {
         name: '전주',
@@ -637,12 +633,10 @@ export const getLastResponseChartOption = (lastResponseList: any) => {
             return value + ' ms';
           },
         },
-        data: lastResponseList.map((item: { lstWkAvgResTm: any }) => {
+        data: lastResponseList.map((item: any) => {
           return item.lstWkAvgResTm;
         }),
         smooth: true,
-        zlevel: 5,
-        z: 5,
       },
     ],
   };
