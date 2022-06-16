@@ -135,6 +135,7 @@ onMounted(() => {
       statRepository
         .getApiList(searchForm)
         .then((res) => {
+          observeSize();
           apiList.value = res;
           isShowProgress.value = false;
           apiDetailModal.value = true;
@@ -147,7 +148,6 @@ onMounted(() => {
           }
         });
     });
-    observeSize();
   });
 });
 
