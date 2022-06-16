@@ -229,3 +229,6 @@
 #section-draggable {
   cursor: move;
 }
+.dashboard .group:last-of-type {
+  margin-bottom: 0px;
+}
