@@ -7,9 +7,45 @@
           <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
         </button>
       </template>
-      <template v-slot:modalContainer
-        ><div class="error-stat-detail-chart" id="errorStatDetail"></div>
-        <div class="total-traffic-detail-chart" id="totalTrafficDetail"></div>
+      <template v-slot:modalContainer>
+        <div style="display: flex; width: 100%; height: 100%; overflow: hidden">
+          <!------- Detail Chart -------->
+          <div
+            style="height: 100%"
+            :class="{ 'before-chart-width': !apiDetailModal, 'after-chart-width': apiDetailModal }"
+            ref="trafficDetailRef"
+          >
+            <div class="error-stat-detail-chart" id="errorStatDetail"></div>
+            <div class="total-traffic-detail-chart" id="totalTrafficDetail"></div>
+          </div>
+          <!------- request API List -------->
+          <div v-if="apiDetailModal" class="request-api-list-pop">
+            <div class="pop-header">
+              <h2 class="h2-tit">Request API List</h2>
+              <button @click="hideModal">
+                <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
+              </button>
+            </div>
+            <div class="pop-container">
+              <p class="total">
+                요청된 API 수 : <span>{{ apiList.apiStat?.length }}</span>
+              </p>
+              <div class="request-api-detail-list" v-if="!isShowProgress">
+                <div class="service-list">
+                  <ul>
+                    <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
+                  </ul>
+                </div>
+              </div>
+              <div class="service-list">
+                <div style="position: relative; text-align: center" v-if="isShowProgress">
+                  <b-spinner label="Large Spinner"></b-spinner>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!------- handler pop -------->
+        </div>
       </template>
       <template v-slot:modalFooter
         ><button class="lg-btn purple-btn" @click="$emit('close')">
@@ -17,41 +53,6 @@
         </button>
       </template>
     </ModalLayout>
-
-    <transition v-if="apiDetailModal" id="app" class="body-wrap" name="modal">
-      <div class="modal-overlay">
-        <!------- handler pop -------->
-        <div class="pop-wrap mid-pop">
-          <div class="pop-header">
-            <h2 class="h2-tit">Request API List</h2>
-            <button @click="hideModal">
-              <i><img src="@/assets/close.svg" alt="닫기" title="닫기" /></i>
-            </button>
-          </div>
-          <div class="pop-container">
-            <p class="total">
-              요청된 API 수 : <span>{{ apiList.apiStat?.length }}</span>
-            </p>
-            <div class="request-api-detail-list" v-if="!isShowProgress">
-              <div class="service-list">
-                <ul>
-                  <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
-                </ul>
-              </div>
-            </div>
-            <div class="service-list">
-              <div style="position: relative; text-align: center" v-if="isShowProgress">
-                <b-spinner label="Large Spinner"></b-spinner>
-              </div>
-            </div>
-          </div>
-          <div class="pop-footer">
-            <button class="lg-btn purple-btn" @click="hideModal">확인</button>
-          </div>
-        </div>
-        <!------- handler pop -------->
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -146,6 +147,7 @@ onMounted(() => {
           }
         });
     });
+    observeSize();
   });
 });
 
@@ -154,6 +156,26 @@ let timerId = 0;
 const hideModal = () => {
   apiDetailModal.value = false;
 };
+
+const chartBoxWidth = ref(0);
+const chartBoxHeight = ref(0);
+const trafficDetailRef = ref<HTMLDivElement | null>(null);
+const observeSize = () => {
+  const ro = new ResizeObserver((entries) => {
+    entries.forEach((entry) => {
+      const { width, height } = entry.contentRect;
+      chartBoxWidth.value = width;
+      chartBoxHeight.value = height;
+    });
+  });
+  ro.observe(trafficDetailRef.value as HTMLDivElement);
+};
+
+watch(chartBoxWidth, () => {
+  console.log('resize');
+  totalTrafficDetailChart.value.resize();
+  errorStatDetailChart.value.resize();
+});
 </script>
 
 <style scoped>
@@ -170,5 +192,23 @@ const hideModal = () => {
   margin: 10px 0px;
   height: 100%;
   overflow-y: auto;
+}
+
+.before-chart-width {
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.after-chart-width {
+  width: 50%;
+  transition: all 0.3s;
+}
+
+.request-api-list-pop {
+  width: 100%;
+  padding: 15px 15px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  border-left: 1px #ddd solid;
 }
 </style>
