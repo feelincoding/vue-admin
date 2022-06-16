@@ -143,16 +143,8 @@ const isShowProgress = ref(false);
 const apiDetail: Ref<ApiCreateRequestBody | null> = ref(null);
 const system: Ref<SystemResponse | null> = ref(null);
 
-let sendHandlerGroup: Ref<HandlerGroupDetail[]> = ref([
-  {
-    id: '',
-    hndlr: [],
-    desc: '',
-  },
-]);
-
-const reqHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(sendHandlerGroup);
-const resHandlerGroupList: Ref<HandlerGroupDetail[]> = ref(sendHandlerGroup);
+const reqHandlerGroupList: Ref<HandlerGroupDetail[]> = ref([]);
+const resHandlerGroupList: Ref<HandlerGroupDetail[]> = ref([]);
 const edptList: Ref<string[]> = ref([]);
 
 const requestBody: Ref<ApiUpdateRequestBody> = ref({
