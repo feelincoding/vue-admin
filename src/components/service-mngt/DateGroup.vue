@@ -5,17 +5,25 @@
       <div class="date-wrap">
         <div class="date-cont">
           <Datepicker
-            multiCalendars
             locale="ko-KR"
+            :format="startDateFormat"
             :disabled="disabled"
             v-model="startDate"
             :minDate="new Date()"
+            :enableTimePicker="false"
             @focus="notice()"
           />
         </div>
         <span class="text">~</span>
         <div class="date-cont">
-          <Datepicker multiCalendars locale="ko-KR" v-model="endDate" :minDate="startDt" @focus="notice()" />
+          <Datepicker
+            locale="ko-KR"
+            :format="endDateFormat"
+            v-model="endDate"
+            :minDate="startDt"
+            :enableTimePicker="false"
+            @focus="notice()"
+          />
         </div>
       </div>
       <p v-if="(validation && startDate == null) || (validation && endDate == null)" class="red-txt noti">
@@ -26,6 +34,7 @@
 </template>
 <script setup lang="ts">
 import Datepicker from '@vuepic/vue-datepicker';
+import { format } from 'date-fns';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { computed, ref, watch } from 'vue';
 import type { Ref } from 'vue';
@@ -43,8 +52,18 @@ const emit = defineEmits<{
   (e: 'update:endDt', value: string | null): void;
 }>();
 
-const format = (dates: Date) => {
-  return `${dates.toISOString().slice(0, 10)} `;
+const startDateFormat = () => {
+  if (!startDate.value) {
+    return '';
+  }
+  return format(startDate.value, 'yyyy-MM-dd HH:mm:ss');
+};
+
+const endDateFormat = () => {
+  if (!endDate.value) {
+    return '';
+  }
+  return format(endDate.value, 'yyyy-MM-dd HH:mm:ss');
 };
 
 const validation = ref(false);
