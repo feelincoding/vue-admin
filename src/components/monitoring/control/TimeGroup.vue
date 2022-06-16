@@ -181,11 +181,3 @@ const minutes = [
   },
 ];
 </script>
-<style>
-.cicle-timer {
-  margin-bottom: 4px;
-  background-color: #f3f3f3;
-  width: 24px;
-  height: 24px;
-}
-</style>

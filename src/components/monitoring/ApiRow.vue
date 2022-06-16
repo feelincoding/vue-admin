@@ -98,17 +98,3 @@ function onClickRow() {
   isOpen.value = !isOpen.value;
 }
 </script>
-<style scoped>
-.list-slider {
-  transform-origin: top;
-  height: fit-content;
-  transform: scaleY(100%);
-  transition: all 0.3s ease-out;
-}
-.list-slider-none {
-  transform-origin: top;
-  height: 0;
-  transform: scaleY(0%);
-  padding: 0 30px;
-}
-</style>

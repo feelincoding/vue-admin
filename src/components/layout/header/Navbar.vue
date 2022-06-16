@@ -126,13 +126,3 @@ const servicePath = SERVICE;
 const monitoringPath = MONITORING;
 const managementPath = MANAGEMENT;
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-</style>
