@@ -1,9 +1,7 @@
 <template>
   <ListLayout :title="$t('system.list_top_title')">
     <template v-slot:search-form>
-      <!-- <template slot='search-form'> -->
       <div class="search-wrap">
-        <!-- Input Box 옵션 -->
         <InputBox
           v-model="(searchData['id'] as string)"
           :label="$t('system.id')"
@@ -120,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, inject } from 'vue';
 import type { Ref } from 'vue';
 
 import ListLayout from '@/components/layout/ListLayout.vue';
@@ -141,14 +139,19 @@ import ErrorCode from '@/error/ErrorCodes';
 
 import { useRoute, useRouter } from 'vue-router';
 import { BSpinner } from 'bootstrap-vue-3';
+import { useI18n } from 'vue-i18n';
+import { modalInjectionKey, type ModalFunction } from '@/plugins/modal/ModalPlugin';
+import { useToast } from 'vue-toastification';
 
 const router = useRouter();
+const modal = inject(modalInjectionKey) as ModalFunction;
+const { t } = useI18n();
+const toast = useToast();
 
 const systemModule = new SystemModule();
 
 const listOption: Ref<SystemResponse[]> = ref([]);
-// const systemPagination: Ref<Pagination|null> = ref(null);
-// const systemPagination: Ref<Pagination> = ref({} as Pagination);
+const searchData: Ref<SearchCondition> = ref({});
 const systemPagination: Ref<Pagination> = ref({
   page: 0,
   size: 0,
@@ -160,28 +163,12 @@ const systemPagination: Ref<Pagination> = ref({
   sortBy: '',
   limit: 0,
 });
-// const systemPagination: Ref<Pagination> = ref({}) as Ref<Pagination>;
-// const systemPagination: Ref<Pagination> = ref({
-//   page: 0,
-//   size: 0,
-//   totalElements: 0,
-//   totalPage: 0,
-//   currentElements: 0,
-//   currentPage: 0,
-//   orderBy: '',
-//   sortBy: '',
-//   limit: 0,
-// });
 
-const searchData: Ref<SearchCondition> = ref({});
-const DateList: Ref<string[][]> = ref([]);
-
+const currId = ref('');
 const isShowProgress = ref(true);
 const isShowModal = ref(false);
 const isDisabled = ref(false);
 const isListEmpty = ref(false);
-
-const currId = ref('');
 
 const route = useRoute();
 
@@ -192,6 +179,7 @@ watch(listOption, () => {
     isListEmpty.value = false;
   }
 });
+
 onMounted(() => {
   let param = {} as SearchCondition;
   if (Object.keys(route.query).filter((key) => key === 'id' && route.query[key] !== '').length > 0) {
@@ -203,68 +191,38 @@ onMounted(() => {
     searchData.value.tkcgrNm = param.tkcgrNm;
   }
 
-  // if (Object.entries(route.query).filter((x) => x[0] === 'id' && x[1] !== '').length > 0) {
-  //   param.id = route.query.id as string;
-  //   searchData.value.id = param.id;
-  // }
-  // if (Object.entries(route.query).filter((x) => x[0] === 'tkcgrNm' && x[1] !== '').length > 0) {
-  //   param.tkcgrNm = route.query.tkcgrNm as string;
-  //   searchData.value.tkcgrNm = param.tkcgrNm;
-  // }
   if (Object.keys(route.query).includes('page')) param.page = route.query.page as string;
 
   _getSystemList(param);
 });
 
+// CRUD 관련
 const _getSystemList = (param: SearchCondition) => {
-  // console.log('_getSystemList param: ', param);
   isShowProgress.value = true;
-  // console.log('param : ', param);
   systemModule
     .getSystemList(param)
     .then((res) => {
-      // console.log('getSystemList res: ', res);
-
       isShowProgress.value = false;
 
       listOption.value = res.value;
       systemPagination.value = res.pagination as Pagination;
-      // listOption.value = res.value;
-      // systemPagination.value = res.pagination as Pagination;
     })
     .catch((error: GateWayError) => {
       if (error.getErrorCode() == ErrorCode.CANCEL_ERROR) {
         console.log('SYSTEM API Cancel');
       } else {
         isShowProgress.value = false;
-        // this.$modal.show(`${this.$t('error.server_error')}`);
+        modal().show(t('error.server_error'));
       }
     });
 };
 
-const searchOnClieckEvent = () => {
-  // console.log('searchOnClieckEvent', JSON.stringify(searchData.value));
-  delete searchData.value.page;
-  Object.keys(searchData.value).forEach((key) => {
-    const value = searchData.value[key as keyof SearchCondition];
-    if (value === '') delete searchData.value[key as keyof SearchCondition];
-  });
-  // console.log('searchOnClieckEvent', searchData.value);
-  // console.log('searchOnClieckEvent', searchData.value.id, searchData.value.tkcgrNm);
-
-  // for (const [key, value] of Object.entries(this.searchData)) {
-  //   if (value === '') delete searchData.value[key as keyof SearchCondition];
-  // }
-  getList('search');
-};
 const getList = (option: string) => {
   let param = {} as SearchCondition;
 
   if (option === 'page') {
     // 1. 페이지 이동
     param.page = searchData.value.page;
-    // console.log('param : ', param);
-    // console.log('getList : ', option);
 
     if (Object.keys(route.query).filter((key) => key === 'id' && route.query[key] !== '').length > 0) {
       param.id = route.query.id as string;
@@ -272,17 +230,11 @@ const getList = (option: string) => {
     if (Object.keys(route.query).filter((key) => key === 'tkcgrNm' && route.query[key] !== '').length > 0) {
       param.tkcgrNm = route.query.tkcgrNm as string;
     }
-
-    // if (Object.entries(route.query).filter((x) => x[0] === 'id' && x[1] !== '').length > 0)
-    //   param.id = route.query.id as string;
-    // if (Object.entries(route.query).filter((x) => x[0] === 'tkcgrNm' && x[1] !== '').length > 0)
-    //   param.tkcgrNm = route.query.tkcgrNm as string;
   } else if (option === 'search') {
     // 2. 검색 조건 변경
     if (searchData.value.id !== undefined) param.id = searchData.value.id;
     if (searchData.value.tkcgrNm !== undefined) param.tkcgrNm = searchData.value.tkcgrNm;
   }
-  // console.log('getList param : ', param);
   if (Object.is(JSON.stringify(router.currentRoute.value.query), JSON.stringify(param))) {
     _getSystemList(param);
   } else {
@@ -292,23 +244,7 @@ const getList = (option: string) => {
     });
   }
 };
-const onChangedPage = (page: number) => {
-  searchData.value.page = String(page);
-  getList('page');
-};
 
-const registerOnClickEvent = () => {
-  router.push({ name: 'system-register' });
-  // router.push(to: '/system/register');
-};
-
-const getRoutePage = (page: string, id?: string): void => {
-  if (id) {
-    router.push({ name: page, params: { id: id } });
-  } else {
-    router.push({ name: page });
-  }
-};
 const deleteSystem = async () => {
   isDisabled.value = true;
 
@@ -320,17 +256,47 @@ const deleteSystem = async () => {
       searchData.value = {};
 
       _getSystemList(searchData.value);
-      // $toast.success($t('common.delete_success'), {
-      //   toastClassName: ['toast-success-custom-class'],
-      // });
+      toast.success(t('common.delete_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
     })
     .catch((error: GateWayError | any) => {
       if (error.getErrorCode() == ErrorCode.SYSTEM_DELETE_FAILED) {
-        // $toast.error($t('system.system_delete_fail', { system_name: currId }));
+        toast.error(t('system.system_delete_fail', { system_name: currId }));
       }
       isDisabled.value = false;
     });
 };
+
+// click event 함수
+const searchOnClieckEvent = () => {
+  delete searchData.value.page;
+  Object.keys(searchData.value).forEach((key) => {
+    const value = searchData.value[key as keyof SearchCondition];
+    if (value === '') delete searchData.value[key as keyof SearchCondition];
+  });
+
+  getList('search');
+};
+
+const onChangedPage = (page: number) => {
+  searchData.value.page = String(page);
+  getList('page');
+};
+
+const registerOnClickEvent = () => {
+  router.push({ name: 'system-register' });
+};
+
+// get 함수
+const getRoutePage = (page: string, id?: string): void => {
+  if (id) {
+    router.push({ name: page, params: { id: id } });
+  } else {
+    router.push({ name: page });
+  }
+};
+
 const getIdx = (index: number): number => {
   return systemPagination.value.totalElements - systemPagination.value.currentPage * 10 - index;
 };
@@ -343,6 +309,7 @@ const getHours = (date: string) => {
   return convertTime(date);
 };
 
+// 모달 on/off
 const showModal = (id: string) => {
   currId.value = id;
   isShowModal.value = true;
@@ -352,5 +319,3 @@ const closeModal = () => {
   isShowModal.value = false;
 };
 </script>
-
-<style scoped></style>
