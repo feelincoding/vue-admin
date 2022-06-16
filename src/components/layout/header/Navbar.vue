@@ -33,8 +33,10 @@
           :class="{
             on: navState.showMonitoring || $route.path.includes('monitoring'),
           }"
+          @mouseenter="changeShowMonitoring()"
+          @mouseleave="changeHideMonitoring()"
         >
-          <a href="javascript:void(0)" @mouseenter="changeShowMonitoring()">Monitoring 관리</a>
+          <a href="javascript:void(0)">Monitoring 관리</a>
           <!-- <a href="javascript:void(0)" @click="changeShowMonitoring()">Monitoring 관리</a> -->
           <Transition name="fade" appear>
             <div class="depth-menu" v-show="navState.showMonitoring || $route.path.includes('monitoring')">
@@ -101,15 +103,11 @@ const navState: Ref<NavState> = ref({
 });
 
 const changeShowMonitoring = () => {
-  if (!navState.value.showMonitoring) {
-    navState.value.showMonitoring = true;
-    if (navState.value.showManagement) {
-      navState.value.showManagement = false;
-    }
-  } else {
-    navState.value.showMonitoring = false;
-  }
-  console.log(navState.value.showMonitoring);
+  navState.value.showMonitoring = true;
+};
+
+const changeHideMonitoring = () => {
+  navState.value.showMonitoring = false;
 };
 
 const changeNavState = (state: string) => {

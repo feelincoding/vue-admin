@@ -60,11 +60,11 @@
         class="group"
         id="section-draggable"
         :style="{
-          height: `${getRealTimeSectionHeight()}px`,
+          height: `${realTimeSectionHeight}px`,
         }"
       >
         <!--- 실시간 Traffic area --->
-        <RealTimeTraffic />
+        <RealTimeTraffic :containerHeight="realTimeSectionHeight" />
       </section>
 
       <section class="grid-group" id="section-draggable">
@@ -230,13 +230,22 @@ const isApiTop5CommError = ref(false);
 const isServiceTop5CommError = ref(false);
 const isLastTrafficCommError = ref(false);
 const isLastResponseCommError = ref(false);
+const realTimeSectionHeight = ref(0);
 
 const dashBoardRepo = new DashBoardRepository();
 
 onMounted(() => {
   requestAllApi();
+  getRealTimeSectionHeight();
   initCharts();
-  window.addEventListener('resize', () => chartResize(), { passive: true });
+  window.addEventListener(
+    'resize',
+    () => {
+      chartResize();
+      getRealTimeSectionHeight();
+    },
+    { passive: true }
+  );
 });
 
 const requestAllApi = () => {
@@ -334,7 +343,7 @@ watch(lastResponseList, () => {
 });
 
 const getRealTimeSectionHeight = () => {
-  return window.innerHeight - 768.5;
+  realTimeSectionHeight.value = window.innerHeight - 763.6;
 };
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);

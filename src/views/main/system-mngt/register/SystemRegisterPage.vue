@@ -16,16 +16,6 @@
             @input="duplicateCheckId()"
             v-model:isValid="idValid"
           />
-          <!-- <TextDebounceForm
-          type="text"
-          :check="isDuplicatedId"
-          v-model="systemItem.id"
-          v-model:isValid.sync="idValid"
-          :inputNm="$t('system.id')"
-          :placeholder="$t('system.id_placeholder')"
-          :required="true"
-          @input="duplicateCheckId"
-        /> -->
           <EdptForm
             :inputNm="$t('system.edpt')"
             v-model:strArr.sync="systemItem.edpt"
@@ -58,7 +48,6 @@
             :place="$t('system.tkcgrEml_placeholder', { account: 'example', domain: 'kt.com' })"
             v-model:isValid.sync="tkcgrEmlValid"
           />
-          <!-- :place="$t('system.tkcgrEml_placeholder')" -->
           <TextAreaGroup
             :inputNm="$t('system.desc')"
             v-model:value.sync="systemItem.desc"
@@ -103,12 +92,12 @@ import EdptForm from '@/components/system-mngt/EdptForm.vue';
 import ModalLayout from '@/components/commons/modal/ModalLayout.vue';
 import type { SystemRegisterResponse } from '@/types/SystemType';
 
-import { ref, reactive, computed, watch, onMounted, inject } from 'vue';
+import { ref, inject } from 'vue';
 import type { Ref } from 'vue';
 
 import { BSpinner } from 'bootstrap-vue-3';
 
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { modalInjectionKey } from '@/plugins/modal/ModalPlugin';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
@@ -116,7 +105,6 @@ import ErrorCode from '@/error/ErrorCodes';
 import type { GateWayError } from '@/error/GateWayError';
 const toast = useToast();
 const { t } = useI18n({});
-const route = useRoute();
 const router = useRouter();
 const modal = inject(modalInjectionKey)!!;
 
@@ -175,13 +163,20 @@ const duplicateCheckId = () => {
 const showModal = () => {
   const val = idValid.value && isDuplicatedId.value && edptValid.value ? true : false;
   // console.log('idValid: ', idValid.value);
+  // console.log('isDuplicatedId: ', isDuplicatedId.value);
+  // console.log('edptValid: ', edptValid.value);
   // console.log('tkcgrNmValid: ', tkcgrNmValid.value);
   // console.log('tkcgrPosValid: ', tkcgrPosValid.value);
   // console.log('tkcgrEmlValid: ', tkcgrEmlValid.value);
-  // console.log('edptValid: ', edptValid.value);
-  // console.log('val: ', val);
   // console.log('systemItem.value: ', systemItem.value);
-  if (!val) {
+  // console.log('descValid : ', descValid.value);
+  if (
+    !val ||
+    (systemItem.value.tkcgrNm !== null && !tkcgrNmValid.value) ||
+    (systemItem.value.tkcgrPos !== null && !tkcgrPosValid.value) ||
+    (systemItem.value.tkcgrEml !== null && !tkcgrEmlValid.value) ||
+    (systemItem.value.desc !== null && !descValid.value)
+  ) {
     modal().show(t('system.empty_check_message'));
     return;
   } else {
@@ -209,6 +204,7 @@ const onSubmit = async () => {
         console.log('SYSTEM API Cancel');
       } else {
         modal().show(t('error.server_error'));
+        isBtnDisabled.value = false;
       }
     });
 };

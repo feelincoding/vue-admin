@@ -145,7 +145,9 @@ watch(edpts.value, () => {
   }
 
   let valid: boolean | null | string = true;
-  notiMessageDomain.value.forEach((domain) => {});
+  notiMessageDomain.value.forEach((domain) => {
+    valid = valid && domain.isValid;
+  });
   notiMessagePort.value.forEach((port) => {
     valid = valid && port.isValid;
   });
