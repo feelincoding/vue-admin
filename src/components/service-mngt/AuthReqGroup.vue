@@ -66,16 +66,11 @@
       <!-- /JWT -->
       <p
         v-if="
-          (showInput && algPick == 'null') ||
+          (showInput && algPick == '') ||
           (showInput && JWTissuer == '') ||
           (showInput && JWTsubject == '') ||
           (showInput && JWTpublicKey == '') ||
-          (showInput && algPick == null) ||
-          (showInput && JWTissuer == null) ||
-          (showInput && JWTsubject == null) ||
-          (showInput && JWTpublicKey == null) ||
           (auth == 'basic' && basicId == '') ||
-          (auth == 'basic' && basicId == null) ||
           !props.isValid
         "
         class="red-txt noti"
@@ -92,25 +87,25 @@ const props = defineProps<{
   inputNm: string;
   athn: string;
   alg: string[];
-  issuer: string | null;
-  subject: string | null;
+  issuer: string;
+  subject: string;
   publicKey: string;
-  pickedAlg: string | null;
-  basicId: string | null;
-  basicPw: string | null;
+  pickedAlg: string;
+  basicId: string;
+  basicPw: string;
   isValid: boolean | null;
   progress: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: 'update:isValid', value: boolean | null): void;
-  (e: 'update:basicId', value: string | null): void;
-  (e: 'update:basicPw', value: string | null): void;
-  (e: 'update:pickedAlg', value: string | null): void;
+  (e: 'update:basicId', value: string): void;
+  (e: 'update:basicPw', value: string): void;
+  (e: 'update:pickedAlg', value: string): void;
   (e: 'update:alg', value: string[]): void;
-  (e: 'update:issuer', value: string | null): void;
-  (e: 'update:subject', value: string | null): void;
-  (e: 'update:publicKey', value: string | null): void;
+  (e: 'update:issuer', value: string): void;
+  (e: 'update:subject', value: string): void;
+  (e: 'update:publicKey', value: string): void;
   (e: 'update:athn', value: string): void;
   (e: 'basicAuthClicked'): void;
 }>();
@@ -124,10 +119,10 @@ watch(
       if (val == '' || val == null) {
         emit('update:isValid', false);
       } else {
-        emit('update:pickedAlg', null);
-        emit('update:issuer', null);
-        emit('update:subject', null);
-        emit('update:publicKey', null);
+        emit('update:pickedAlg', '');
+        emit('update:issuer', '');
+        emit('update:subject', '');
+        emit('update:publicKey', '');
         emit('update:isValid', true);
       }
     }
@@ -155,8 +150,8 @@ const algPick = computed({
   set: (val) => {
     emit('update:pickedAlg', val);
     if (auth.value == 'jwt') {
-      emit('update:basicId', null);
-      emit('update:basicPw', null);
+      emit('update:basicId', '');
+      emit('update:basicPw', '');
       if (
         algPick.value != 'null' &&
         JWTissuer.value != '' &&
@@ -181,8 +176,8 @@ const JWTissuer = computed({
   set: (val) => {
     emit('update:issuer', val);
     if (auth.value == 'jwt') {
-      emit('update:basicId', null);
-      emit('update:basicPw', null);
+      emit('update:basicId', '');
+      emit('update:basicPw', '');
       if (
         algPick.value != 'null' &&
         JWTissuer.value != '' &&
@@ -207,8 +202,8 @@ const JWTsubject = computed({
   set: (val) => {
     emit('update:subject', val);
     if (auth.value == 'jwt') {
-      emit('update:basicId', null);
-      emit('update:basicPw', null);
+      emit('update:basicId', '');
+      emit('update:basicPw', '');
       if (
         algPick.value != 'null' &&
         JWTissuer.value != '' &&
@@ -233,8 +228,8 @@ const JWTpublicKey = computed({
   set: (val) => {
     emit('update:publicKey', val);
     if (auth.value == 'jwt') {
-      emit('update:basicId', null);
-      emit('update:basicPw', null);
+      emit('update:basicId', '');
+      emit('update:basicPw', '');
       if (
         algPick.value != 'null' &&
         JWTissuer.value != '' &&
