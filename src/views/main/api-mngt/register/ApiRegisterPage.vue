@@ -170,32 +170,21 @@ const requestBody: Ref<ApiCreateRequestBody> = ref({
 });
 
 let timerId = -1;
-
-const fetchApiDetail = async () => {
-  systemModule.getSystemIdEdptList().then((res) => {
-    systemIdEdptList.value = res;
-  });
-};
-
-const fetchReqHandlerGroupList = async () => {
-  handlerModule.getReqHandlerGroupList().then((res) => {
-    reqHandlerGroupList.value = res;
-  });
-};
-
-const fetchResHandlerGroupList = async () => {
-  handlerModule.getResHandlerGroupList().then((res) => {
-    resHandlerGroupList.value = res;
-  });
-};
-
 onMounted(() => {
-  Promise.all([fetchApiDetail(), fetchReqHandlerGroupList(), fetchResHandlerGroupList()])
-    .then(() => {
+  Promise.all([
+    systemModule.getSystemIdEdptList(),
+    handlerModule.getReqHandlerGroupList(),
+    handlerModule.getResHandlerGroupList(),
+  ])
+    .then((res) => {
+      systemIdEdptList.value = res[0];
+      reqHandlerGroupList.value = res[1];
+      resHandlerGroupList.value = res[2];
       showPage.value = true;
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(() => {
+      showPage.value = true;
+      modal().show(t('error.server_error'));
     });
 });
 const textDebounceFormDisabled = ref(true);

@@ -6,7 +6,7 @@
     :isShowProgress="isShowProgress"
     :isEmShow="false"
   >
-    <template v-slot:contents v-if="!isShowProgress && apiDetail">
+    <template v-slot:contents v-if="!isShowProgress">
       <!-- 레이아웃을 제외한 실제 컨텐츠 부분을 넣어주세요 -->
       <div class="form-wrap">
         <ul>
