@@ -14,21 +14,18 @@
         <ul>
           <TextForm
             :groupNm="$t('api.sysId') + ' :'"
-            type="text"
             :required="true"
             v-model:value="requestBody.sysId"
             :disabled="true"
           />
           <TextForm
             :groupNm="$t('api.apiId') + ' :'"
-            type="text"
             :required="true"
             v-model:value="requestBody.id"
             :disabled="true"
           />
           <TextForm
             :groupNm="$t('api.interfaceNumber') + ' :'"
-            type="text"
             :required="true"
             :disabled="true"
             v-model:value="requestBody.ifNo"
@@ -44,7 +41,6 @@
           <EndPointGroup groupNm="End-point :" :edptList="edptList" />
 
           <HandlerGroupForm
-            :groupNm="$t('api.resHndlrGrp') + ' :'"
             :reqHandlerGroupList="reqHandlerGroupList"
             :resHandlerGroupList="resHandlerGroupList"
             :resHandlerGroupId="requestBody.resHndlrGrpId"
@@ -60,45 +56,40 @@
               }
             "
           />
-          <TextForm
+          <NumberForm
             :groupNm="$t('api.timeOutMS') + ' :'"
-            type="number"
             :required="true"
             v-model:value="requestBody.timeOut"
             v-model:isvalid="timeoutValid"
           />
         </ul>
-
-        <div class="form-wrap option-wrap">
-          <h3 class="h3-tit">선택 입력 항목 :</h3>
-          <ul>
-            <TextForm
-              :groupNm="$t('api.apiDescription') + ' :'"
-              type="textarea"
-              v-model:value="requestBody.desc"
-              v-model:isvalid="descValid"
-            />
-          </ul>
-        </div>
-
-        <ModalLayout size="s" v-if="showModal">
-          <template v-slot:modalHeader><h1 class="h1-tit">API 수정</h1> </template>
-          <template v-slot:modalContainer>
-            <p class="text">API를 수정하시겠습니까?</p>
-          </template>
-          <template v-slot:modalFooter>
-            <button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button>
-            <button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
-          </template>
-        </ModalLayout>
       </div>
+      <div class="form-wrap option-wrap">
+        <h3 class="h3-tit">선택 입력 항목 :</h3>
+        <ul>
+          <TextareaForm
+            :groupNm="$t('api.apiDescription') + ' :'"
+            v-model:value="requestBody.desc"
+            v-model:isvalid="descValid"
+          />
+        </ul>
+      </div>
+
+      <ModalLayout size="s" v-if="showModal">
+        <template v-slot:modalHeader><h1 class="h1-tit">API 수정</h1> </template>
+        <template v-slot:modalContainer>
+          <p class="text">API를 수정하시겠습니까?</p>
+        </template>
+        <template v-slot:modalFooter>
+          <button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button>
+          <button class="lg-btn white-btn" @click="showModal = false">{{ $t('common.cancel') }}</button>
+        </template>
+      </ModalLayout>
     </template>
     <!-- for progress -->
     <template v-slot:buttons v-if="!isShowProgress">
       <!-- 레이아웃과 컨텐츠를 제외한 나머지 버튼들을 넣어주세요 -->
       <div class="btn-wrap">
-        <!-- <button class="lg-btn purple-btn" @click="handleClickTestSubmitButton">수정테스트</button> -->
-        <!-- <button class="lg-btn purple-btn" @click="$router.push({ path: '/api' })">{{ $t('api.edit') }}</button> -->
         <button :disabled="isButtonDisabled" class="lg-btn purple-btn" @click="onClickSubmitButton">
           {{ $t('api.edit') }}
           <b-spinner variant="light" label="Spinning" v-if="isButtonDisabled" small></b-spinner>
@@ -116,6 +107,8 @@ import type { ApiCreateRequestBody, ApiUpdateRequestBody } from '@/types/ApiType
 import type { HandlerGroupDetail } from '@/types/HandlerType';
 import HandlerGroupForm from '@/components/api-mngt/register/HandlerGroupForm.vue';
 import TextForm from '@/components/api-mngt/register/TextForm.vue';
+import NumberForm from '@/components/api-mngt/register/NumberForm.vue';
+import TextareaForm from '@/components/api-mngt/register/TextareaForm.vue';
 import MethodForm from '@/components/api-mngt/register/MethodForm.vue';
 import UriForm from '@/components/api-mngt/register/UriForm.vue';
 import EndPointGroup from '@/components/api-mngt/register/EndPointGroup.vue';
@@ -156,7 +149,7 @@ const requestBody: Ref<ApiUpdateRequestBody> = ref({
   uriOut: '',
   reqHndlrGrpId: '',
   resHndlrGrpId: '',
-  timeOut: 15000,
+  timeOut: 0,
   desc: '',
 });
 

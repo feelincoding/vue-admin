@@ -2,17 +2,8 @@
   <li>
     <label for="" class="label" :class="{ point: required }">{{ groupNm }}</label>
     <div class="form-cont">
-      <input v-if="disabled" type="text" :value="value" class="input-box lg" disabled :placeholder="placeholder" />
-      <input
-        v-if="!disabled"
-        type="text"
-        class="input-box lg"
-        :class="{ 'check-ok': notiMessage.isCheck, 'check-false': !notiMessage.isCheck && show }"
-        v-model="text"
-        :placeholder="placeholder"
-        @focus="notice()"
-      />
-      <p v-if="show && notiMessage.isCheck === null" class="red-txt noti">해당 목록은 필수 입력값입니다.</p>
+      <textarea class="textarea" @input="handleOnChange" :value="longText" :placeholder="placeholder"></textarea>
+
       <p v-if="notiMessage.isCheck === false" class="red-txt noti">{{ notiMessage.message }}</p>
     </div>
   </li>
@@ -39,34 +30,37 @@ const validationCheck: ValidationCheckType = {
 };
 
 const notiMessage = ref(validationCheck);
-const text = ref('');
+const longText = ref('');
 const show = ref(false);
 
 onMounted(() => {
-  text.value = props.value;
+  longText.value = props.value;
 });
 
 const emit = defineEmits<{
   (e: 'update:value', value: string): void;
   (e: 'update:isvalid', value: boolean): void;
 }>();
-
-watch(text, (val: string) => {
-  if (checkLength(val, 1, 20)) {
+watch(
+  () => props.value,
+  (val: string) => {
+    longText.value = val;
+  }
+);
+watch(longText, (val: string) => {
+  if (val.length > 1000) {
+    notiMessage.value.isCheck = false;
+    notiMessage.value.message = t('api.valid_check_desc');
+  } else {
     notiMessage.value.isCheck = true;
     notiMessage.value.message = '';
-
-    emit('update:value', val);
-  } else if (val == '') {
-    notiMessage.value.isCheck = false;
-    notiMessage.value.message = '';
-  } else {
-    notiMessage.value.isCheck = false;
-    notiMessage.value.message = t('api.valid_check_nm');
   }
-
   emit('update:isvalid', notiMessage.value.isCheck);
 });
+
+const handleOnChange = (event: any) => {
+  emit('update:value', event.target.value);
+};
 
 const notice = () => {
   show.value = true;

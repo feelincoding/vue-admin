@@ -54,38 +54,36 @@
               }
             "
           />
-          <TextForm
+          <NumberForm
             :groupNm="$t('api.timeOutMS') + ' :'"
-            type="number"
             :required="true"
             v-model:value="requestBody.timeOut"
             v-model:isvalid="timeoutValid"
           />
         </ul>
-        <div class="form-wrap option-wrap">
-          <h3 class="h3-tit">선택 입력 항목</h3>
-          <ul>
-            <TextForm
-              :groupNm="$t('api.apiDescription') + ' :'"
-              type="textarea"
-              v-model:value="requestBody.desc"
-              v-model:isvalid="descValid"
-            />
-          </ul>
-        </div>
-        <ModalLayout size="s" v-if="isShowModal">
-          <template v-slot:modalHeader
-            ><h1 class="h1-tit">{{ $t('api.apiRegister') }}</h1>
-          </template>
-          <template v-slot:modalContainer>
-            <p class="text">{{ $t('api.confirm_api_register') }}</p>
-          </template>
-          <template v-slot:modalFooter
-            ><button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button
-            ><button class="lg-btn white-btn" @click="closeModal">{{ $t('common.cancel') }}</button>
-          </template>
-        </ModalLayout>
       </div>
+      <div class="form-wrap option-wrap">
+        <h3 class="h3-tit">선택 입력 항목</h3>
+        <ul>
+          <TextareaForm
+            :groupNm="$t('api.apiDescription') + ' :'"
+            v-model:value="requestBody.desc"
+            v-model:isvalid="descValid"
+          />
+        </ul>
+      </div>
+      <ModalLayout size="s" v-if="isShowModal">
+        <template v-slot:modalHeader
+          ><h1 class="h1-tit">{{ $t('api.apiRegister') }}</h1>
+        </template>
+        <template v-slot:modalContainer>
+          <p class="text">{{ $t('api.confirm_api_register') }}</p>
+        </template>
+        <template v-slot:modalFooter
+          ><button class="lg-btn purple-btn" @click="onSubmit">{{ $t('common.ok') }}</button
+          ><button class="lg-btn white-btn" @click="closeModal">{{ $t('common.cancel') }}</button>
+        </template>
+      </ModalLayout>
     </template>
     <template v-slot:buttons>
       <!-- 레이아웃과 컨텐츠를 제외한 나머지 버튼들을 넣어주세요 -->
@@ -112,6 +110,8 @@ import type { HandlerGroupDetail } from '@/types/HandlerType';
 import HandlerGroupForm from '@/components/api-mngt/register/HandlerGroupForm.vue';
 import SelectForm from '@/components/api-mngt/register/SelectForm.vue';
 import TextForm from '@/components/api-mngt/register/TextForm.vue';
+import NumberForm from '@/components/api-mngt/register/NumberForm.vue';
+import TextareaForm from '@/components/api-mngt/register/TextareaForm.vue';
 import MethodForm from '@/components/api-mngt/register/MethodForm.vue';
 import UriForm from '@/components/api-mngt/register/UriForm.vue';
 import TextDebounceForm from '@/components/api-mngt/register/TextDebounceForm.vue';

@@ -129,7 +129,6 @@ onMounted(() => {
 });
 
 watch(apiDetail, () => {
-  console.log('apiDetail changed');
   if (apiDetail) {
     systemModule
       .getSystemDetail(apiDetail.value.sysId)
