@@ -121,6 +121,17 @@
           </template>
         </ModalLayout>
       </template>
+      <template v-if="!isShowProgress" v-slot:buttons>
+        <div class="btn-wrap">
+          <button class="lg-btn purple-btn" @click="modalShow()" :disabled="isRegisterProgress">
+            {{ $t('common.modify') }}
+            <b-spinner variant="light" v-show="isRegisterProgress" small></b-spinner>
+          </button>
+          <button class="lg-btn white-btn" @click="$router.go(-1)" :disabled="isRegisterProgress">
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
+      </template>
     </ContentLayout>
 
     <ApiAuthModal
