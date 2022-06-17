@@ -309,19 +309,22 @@ const duplicateCheckId = () => {
 };
 
 const basicAuthClicked = () => {
-  isBasicAuthProgress.value = true;
-
-  serviceRepository
-    .getBasicAuth(formData.value.id)
-    .then((res) => {
-      formData.value.athn.basic.id = res.value.id;
-      formData.value.athn.basic.pw = res.value.pw;
-      isBasicAuthProgress.value = false;
-    })
-    .catch(() => {
-      isBasicAuthProgress.value = false;
-      modal().show(t('error.server_error'));
-    });
+  if (formData.value.id !== '' && idValid.value && isDuplicatedId.value) {
+    isBasicAuthProgress.value = true;
+    serviceRepository
+      .getBasicAuth(formData.value.id)
+      .then((res) => {
+        formData.value.athn.basic.id = res.value.id;
+        formData.value.athn.basic.pw = res.value.pw;
+        isBasicAuthProgress.value = false;
+      })
+      .catch(() => {
+        isBasicAuthProgress.value = false;
+        modal().show(t('error.server_error'));
+      });
+  } else {
+    modal().show(t('service.service_id_empty'));
+  }
 };
 
 const showApiAuth = () => {

@@ -104,17 +104,22 @@
             </button>
           </template>
         </ModalLayout>
-      </template>
-      <template v-if="!isShowProgress" v-slot:buttons>
-        <div class="btn-wrap">
-          <button class="lg-btn purple-btn" @click="modalShow()" :disabled="isRegisterProgress">
-            {{ $t('common.modify') }}
-            <b-spinner variant="light" v-show="isRegisterProgress" small></b-spinner>
-          </button>
-          <button class="lg-btn white-btn" @click="$router.back()" :disabled="isRegisterProgress">
-            {{ $t('common.cancel') }}
-          </button>
-        </div>
+        <ModalLayout size="s" v-if="AuthModal">
+          <template v-slot:modalHeader
+            ><h1 class="h1-tit">{{ $t('service.auth_modify') }}</h1>
+          </template>
+          <template v-slot:modalContainer>
+            <p v-if="!isShowProgress" class="text">{{ $t('service.auth_modify_message') }}</p>
+            <div v-if="isShowProgress" style="width: 100%; text-align: center"></div
+          ></template>
+          <template v-slot:modalFooter
+            ><button class="lg-btn purple-btn" @click="getBasicAuthCheck()">
+              {{ $t('common.ok') }}</button
+            ><button class="lg-btn white-btn" @click="AuthModal = false">
+              {{ $t('common.cancel') }}
+            </button>
+          </template>
+        </ModalLayout>
       </template>
     </ContentLayout>
 
@@ -188,6 +193,7 @@ const slaDay = ref(false);
 const slaMon = ref(false);
 
 const modifyModal = ref(false);
+const AuthModal = ref(false);
 const isDuplicatedId: Ref<boolean | null> = ref(null);
 const formData: Ref<ServiceModifyRequest> = ref({
   id: '',
@@ -291,8 +297,26 @@ const editService = () => {
 };
 
 const basicAuthClicked = () => {
-  isBasicAuthProgress.value = true;
+  if (formData.value.athn.basic.id == null) {
+    isBasicAuthProgress.value = true;
+    serviceRepository
+      .getBasicAuth(formData.value.id)
+      .then((res) => {
+        formData.value.athn.basic.id = res.value.id;
+        formData.value.athn.basic.pw = res.value.pw;
+        isBasicAuthProgress.value = false;
+      })
+      .catch(() => {
+        isBasicAuthProgress.value = false;
+        modal().show(t('error.server_error'));
+      });
+  } else {
+    AuthModal.value = true;
+  }
+};
 
+const getBasicAuthCheck = () => {
+  isBasicAuthProgress.value = true;
   serviceRepository
     .getBasicAuth(formData.value.id)
     .then((res) => {
