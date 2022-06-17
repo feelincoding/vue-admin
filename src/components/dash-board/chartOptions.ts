@@ -407,7 +407,7 @@ export function getErrorStatChartOption(miCnt: number, maCnt: number, crCnt: num
           color: 'rgba(180, 180, 180, 0.5)',
           borderRadius: [100, 100, 100, 100],
         },
-        barWidth: '40%',
+        barWidth: '50%',
         itemStyle: {
           borderRadius: [100, 100, 100, 100],
         },
