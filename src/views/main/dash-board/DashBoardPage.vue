@@ -235,8 +235,9 @@ const realTimeSectionHeight = ref(0);
 const dashBoardRepo = new DashBoardRepository();
 
 onMounted(() => {
-  requestAllApi();
   getRealTimeSectionHeight();
+  requestAllApi();
+
   initCharts();
   window.addEventListener(
     'resize',
@@ -363,7 +364,12 @@ watch(lastResponseList, () => {
 });
 
 const getRealTimeSectionHeight = () => {
-  realTimeSectionHeight.value = window.innerHeight - 763.6;
+  console.log(window.innerHeight);
+  if (window.innerHeight < 1080) {
+    realTimeSectionHeight.value = 180;
+  } else {
+    realTimeSectionHeight.value = window.innerHeight - 763.6;
+  }
 };
 
 const totaltrafficDetail: Ref<TotalTrafficStat[]> = ref([]);
