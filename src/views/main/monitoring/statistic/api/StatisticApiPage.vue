@@ -1,32 +1,30 @@
 <template>
-  <div>
-    <StatisticSelectSearch
-      :isFocus="isSearchFocus"
-      :propServiceList="null"
-      :propApiList="searchApiList"
-      tab="api"
-      @search="getSearchOption"
-    />
-    <div class="monitor-comp">
-      <div class="tb-tit">
-        <h3 class="h3-tit">API List</h3>
-        <p class="total">
-          total : <span>{{ apiList !== null ? numberWithCommas(apiList.totCnt) : 0 }}</span>
-        </p>
-      </div>
+  <StatisticSelectSearch
+    :isFocus="isSearchFocus"
+    :propServiceList="null"
+    :propApiList="searchApiList"
+    tab="api"
+    @search="getSearchOption"
+  />
+  <div class="monitor-comp">
+    <div class="tb-tit">
+      <h3 class="h3-tit">API List</h3>
+      <p class="total">
+        total : <span>{{ apiList !== null ? numberWithCommas(apiList.totCnt) : 0 }}</span>
+      </p>
+    </div>
 
-      <div class="stati-list" v-if="apiList != undefined && apiList.apiStat != undefined && apiList.apiStat.length > 0">
-        <ul>
-          <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
-        </ul>
+    <div class="stati-list" v-if="apiList != undefined && apiList.apiStat != undefined && apiList.apiStat.length > 0">
+      <ul>
+        <ApiRow v-for="(item, index) in apiList.apiStat" :key="index" :apiList="item" />
+      </ul>
+    </div>
+    <div class="card-wrap" v-else>
+      <div style="position: relative; text-align: center" v-if="isShowProgress">
+        <b-spinner label="Large Spinner"></b-spinner>
       </div>
-      <div class="stati-list" v-else>
-        <div style="position: relative; text-align: center" v-if="isShowProgress">
-          <b-spinner label="Large Spinner"></b-spinner>
-        </div>
-        <div style="text-align: center" v-if="!isShowProgress">
-          <p>{{ emptyMsg }}</p>
-        </div>
+      <div style="text-align: center" v-if="!isShowProgress">
+        <p>{{ emptyMsg }}</p>
       </div>
     </div>
   </div>

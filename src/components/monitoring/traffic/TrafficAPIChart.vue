@@ -1,6 +1,6 @@
 <template>
   <!-- <h3 class="h3-tit">{{ $t('traffic.api_traffic') }}</h3> -->
-  <div class="chart-group chart-group-height" id="trafficAPI" ref="trafficAPI"></div>
+  <div class="chart-wrap traffic-chart" id="trafficAPI" ref="trafficAPI"></div>
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
