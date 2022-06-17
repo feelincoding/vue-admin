@@ -20,7 +20,7 @@
 .d-total .num{color: #fff; text-align:left;}
 
 .fail-group{width: 120px; margin-left: 10px; display: flex; position: relative; flex-direction: column;}
-.fail-list{position: relative; margin-bottom: 4px; display: flex; justify-content: flex-start;}
+.fail-list{position: relative; margin-bottom: 4px; display: flex; justify-content: flex-start; height: 14px;}
 .fail-list:last-of-type{margin-bottom: 0px;}
 .fail-list span{font-size: 13px; font-weight: 500; line-height: 14px; color: #fff;}
 
@@ -462,7 +462,7 @@
 
 .chart-wrap{width: 100%;}
 .chart-wrap .h3-tit{margin-bottom: 5px; font-size: 15px; line-height: 24px; font-weight: 600;}
-.chart-wrap .chart-group{border: 1px #ddd solid; border-radius: 8px; height: 220px;}
+.chart-wrap .chart-group{border: 1px #ddd solid; padding: 5px 0px; border-radius: 8px; height: 220px;}
 
 .chart-wrap .list-wrap{border: 1px #ddd solid; border-radius: 8px; padding: 18px 20px;     margin: 0 0;}
 .chart-wrap .list-wrap li{position: relative; padding: 6px 0px; border-bottom: 1px #ddd dashed; display: flex; justify-content: space-between; align-items: center;}
