@@ -29,8 +29,8 @@
             <AuthReqGroup
               @basicAuthClicked="basicAuthClicked"
               :inputNm="$t('service.authentication_method')"
-              :basicId="formData.athn.basic.id"
-              :basicPw="formData.athn.basic.pw"
+              v-model:basicId="formData.athn.basic.id"
+              v-model:basicPw="formData.athn.basic.pw"
               v-model:athn="formData.athnType"
               v-model:alg="jwtAlgList"
               v-model:pickedAlg="formData.athn.jwt.alg"
@@ -235,29 +235,24 @@ const formData: Ref<ServiceModifyRequest> = ref({
 watch(
   () => formData.value.athnType,
   (val) => {
-    if (val == 'basic') {
-      formData.value.athn.jwt = {
-        alg: null,
-        iss: null,
-        aud: null,
-        pubKey: null,
-      };
+    if (
+      (val === 'basic' && formData.value.athn.basic.id === null) ||
+      (val === 'jwt' && formData.value.athn.jwt.alg === null)
+    ) {
+      authValid.value = false;
     } else {
-      formData.value.athn.basic = {
-        id: null,
-        pw: null,
-      };
+      authValid.value = true;
     }
   }
 );
 
 const modalShow = () => {
   const val =
-    tkcgrNmValid.value == false &&
-    tkcgrPosValid.value == false &&
-    tkcgrEmlValid.value == false &&
-    dateValid.value == false &&
-    authValid.value == false &&
+    tkcgrNmValid.value == false ||
+    tkcgrPosValid.value == false ||
+    tkcgrEmlValid.value == false ||
+    dateValid.value == false ||
+    authValid.value == false ||
     apiAuthValid.value == false
       ? false
       : true;
