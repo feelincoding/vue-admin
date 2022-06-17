@@ -959,10 +959,6 @@ export const getBarOption = (
       Object.assign(item, {
         type: 'bar',
         stack: 'total',
-        label: {
-          show: true,
-          fontSize: 9,
-        },
         emphasis: {
           focus: 'series',
         },
