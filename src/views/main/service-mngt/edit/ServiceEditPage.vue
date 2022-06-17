@@ -237,7 +237,10 @@ watch(
   (val) => {
     if (
       (val === 'basic' && formData.value.athn.basic.id === null) ||
-      (val === 'jwt' && formData.value.athn.jwt.alg === null)
+      (val === 'jwt' && formData.value.athn.jwt.alg === null) ||
+      (val === 'jwt' && formData.value.athn.jwt.iss === null) ||
+      (val === 'jwt' && formData.value.athn.jwt.aud === null) ||
+      (val === 'jwt' && formData.value.athn.jwt.pubKey === null)
     ) {
       authValid.value = false;
     } else {
