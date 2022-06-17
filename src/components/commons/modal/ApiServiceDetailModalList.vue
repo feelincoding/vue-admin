@@ -36,7 +36,10 @@
         /></i>
       </button>
     </div>
-    <div class="stati-detail block" v-if="showStatiDetailBlock">
+    <div
+      class="stati-detail block"
+      :class="{ 'list-slider': showStatiDetailBlock, 'list-slider-none': !showStatiDetailBlock }"
+    >
       <div class="result-group">
         <div class="comp">
           <label class="badge syan">{{ $t('common.success_eng') }}</label>
