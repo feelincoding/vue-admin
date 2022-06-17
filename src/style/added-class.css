@@ -236,3 +236,11 @@
 .dashboard .group:last-of-type {
   margin-bottom: 0px;
 }
+
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}

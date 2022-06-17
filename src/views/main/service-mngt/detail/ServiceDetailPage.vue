@@ -132,13 +132,13 @@ const service: Ref<ServiceResponse> = ref({
   athnType: '',
   athn: {
     basic: {
-      id: null,
-      pw: null,
+      id: '',
+      pw: '',
     },
     jwt: {
-      alg: null,
-      iss: null,
-      aud: null,
+      alg: '',
+      iss: '',
+      aud: '',
       pubKey: '',
     },
   },
