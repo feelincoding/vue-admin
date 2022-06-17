@@ -191,6 +191,7 @@ export const getTotalTrafficDetailChartOption = (traffic: TotalTrafficStat[]) =>
       textStyle: {
         fontSize: '14',
       },
+      bottom: '3%',
     },
     tooltip: {
       backgroundColor: 'rgba(255, 255, 255, 0.8)',

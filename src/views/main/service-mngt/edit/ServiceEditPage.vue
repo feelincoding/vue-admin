@@ -331,6 +331,7 @@ const getBasicAuthCheck = () => {
   serviceRepository
     .getBasicAuth(formData.value.id)
     .then((res) => {
+      AuthModal.value = false;
       formData.value.athn.basic.id = res.value.id;
       formData.value.athn.basic.pw = res.value.pw;
       isBasicAuthProgress.value = false;
