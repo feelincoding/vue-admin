@@ -159,34 +159,20 @@ const uriValid = ref(true);
 const timeoutValid = ref(true);
 const descValid = ref(true);
 
-const fetchApiDetail = async () => {
-  const query = route.query as { id: string; sysId: string };
-  apiRepository.getApiDetail(query).then((res) => {
-    apiDetail.value = res;
-  });
-};
-const fetchReqHandlerGroupList = async () => {
-  handlerRepository.getReqHandlerGroupList().then((res) => {
-    reqHandlerGroupList.value = res;
-  });
-};
-const fetchResHandlerGroupList = async () => {
-  handlerRepository.getResHandlerGroupList().then((res) => {
-    resHandlerGroupList.value = res;
-  });
-};
-
 onMounted(() => {
   isShowProgress.value = true;
-  axios
-    .all([
-      // this.systemModule.getSystemDetail(), api detail 꺼내고 sysId로 sysDetail 콜
-      fetchApiDetail(),
-      fetchReqHandlerGroupList(),
-      fetchResHandlerGroupList(),
-    ])
-    .then(() => {
-      isShowProgress.value = false;
+  const query = route.query as { id: string; sysId: string };
+
+  Promise.all([
+    // this.systemModule.getSystemDetail(), api detail 꺼내고 sysId로 sysDetail 콜
+    apiRepository.getApiDetail(query),
+    handlerRepository.getReqHandlerGroupList(),
+    handlerRepository.getResHandlerGroupList(),
+  ])
+    .then((res) => {
+      apiDetail.value = res[0];
+      reqHandlerGroupList.value = res[1];
+      resHandlerGroupList.value = res[2];
     })
     .catch(() => {
       isShowProgress.value = false;
