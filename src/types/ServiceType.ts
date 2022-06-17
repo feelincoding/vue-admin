@@ -8,14 +8,14 @@ interface AuthResponse {
   jwt: JWTDetail;
 }
 interface BasicAuthDetail {
-  id: string | null;
-  pw: string | null;
+  id: string;
+  pw: string;
 }
 
 interface JWTDetail {
-  alg: string | null;
-  iss: string | null;
-  aud: string | null;
+  alg: string;
+  iss: string;
+  aud: string;
   pubKey: string;
 }
 export interface ServiceResponse {
@@ -36,8 +36,8 @@ export interface ServiceResponse {
   updId: string;
 }
 export interface BasicAuthResponse {
-  id: string | null;
-  pw: string | null;
+  id: string;
+  pw: string;
 }
 
 export interface duplicatedCheck {

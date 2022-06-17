@@ -216,13 +216,13 @@ const formData: Ref<ServiceModifyRequest> = ref({
   athnType: '',
   athn: {
     basic: {
-      id: null,
-      pw: null,
+      id: '',
+      pw: '',
     },
     jwt: {
-      alg: null,
-      iss: null,
-      aud: null,
+      alg: '',
+      iss: '',
+      aud: '',
       pubKey: '',
     },
   },
@@ -236,11 +236,11 @@ watch(
   () => formData.value.athnType,
   (val) => {
     if (
-      (val === 'basic' && formData.value.athn.basic.id === null) ||
-      (val === 'jwt' && formData.value.athn.jwt.alg === null) ||
-      (val === 'jwt' && formData.value.athn.jwt.iss === null) ||
-      (val === 'jwt' && formData.value.athn.jwt.aud === null) ||
-      (val === 'jwt' && formData.value.athn.jwt.pubKey === null)
+      (val === 'basic' && formData.value.athn.basic.id === '') ||
+      (val === 'jwt' && formData.value.athn.jwt.alg === '') ||
+      (val === 'jwt' && formData.value.athn.jwt.iss === '') ||
+      (val === 'jwt' && formData.value.athn.jwt.aud === '') ||
+      (val === 'jwt' && formData.value.athn.jwt.pubKey === '')
     ) {
       authValid.value = false;
     } else {
