@@ -1,21 +1,17 @@
 <template>
-  <div>
-    <TrafficSelectSearch
-      :isFocus="isSearchFocus"
-      :placeholder="'서비스'"
-      tab="service"
-      :propServiceList="searchServiceList"
-      :propApiList="null"
-      @search="getSearchOption"
-    />
+  <TrafficSelectSearch
+    :isFocus="isSearchFocus"
+    :placeholder="'서비스'"
+    tab="service"
+    :propServiceList="searchServiceList"
+    :propApiList="null"
+    @search="getSearchOption"
+  />
 
-    <div class="chart-wrap traffic-chart">
-      <div class="chart-div">
-        <TrafficServiceChart :serviceList="serviceList" :timeUnit="timeUnit" v-if="serviceList.length > 0" />
-        <div class="no-data" style="text-align: center" v-else>
-          <p>{{ emptyMsg }}</p>
-        </div>
-      </div>
+  <div class="chart-wrap traffic-chart">
+    <TrafficServiceChart :serviceList="serviceList" :timeUnit="timeUnit" v-if="serviceList.length > 0" />
+    <div class="no-data" style="text-align: center" v-else>
+      <p>{{ emptyMsg }}</p>
     </div>
   </div>
 </template>

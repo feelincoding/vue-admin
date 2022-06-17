@@ -1,5 +1,5 @@
 <template>
-  <article class="contents-wrap" @click="handleOnClick">
+  <article class="body-cont" @click="handleOnClick">
     <div class="tit-wrap">
       <h1 class="h1-tit">{{ $t('traffic.traffic') }}</h1>
     </div>

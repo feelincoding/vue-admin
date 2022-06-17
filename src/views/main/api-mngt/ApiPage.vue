@@ -73,7 +73,7 @@
                   @deleteApi="handleOndeleteApi"
                 />
               </tbody>
-              <tbody v-else>
+              <tbody v-else class="no-data">
                 <tr>
                   <td colspan="8">{{ $t('common.no_data') }}</td>
                 </tr>
