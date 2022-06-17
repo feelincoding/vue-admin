@@ -163,7 +163,7 @@
 
 
 
-.badge{display: inline-block; padding: 2px 3px !important; border-radius: 8px; font-size: 10px !important; font-weight: 400 !important; line-height: 14px !important; cursor: default; margin: 2px 1px;}
+.badge{display: inline-block; padding: 2px 3px !important; border-radius: 5px; font-size: 10px !important; font-weight: 400 !important; line-height: 14px !important; cursor: default; margin: 2px 1px;}
 
 .badge.red{background-color: #FFDBDB; color: #FF4E63 !important;}
 .badge.syan{background-color: #C4F7F5; color: #00CEC6 !important;}
@@ -325,7 +325,7 @@
 .minor{background-color: #FFE03D; color: #A08702;}
 
 .fz30{font-size: 30px; font-weight: 500;}
-.num{font-size: 25px; font-weight: 500;}
+.num{font-size: 24px; font-weight: 500;}
 
 .gray-txt{position: relative; font-size: 14px; font-weight: 400; line-height: 24px; color: #aaa; text-align: left; margin:0px 0px 0px 2px;}
 .red-txt{display: inline-block; position: relative; font-size: 14px; font-weight: 400; line-height: 24px; color: #FF4E63; text-align: left; margin: 0px 0px;}
@@ -336,3 +336,4 @@
 
 .overflow-y{overflow-y: auto;}
 
+.flex{flex: 1;}

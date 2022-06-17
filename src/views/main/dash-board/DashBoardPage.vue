@@ -160,7 +160,7 @@
   </article>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, shallowRef, watch } from 'vue';
+import { onMounted, onUnmounted, ref, shallowRef, watch } from 'vue';
 import type { Ref } from 'vue';
 import TimeCheck from '@/components/dash-board/TimeCheck.vue';
 import RealTimeTraffic from '@/components/dash-board/RealTimeTraffic.vue';
@@ -246,8 +246,28 @@ onMounted(() => {
     },
     { passive: true }
   );
+  document.addEventListener('keyup', (evt) => {
+    keyupHandler(evt);
+  });
 });
 
+onUnmounted(() => {
+  window.removeEventListener('resize', () => {
+    chartResize();
+    getRealTimeSectionHeight();
+  });
+  document.removeEventListener('keyup', (evt) => {
+    keyupHandler(evt);
+  });
+});
+
+const keyupHandler = (evt: KeyboardEvent) => {
+  if (evt.key === 'Escape') {
+    isShowModal.value = false;
+    trafficModal.value = false;
+    avgModal.value = false;
+  }
+};
 const requestAllApi = () => {
   const request = [
     dashBoardRepo.getTotalAPITraffic(TOTAL_TRAFFIC_PARAM),
