@@ -1,5 +1,3 @@
-import { Data, GateWayResponse, Pagination } from './GateWayResponse';
-
 export interface ApiAuthResponse {
   sysId: string;
   apiId: string[];
@@ -18,7 +16,7 @@ interface JWTDetail {
   alg: string | null;
   iss: string | null;
   aud: string | null;
-  pubKey: string | null;
+  pubKey: string;
 }
 export interface ServiceResponse {
   id: string;
@@ -31,7 +29,7 @@ export interface ServiceResponse {
   athn: AuthResponse;
   sla: { sec: number | null; min: number | null; hr: number | null; day: number | null; mon: number | null };
   apiAut: ApiAuthResponse[];
-  desc: string | null;
+  desc: string;
   cretDt: string;
   updDt: string;
   cretId: string;
@@ -56,7 +54,7 @@ export interface ServiceRegisterRequest {
   athn: AuthResponse;
   sla: { sec: number | null; min: number | null; hr: number | null; day: number | null; mon: number | null };
   apiAut: ApiAuthResponse[];
-  desc: string | null;
+  desc: string;
 }
 
 export interface ServiceModifyRequest {
@@ -70,6 +68,6 @@ export interface ServiceModifyRequest {
   athn: AuthResponse;
   sla: { sec: number | null; min: number | null; hr: number | null; day: number | null; mon: number | null };
   apiAut: ApiAuthResponse[];
-  desc: string | null;
+  desc: string;
   updId: string;
 }

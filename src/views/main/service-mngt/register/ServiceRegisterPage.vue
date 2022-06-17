@@ -208,11 +208,11 @@ const formData: Ref<ServiceRegisterRequest> = ref({
       alg: null,
       iss: null,
       aud: null,
-      pubKey: null,
+      pubKey: '',
     },
   },
   apiAut: [],
-  desc: null,
+  desc: '',
 });
 
 watch(showApiAuthModal, () => {

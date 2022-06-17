@@ -10,7 +10,7 @@
 import { computed } from 'vue';
 const props = defineProps<{
   inputNm: string;
-  value: string | null;
+  value: string;
 }>();
 
 const emit = defineEmits<{

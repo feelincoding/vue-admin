@@ -94,7 +94,7 @@ const props = defineProps<{
   alg: string[];
   issuer: string | null;
   subject: string | null;
-  publicKey: string | null;
+  publicKey: string;
   pickedAlg: string | null;
   basicId: string | null;
   basicPw: string | null;

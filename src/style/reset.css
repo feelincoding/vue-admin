@@ -110,7 +110,7 @@ select {
 }
 select::-ms-expand {display:none} /*  ie  */
 
-select:focus, select:active{outline:1px #21ABA5 solid};
+select:focus, select:active{outline:1px #21ABA5 solid;}
 select:disabled{background:#e5e5e5 !important; border: 1px #e5e5e5 solid !important;}
 
 

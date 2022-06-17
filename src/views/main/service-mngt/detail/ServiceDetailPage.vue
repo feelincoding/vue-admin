@@ -139,7 +139,7 @@ const service: Ref<ServiceResponse> = ref({
       alg: null,
       iss: null,
       aud: null,
-      pubKey: null,
+      pubKey: '',
     },
   },
   sla: { sec: null, min: null, hr: null, day: null, mon: null },
