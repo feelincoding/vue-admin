@@ -195,7 +195,9 @@ const onSubmit = async () => {
     .registerSystem(systemItem.value)
     .then(() => {
       isShowProgress.value = false;
-      toast.success(t('system.register_success'));
+      toast.success(t('system.register_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
       router.push({ name: 'system' });
     })
     .catch((err) => {

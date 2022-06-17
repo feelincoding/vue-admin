@@ -158,7 +158,9 @@ const onSubmit = async () => {
   systemModule
     .updateSystemDetail(systemItem.value)
     .then(() => {
-      toast.success(t('system.edit_success'));
+      toast.success(t('system.edit_success'), {
+        toastClassName: ['toast-success-custom-class'],
+      });
       isShowProgress.value = false;
       router.back();
     })
