@@ -64,10 +64,6 @@
     </template>
     <template v-slot:buttons v-if="!isShowProgress">
       <div class="btn-wrap">
-        <button class="lg-btn purple-btn" @click="test" :disabled="isBtnDisabled">
-          등록테스트
-          <b-spinner variant="light" label="Spinning" v-if="isBtnDisabled" small></b-spinner>
-        </button>
         <button class="lg-btn purple-btn" @click="showModal" :disabled="isBtnDisabled">
           {{ $t('common.modify') }}
           <b-spinner variant="light" label="Spinning" v-if="isBtnDisabled" small></b-spinner>
@@ -124,9 +120,6 @@ const isShowModal = ref(false);
 const isBtnDisabled = ref(false);
 
 const isDuplicatedId: Ref<boolean | null> = ref(null);
-const test = () => {
-  console.log('test value: ', systemItem.value);
-};
 
 onMounted(() => {
   isShowProgress.value = true;
