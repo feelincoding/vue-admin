@@ -92,7 +92,7 @@ const notiMessageDomain: Ref<ValidationCheckType[]> = ref([]);
 const notiMessagePort: Ref<ValidationCheckType[]> = ref([]);
 const notiMessageDupl: Ref<ValidationCheckType[]> = ref([]);
 
-const isDomainEmpty = ref(true);
+// const isDomainEmpty = ref(true);
 
 onMounted(() => {
   // console.log('@@@:', props);
@@ -125,6 +125,7 @@ watch(edpts.value, () => {
   let idxArr: number[] = [];
   // 중복 검사를 수행한다.(도메인, 포트가 둘 중 하나라도 입력일 때만)
   edpts.value.forEach((edpt, idx) => {
+    console.log("edpt:", edpt);
     if (!(edpt.domain === '' && edpt.port === '')) {
       if (!duplCheck(edptToString(edpts.value[idx]))) {
         notiMessageDupl.value[idx].isValid = true;
@@ -144,13 +145,25 @@ watch(edpts.value, () => {
     }
   }
 
-  let valid: boolean | null | string = true;
-  notiMessageDomain.value.forEach((domain) => {
-    valid = valid && domain.isValid;
+  let valid: boolean | null = true; // | string
+  notiMessageDomain.value.forEach((domain, idx) => {
+    if(edpts.value[idx].domain === '') {
+      valid = valid && false;
+    }else {
+      valid = valid && domain.isValid;
+    }
   });
-  notiMessagePort.value.forEach((port) => {
-    valid = valid && port.isValid;
+
+  notiMessagePort.value.forEach((port, idx) => {
+    if(edpts.value[idx].port === '') {
+      valid = valid && false;
+    }else {
+      valid = valid && port.isValid;
+    }
   });
+
+  console.log('valid:', valid);
+
   emit('update:isValid', valid);
   emit('update:strArr', edptArrToStringArr(edpts.value));
 });
@@ -161,7 +174,7 @@ const focusInDomain = (idx: number) => {
     notiMessageDomain.value[idx].isValid = false;
     notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain');
   }
-  let notiDomCheck = notiMessageDomain.value[idx];
+  // let notiDomCheck = notiMessageDomain.value[idx];
 };
 // const focusOutDomain = (idx: number) => {
 //   console.log('focusOutDomain', idx);
@@ -225,17 +238,18 @@ const duplCheck = (val: string) => {
 };
 
 // 빈칸 체크: 도메인. 포트 각각의 값이 빈칸이면 false, 경고문구를 출력한다.
-const emptyChkFunc = (idx: number) => {
-  console.log('emptyChkFunc idx: ', idx);
-  if (!checkEmpty(edpts.value[idx].domain)) {
-    notiMessageDomain.value[idx].isValid = false;
-    notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain') as string;
-  }
-  if (!checkEmpty(edpts.value[idx].port)) {
-    notiMessageDomain.value[idx].isValid = false;
-    notiMessageDomain.value[idx].message = t('system.empty_check_edpt_port') as string;
-  }
-};
+// const emptyChkFunc = (idx: number) => {
+//   console.log('emptyChkFunc idx: ', idx);
+//   if (!checkEmpty(edpts.value[idx].domain)) {
+//     notiMessageDomain.value[idx].isValid = false;
+//     notiMessageDomain.value[idx].message = t('system.empty_check_edpt_domain') as string;
+//   }
+//   if (!checkEmpty(edpts.value[idx].port)) {
+//     notiMessageDomain.value[idx].isValid = false;
+//     notiMessageDomain.value[idx].message = t('system.empty_check_edpt_port') as string;
+//   }
+// };
+
 const validCheckProtocol = (idx: number) => {
   if (notiMessageDomain.value[idx].isValid === true && notiMessagePort.value[idx].isValid === true) {
     // domain, port 규격 통과시에는 프로토콜 검사를 한다.
@@ -274,6 +288,7 @@ const validCheckPort = (idx: number) => {
     notiMessagePort.value[idx].isValid = true;
     notiMessagePort.value[idx].message = '';
   } else if (port == '') {
+    console.log("port 빈값")
     notiMessagePort.value[idx].isValid = false;
     notiMessagePort.value[idx].message = t('system.empty_check_edpt_port') as string;
   } else {
