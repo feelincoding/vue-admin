@@ -11,7 +11,6 @@
         <div style="display: flex; width: 100%; height: 100%; overflow: hidden">
           <!------- Detail Chart -------->
           <div
-            style="height: 100%"
             :class="{ 'before-chart-width': !apiDetailModal, 'after-chart-width': apiDetailModal }"
             ref="trafficDetailRef"
           >
