@@ -4,10 +4,13 @@
 
 .wrap{min-width:1440px; height:100%; display: flex; position: relative; padding: 0px 0px; background-color: #fff; margin: 0 auto;}
 
-#side{width: 260px; background: #0C233A; position: relative;}
+#side{width: 260px; background: #0C233A; 
+    position: fixed;
+    z-index: 10;
+    height: 100%;}
 
-.body-cont{flex: 1; position: relative; padding:10px 20px;}
-.dashboard{display: flex; flex-direction: column; flex: 1; position: relative; padding: 10px 20px;}
+.body-cont{flex: 1; position: relative; padding: 10px 20px 10px 280px;;}
+.dashboard{display: flex; flex: 1; flex-direction: column; position: relative; padding: 10px 20px 10px 280px;}
 
 .total-group{background: #61C1BD; border-radius: 8px; margin-right: 20px; padding: 15px 15px; height: 78px; display: flex; flex: 1; justify-content: space-between;}
 .d-total{width:195px; height: 48px; display: inline-flex; align-items: center; justify-content: left;}
@@ -507,7 +510,7 @@
 .tps-group .tps-chart .fz38 >strong{font-weight: 600; font-size: 38px; }
 
 
-.dashboard .time-wrap{height: 28px; margin-bottom:0px;}
+.dashboard .time-wrap{height: 28px; margin-bottom:0px;justify-content: left;}
 
 .time-wrap{position: relative;text-align: right; margin-bottom:10px; display: flex; justify-content: right;}
 .time-wrap span{font-size: 13px; line-height: 24px; margin-right: 5px;}
