@@ -1,6 +1,6 @@
 <template>
   <!-- <h3 class="h3-tit">서비스 트래픽</h3> -->
-  <div class="chart-group chart-group-height" id="trafficService" ref="trafficServiceRef"></div>
+  <div class="chart-wrap traffic-chart" id="trafficService" ref="trafficServiceRef"></div>
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, shallowRef, watch, type Ref } from 'vue';
