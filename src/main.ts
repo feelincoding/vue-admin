@@ -24,6 +24,11 @@ import BootstrapVue3 from 'bootstrap-vue-3';
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 
+// import recaptcha-v3
+import { VueReCaptcha } from 'vue-recaptcha-v3';
+
+// import dotenv
+import dotenv from 'dotenv';
 const app = createApp(App);
 
 app.use(createPinia());
@@ -31,5 +36,6 @@ app.use(BootstrapVue3);
 app.use(router);
 app.use(i18n);
 app.use(Toast);
+app.use(VueReCaptcha, { siteKey: process.env.RECAPTCHA_SITE_KEY });
 app.component('Datepicker', Datepicker);
 app.mount('#app');
