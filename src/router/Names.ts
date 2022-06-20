@@ -4,3 +4,4 @@ export const API = '/api';
 export const MONITORING = '/monitoring';
 export const MANAGEMENT = '/management';
 export const MY = '/my';
+export const CODE = '/code';

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { SYSTEM, SERVICE, API, MANAGEMENT, MONITORING, MY } from '@/router/Names';
+import { SYSTEM, SERVICE, API, MANAGEMENT, MONITORING, MY, CODE } from '@/router/Names';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -134,6 +134,11 @@ const router = createRouter({
           path: MY + '/:id',
           name: 'my',
           component: () => import('@/views/main/my/MyPage.vue'),
+        },
+        {
+          path: CODE,
+          name: 'code',
+          component: () => import('@/views/main/code/Code.vue'),
         },
       ],
     },

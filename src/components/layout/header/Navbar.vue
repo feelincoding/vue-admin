@@ -63,6 +63,9 @@
         <li class="manage" :class="{ on: navState.showManagement }">
           <a href="javascript:void(0)">Management</a>
         </li>
+        <li class="code" :class="{ on: $route.path.includes('code') }">
+          <router-link :to="`${code}`" @click="changeNavState('code')">Code</router-link>
+        </li>
       </ul>
     </nav>
     <!------- // navigation -------->
@@ -70,7 +73,7 @@
 </template>
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
-import { SYSTEM, SERVICE, API, MONITORING, MANAGEMENT } from '@/router/Names';
+import { SYSTEM, SERVICE, API, MONITORING, MANAGEMENT, CODE } from '@/router/Names';
 import { onMounted, ref, type Ref } from 'vue';
 
 interface NavState {
@@ -86,6 +89,7 @@ interface NavState {
   managementState: boolean;
   showMonitoring: boolean;
   showManagement: boolean;
+  code: boolean;
 }
 
 const navState: Ref<NavState> = ref({
@@ -100,6 +104,7 @@ const navState: Ref<NavState> = ref({
   managementState: false,
   showMonitoring: false,
   showManagement: false,
+  code: false,
 });
 
 const changeShowMonitoring = () => {
@@ -122,6 +127,7 @@ const dashBoardPath = '/dashboard';
 const systemPath = SYSTEM;
 const apiPath = API;
 const servicePath = SERVICE;
+const code = CODE;
 const monitoringPath = MONITORING;
 const managementPath = MANAGEMENT;
 </script>
