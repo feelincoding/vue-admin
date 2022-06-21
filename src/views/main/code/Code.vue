@@ -1,34 +1,59 @@
 <template>
   <div id="container" style="height: 1000px">
     <h1 class="h1-tit">핸들러 코드 작성</h1>
-    <p></p>
+    <FilePond
+      instant-upload="false"
+      label-idle="Drop files here..."
+      v-bind:allow-multiple="false"
+      allow-revert="false"
+      accepted-file-types=".java"
+      @updatefiles="onFilesUpdated"
+      @error="onFilesError"
+    />
     <div id="editor-section" style="height: 80%"></div>
   </div>
 </template>
 
 <script setup lang="ts">
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import { ref, reactive, computed, watch, onMounted, inject } from 'vue';
 import * as monaco from 'monaco-editor';
+import vueFilePond from 'vue-filepond';
+import 'filepond/dist/filepond.min.css';
+
+const FilePond = vueFilePond(FilePondPluginFileValidateType);
 
 const codeEditor = ref();
+const file = ref(null);
 
-function initEditor() {
+const initEditor = () => {
   codeEditor.value = monaco.editor.create(document.getElementById('editor-section') as HTMLDivElement, {
     value: code.value,
     language: 'java',
-    theme: 'vs-dark',
-    fontSize: 18,
+    theme: 'vs',
+    fontSize: 15,
     lineNumbers: 'on',
+    domReadOnly: true,
+    dragAndDrop: true,
     minimap: {
-      enabled: false,
+      enabled: true,
     },
   });
-}
+};
 
-function runCode() {
+const myFiles: string[] = [];
+const runCode = () => {
   console.log('runCode');
   console.log(codeEditor.value.getValue());
-}
+};
+
+const onFilesError = (files: any) => {
+  console.log(files);
+};
+
+const onFilesUpdated = (files: File) => {
+  console.log(files);
+};
 
 onMounted(() => {
   initEditor();
@@ -67,3 +92,31 @@ public class RequestConvertBodyHandler implements RouteHandler {
 
 // onMounted(() => {});
 </script>
+
+<style>
+[data-filepond-item-state*='error'] .filepond--item-panel,
+[data-filepond-item-state*='invalid'] .filepond--item-panel {
+  background-color: red;
+}
+
+[data-filepond-item-state='processing-complete'] .filepond--item-panel {
+  background-color: green;
+}
+.filepond--drop-label {
+  background-color: #ecf7e9;
+  height: auto !important;
+}
+.filepond--item-panel {
+  background-color: #555;
+}
+.filepond--drip-blob {
+  background-color: #999;
+}
+img {
+  width: 25%;
+  opacity: 0.8;
+  filter: grayscale(100%);
+  border-radius: 8px;
+  cursor: pointer;
+}
+</style>

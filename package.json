@@ -23,7 +23,9 @@
     "vue-draggable-next": "^2.1.1",
     "vue-i18n": "^9.1.10",
     "vue-router": "^4.0.15",
-    "vue-toastification": "^2.0.0-rc.5"
+    "vue-toastification": "^2.0.0-rc.5",
+    "vue-filepond":"^7.0.3",
+    "filepond-plugin-file-validate-type":"^1.2.8"
   },
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.4.0",
