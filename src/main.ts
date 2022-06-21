@@ -25,7 +25,6 @@ import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 
 const app = createApp(App);
-
 app.use(createPinia());
 app.use(BootstrapVue3);
 app.use(router);
