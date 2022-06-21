@@ -15,7 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+// import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginFileValidateType from '@/plugins/filepond';
 import { ref, reactive, computed, watch, onMounted, inject } from 'vue';
 import * as monaco from 'monaco-editor';
 import vueFilePond from 'vue-filepond';
