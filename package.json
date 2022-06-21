@@ -23,7 +23,7 @@
     "vue": "^3.2.36",
     "vue-draggable-next": "^2.1.1",
     "vue-i18n": "^9.1.10",
-    "vue-recaptcha-v3": "^2.0.1",
+    "vue-recaptcha": "^2.0.2",
     "vue-router": "^4.0.15",
     "vue-toastification": "^2.0.0-rc.5"
   },
