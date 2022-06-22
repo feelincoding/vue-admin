@@ -12,8 +12,7 @@
       @error="onFilesError"
       @removefile="onRemoveFile"
     />
-    <MonacoEditor ref="ttttt" :editorValue="editorValue"></MonacoEditor>
-    <button @click="">TTEEESETSEESTSTES</button>
+    <MonacoEditor :editorValue="editorValue"></MonacoEditor>
   </div>
 </template>
 
@@ -53,7 +52,6 @@ const addFile = (error: any, _file: any) => {
     // }
   };
 };
-const ttttt = ref<HTMLDivElement | null>(null);
 </script>
 
 <style>
