@@ -47,7 +47,7 @@ onMounted(() => {
     value: code.value,
     language: 'java',
     theme: 'vs',
-    fontSize: 15,
+    fontSize: 13,
     lineNumbers: 'on',
     domReadOnly: true,
     dragAndDrop: true,

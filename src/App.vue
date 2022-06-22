@@ -1,6 +1,6 @@
-<template style="height: 100%">
-  <div class="body-wrap" style="height: 100%">
-    <div class="wrap" style="height: 100%">
+<template>
+  <div class="body-wrap">
+    <div class="wrap">
       <Navbar />
       <router-view :key="$route.fullPath" />
     </div>
