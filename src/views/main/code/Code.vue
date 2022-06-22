@@ -10,6 +10,7 @@
       accepted-file-types=".java"
       @addfile="addFile"
       @error="onFilesError"
+      @removefile="onRemoveFile"
     />
     <MonacoEditor ref="ttttt" :editorValue="editorValue"></MonacoEditor>
     <button @click="">TTEEESETSEESTSTES</button>
@@ -23,9 +24,14 @@ import vueFilePond from 'vue-filepond';
 import 'filepond/dist/filepond.min.css';
 
 import MonacoEditor from '@/components/commons/code/MonacoEditor.vue';
+import { defaultHanlderCode } from './DefaultHandlerCode';
 
 const editorValue = ref('');
 const FilePond = vueFilePond(FilePondPluginFileValidateType);
+
+const onRemoveFile = (error: any, file: any) => {
+  editorValue.value = defaultHanlderCode;
+};
 
 const onFilesError = (files: any) => {
   console.log(files);
@@ -39,12 +45,12 @@ const addFile = (error: any, _file: any) => {
   reader.readAsText(file as Blob);
 
   reader.onload = (e) => {
-    var result = confirm('내용이 이미 있습니다. 덮어 쓰겠습니까?');
-    if (result) {
-      editorValue.value = reader.result as string;
-      console.log(reader.result);
-    } else {
-    }
+    // var result = confirm('내용이 이미 있습니다. 덮어 쓰겠습니까?');
+    // if (result) {
+    editorValue.value = reader.result as string;
+    console.log(reader.result);
+    // } else {
+    // }
   };
 };
 const ttttt = ref<HTMLDivElement | null>(null);
@@ -56,20 +62,23 @@ const ttttt = ref<HTMLDivElement | null>(null);
 [data-filepond-item-state*='invalid'] .filepond--item-panel {
   background-color: red;
 }
-
-/** 파일 타입 실패 색 */
+/** 파일 타입 성공 색 */
 [data-filepond-item-state='processing-complete'] .filepond--item-panel {
   background-color: green;
 }
-/** 파일 넣기 전 배경색 */
+/** 파일 넣기 전 배경(background) & 글자 색(color) */
 .filepond--drop-label {
-  background-color: #ecf7e9;
+  color: white;
+  background-color: #0c233a;
+  border-radius: 0.5em;
   height: auto !important;
 }
+/** 파일 넣은 후 파일 색 */
 .filepond--item-panel {
-  background-color: rgb(62, 159, 65);
+  background-color: #989fb2;
 }
-.filepond--drip-blob {
-  background-color: #999;
+/** 파일 넣기 후 배경 색 */
+.filepond--panel-root {
+  background-color: #0c233a;
 }
 </style>
