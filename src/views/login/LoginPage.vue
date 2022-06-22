@@ -2,13 +2,15 @@
   <article class="body-cont">
     <h1>this is LoginPage!!</h1>
     <!-- 리캡차 사용 -->
-    <vue-recaptcha
-      @verify="handleSuccessRecaptcha"
-      @expired="handleFailRecaptcha"
-      @error="handleFailRecaptcha"
-      :sitekey="sitekey"
-      language="ko"
-    ></vue-recaptcha>
+    <div class="recaptcha-comp">
+      <vue-recaptcha
+        @verify="handleSuccessRecaptcha"
+        @expired="handleFailRecaptcha"
+        @error="handleFailRecaptcha"
+        :sitekey="sitekey"
+        language="ko"
+      ></vue-recaptcha>
+    </div>
   </article>
 </template>
 
@@ -18,7 +20,6 @@ import i18n from '@/plugins/Locale';
 
 //Todo 아래의 recaptcha 키는 개인발급된 키입니다. 변경 필요합니다.
 const sitekey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-
 // 리캡차 통과, 로그인 시나리오 진행
 const handleSuccessRecaptcha = (token: string) => {
   console.log('리캡차 통과\n token : ', token);
@@ -28,4 +29,13 @@ const handleSuccessRecaptcha = (token: string) => {
 const handleFailRecaptcha = (error: any) => {
   console.log('리캡차 실패\n', error);
 };
+
+console.log();
 </script>
+
+<style>
+.recaptcha-comp {
+  transform: scale(1.77);
+  transform-origin: 0 0;
+}
+</style>
