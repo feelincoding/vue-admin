@@ -126,11 +126,4 @@ const getV = () => {
 .filepond--drip-blob {
   background-color: #999;
 }
-img {
-  width: 25%;
-  opacity: 0.8;
-  filter: grayscale(100%);
-  border-radius: 8px;
-  cursor: pointer;
-}
 </style>

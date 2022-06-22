@@ -51,14 +51,17 @@ const ttttt = ref<HTMLDivElement | null>(null);
 </script>
 
 <style>
+/** 파일 타입 실패 색 */
 [data-filepond-item-state*='error'] .filepond--item-panel,
 [data-filepond-item-state*='invalid'] .filepond--item-panel {
   background-color: red;
 }
 
+/** 파일 타입 실패 색 */
 [data-filepond-item-state='processing-complete'] .filepond--item-panel {
   background-color: green;
 }
+/** 파일 넣기 전 배경색 */
 .filepond--drop-label {
   background-color: #ecf7e9;
   height: auto !important;
@@ -68,12 +71,5 @@ const ttttt = ref<HTMLDivElement | null>(null);
 }
 .filepond--drip-blob {
   background-color: #999;
-}
-img {
-  width: 25%;
-  opacity: 0.8;
-  filter: grayscale(100%);
-  border-radius: 8px;
-  cursor: pointer;
 }
 </style>
