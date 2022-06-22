@@ -27,8 +27,7 @@
     "vue-recaptcha": "^2.0.2",
     "vue-router": "^4.0.15",
     "vue-toastification": "^2.0.0-rc.5",
-    "vue-filepond":"^7.0.3",
-    "filepond-plugin-file-validate-type":"^1.2.8"
+    "vue-filepond":"^7.0.3"
   },
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.4.0",

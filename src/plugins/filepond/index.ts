@@ -82,7 +82,6 @@ const plugin = ({ addFilter, utils }: any) => {
     if (!query('GET_ALLOW_FILE_TYPE_VALIDATION')) {
       return true;
     }
-
     // we validate the file against the accepted file types
     return validateFile(file, query('GET_ACCEPTED_FILE_TYPES'));
   });
