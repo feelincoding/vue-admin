@@ -126,11 +126,17 @@
 .lg-btn >i{margin-right: 10px;}
 
 
-.purple-btn{background: #61C1BD!important; border:1px #61C1BD solid !important; color: #fff;}
-.purple-btn:hover{box-shadow: 1px 1px 5px #ccc;}
-.purple-btn:focus{box-shadow: 1px 1px 5px #ccc;}
-.purple-btn:active{background: #5614D3 !important; border:1px #5614D3 solid !important; box-shadow: 1px 1px 5px #ccc;}
-.purple-btn >i{}
+.mint-btn{background: #61C1BD!important; border:1px #61C1BD solid !important; color: #fff;}
+.mint-btn:hover{box-shadow: 1px 1px 5px #ccc;}
+.mint-btn:focus{box-shadow: 1px 1px 5px #ccc;}
+.mint-btn:active{background: #5614D3 !important; border:1px #5614D3 solid !important; box-shadow: 1px 1px 5px #ccc;}
+.mint-btn >i{}
+
+
+.navy-btn{background: #0C233A!important; border:1px #0C233A solid !important; color: #fff;}
+.navy-btn:hover{box-shadow: 1px 1px 5px #ccc;}
+.navy-btn:focus{box-shadow: 1px 1px 5px #ccc;}
+.navy-btn:active{background: #000 !important; border:1px #000 solid !important; box-shadow: 1px 1px 5px #ccc;}
 
 
 .white-btn{background: #fff!important; border:1px #777 solid !important; color: #777;}
@@ -172,6 +178,8 @@
 
 
 /*  check box    */
+.check-box{display: flex;}
+
 .check {
     display: inline-block;
     width:22px;

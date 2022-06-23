@@ -110,6 +110,8 @@
   height: 24px;
 }
 
+.cicle-timer >div >canvas{top: -1px !important;}
+
 /* TrafficDetailModal */
 .total-traffic-detail-chart {
   width: 100%;
@@ -188,13 +190,6 @@
   padding: 0 30px;
 }
 
-/* TimeGroup */
-.cicle-timer {
-  margin-bottom: 4px;
-  background-color: #f3f3f3;
-  width: 24px;
-  height: 24px;
-}
 
 /* TrafficServiceChart */
 .chart-group-height {
