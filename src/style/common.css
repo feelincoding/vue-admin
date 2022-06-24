@@ -268,7 +268,7 @@
 
 
 
-.textarea{width: 380px; height:80px; background-color: #fff; border: 1px #ddd solid; border-radius: 7px; padding: 12px 12px; font-size: 14px; font-weight: 400; color: #333; line-height: 24px; word-break: break-all; white-space: normal; text-align: left;}
+.textarea{width: 380px; height:80px; background-color: #fff; border: 1px #ddd solid; border-radius: 5px; padding: 10px 10px; font-size: 14px; font-weight: 400; color: #333; line-height: 24px; word-break: break-all; white-space: normal; text-align: left;}
 
 
 .disable{background-color:#e5e5e5 !important; border: 1px #e5e5e5 solid !important; cursor: default;}
@@ -345,3 +345,7 @@
 .overflow-y{overflow-y: auto;}
 
 .flex{flex: 1;}
+
+
+.updown-btn.on{background: url("../assets/dropup_ico.svg") no-repeat center center;}
+.updown-btn{width: 22px; height: 22px; background: url("../assets/dropdown_ico.svg") no-repeat center center;}
